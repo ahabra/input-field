@@ -1,5 +1,3 @@
-/* This file uses vars defined in moose-vars.css */
-
 .input-field {
   --width-label: 10em;
   --width-input: calc(100% - var(--width-label) - 4em);
@@ -8,15 +6,17 @@
   --required-marker: " *";
 
   --color-normal: green;
-  --color-dark: darkgreen;
-  --color-light: lightgreen;
+  --color-dark: #3c643c;
+  --color-verydark: #0f190f;
+  --color-light: #e0fde0;
   --color-bad: red;
-  --input-color: DarkSlateGray;
-  --input-background-image-focus: linear-gradient(to right, var(--color-light), white);
-  --input-background-color-bad: LavenderBlush;
+  --color-bad-light: LavenderBlush;
+
+  --input-border-color: Gainsboro;
   --input-border-color-bad: var(--color-bad);
-  --input-background-image-bad: linear-gradient(to right, var(--input-background-color-bad), white);
-  --input-background-image-focus-bad: linear-gradient(to right, var(--input-background-color-bad), var(--color-light), white);
+  --input-background-image-focus: linear-gradient(to right, var(--color-light), white);
+  --input-background-image-bad: linear-gradient(to right, var(--color-bad-light), white);
+  --input-background-image-focus-bad: linear-gradient(to right, var(--color-bad-light), var(--color-light), white);
 }
 
 .input-field label {
@@ -38,19 +38,20 @@
 .input-field input {
   width: var(--width-input);
   margin: 0.4em 0.4em 0.1em 0.2em;
+  padding: 1em 0.7em;
 
   background-color: white;
   border-radius: 4px;
-  border: 1px solid #dbdbdb;
-  height: 1.5em;
-  padding: 0.5em 0.7em;
-  font-size: 1rem;
+  border: 1px solid var(--input-border-color);
+  height: 2em;
+  font-size: 1em;
 
-  color: var(--input-color, dimgray)
+  color: var(--color-verydark, dimgray)
 }
 
 .input-field input:focus {
-  background-image: var(--input-background-image-focus)
+  background-image: var(--input-background-image-focus);
+  outline-color: var(--color-normal);
 }
 
 .input-field input.bad {
@@ -62,7 +63,7 @@
 .input-field input.bad:focus {
   border-color: var(--input-border-color-bad, red);
   background-image: var(--input-background-image-focus-bad);
-  outline: none;
+  outline-color: var(--input-border-color-bad);
 }
 
 .input-field footer {

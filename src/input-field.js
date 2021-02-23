@@ -5,6 +5,8 @@ import * as Validation from './input-field-validation'
 import template from './input-field.html'
 import css from './input-field.tcss'
 
+// TODO allow message override
+
 export function define() {
   let validationRules
 
