@@ -1,0 +1,103 @@
+/* This file uses vars defined in moose-vars.css */
+
+.input-field {
+  --width-label: 10em;
+  --width-input: calc(100% - var(--width-label) - 4em);
+  --footer-padding-left: calc(var(--width-label) + 1em);
+  --footer-font-size: 0.9em;
+  --required-marker: " *";
+
+  --color-normal: green;
+  --color-dark: darkgreen;
+  --color-light: lightgreen;
+  --color-bad: red;
+  --input-color: DarkSlateGray;
+  --input-background-image-focus: linear-gradient(to right, var(--color-light), white);
+  --input-background-color-bad: LavenderBlush;
+  --input-border-color-bad: var(--color-bad);
+  --input-background-image-bad: linear-gradient(to right, var(--input-background-color-bad), white);
+  --input-background-image-focus-bad: linear-gradient(to right, var(--input-background-color-bad), var(--color-light), white);
+}
+
+.input-field label {
+  display: inline-block;
+  width: var(--width-label);
+  text-align: right;
+  margin: 0.4em 0.2em 0.1em 0.4em;
+
+  color: var(--color-dark, darkgreen);
+  font-weight: bold;
+}
+
+.input-field label.required:after {
+  content: var(--required-marker);
+  color: var(--color-normal);
+}
+
+
+.input-field input {
+  width: var(--width-input);
+  margin: 0.4em 0.4em 0.1em 0.2em;
+
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #dbdbdb;
+  height: 1.5em;
+  padding: 0.5em 0.7em;
+  font-size: 1rem;
+
+  color: var(--input-color, dimgray)
+}
+
+.input-field input:focus {
+  background-image: var(--input-background-image-focus)
+}
+
+.input-field input.bad {
+  border-color: var(--input-border-color-bad, red);
+  background-image: var(--input-background-image-bad);
+}
+
+
+.input-field input.bad:focus {
+  border-color: var(--input-border-color-bad, red);
+  background-image: var(--input-background-image-focus-bad);
+  outline: none;
+}
+
+.input-field footer {
+  padding-left: var(--footer-padding-left);
+  margin-bottom: 1em;
+  font-size: var(--footer-font-size);
+}
+
+.input-field footer ul {
+  margin: 0.5em 0;
+}
+
+.input-field footer ul.rules li.bad {
+  color: var(--color-bad);
+}
+
+@media screen and (max-width: 600px) {
+  .input-field label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.1em;
+    margin-left: 1.2em;
+  }
+
+  .input-field input {
+    margin-top: 0.1em;
+    width: 80%;
+    margin-left: 1em;
+  }
+
+  .input-field footer {
+    padding-left: 1em;
+  }
+
+  .input-field footer ul {
+    padding-left: 2em;
+  }
+}
