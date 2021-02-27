@@ -45,33 +45,30 @@ export class Rule {
     return `<li class="validation-${this.name}">${this.message}</li>\n`
   }
 
-}
-
-const basicRules = {
-  required: (flag, msg = 'Required Field') => {
+  static required(flag, msg = 'Required Field') {
     const validator = value => !!value
     return new Rule('required', msg, validator)
-  },
+  }
 
-  minlength: (minLength, msg = 'Minimum Length is %v') => {
+  static minlength(minLength, msg = 'Minimum Length is %v') {
     const validator = value => {
       const len = value ? value.length : 0
       return len >= minLength
     }
     msg = msg.replaceAll('%v', minLength)
     return new Rule('minlength', msg, validator)
-  },
+  }
 
-  pattern: (pattern, msg = 'Must satisfy the pattern %v') => {
+  static pattern(pattern, msg = 'Must satisfy the pattern %v') {
     const validator = value => {
       const regex = new RegExp(pattern)
       return regex.test(value)
     }
     msg = msg.replaceAll('%v', pattern)
     return new Rule('pattern', msg, validator)
-  },
+  }
 
-  min: (minValue, msg = 'Minimum value of %v') => {
+  static min(minValue, msg = 'Minimum value of %v') {
     minValue = Number(minValue) || 0
     const validator = value => {
       value = Number(value) || 0
@@ -79,9 +76,9 @@ const basicRules = {
     }
     msg = msg.replaceAll('%v', minValue)
     return new Rule('min', msg, validator)
-  },
+  }
 
-  max: (maxValue, msg = 'Maximum value of %v') => {
+  static max(maxValue, msg = 'Maximum value of %v') {
     maxValue = Number(maxValue) || 0
     const validator = value => {
       value = Number(value) || 0
@@ -89,15 +86,15 @@ const basicRules = {
     }
     msg = msg.replaceAll('%v', maxValue)
     return new Rule('max', msg, validator)
-  },
+  }
 }
 
 export function createRulesFromAttributes(atts, messages = {}) {
   const rules = []
   Objecter.forEachEntry(atts, (k, v) => {
-    if (!Stringer.isEmpty(v) && Objecter.has(basicRules, k)) {
+    if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
       const msg = messages[k]
-      const rule = basicRules[k](v, msg)
+      const rule = Rule[k](v, msg)
       rules.push(rule)
     }
   })
