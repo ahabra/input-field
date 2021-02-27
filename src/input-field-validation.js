@@ -23,6 +23,21 @@ export class ValidationRules {
   toHtml() {
     return this.rules.map(r => r.toHtml()).join('')
   }
+
+  static createFromAttributes(atts, messages = {}) {
+    const rules = []
+    Objecter.forEachEntry(atts, (k, v) => {
+      if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
+        const msg = messages[k]
+        const rule = Rule[k](v, msg)
+        rules.push(rule)
+      }
+    })
+    const validationRules = new ValidationRules()
+    validationRules.add(...rules)
+    return validationRules
+  }
+
 }
 
 function containsName(rules, name) {
@@ -45,6 +60,11 @@ export class Rule {
     return `<li class="validation-${this.name}">${this.message}</li>\n`
   }
 
+  static createRule(name, message, validator, value) {
+    message = message.replaceAll('%v', value)
+    return new Rule(name, message, validator)
+  }
+
   static required(flag, msg = 'Required Field') {
     const validator = value => !!value
     return new Rule('required', msg, validator)
@@ -55,8 +75,7 @@ export class Rule {
       const len = value ? value.length : 0
       return len >= minLength
     }
-    msg = msg.replaceAll('%v', minLength)
-    return new Rule('minlength', msg, validator)
+    return Rule.createRule('minlength', msg, validator, minLength)
   }
 
   static pattern(pattern, msg = 'Must satisfy the pattern %v') {
@@ -64,8 +83,7 @@ export class Rule {
       const regex = new RegExp(pattern)
       return regex.test(value)
     }
-    msg = msg.replaceAll('%v', pattern)
-    return new Rule('pattern', msg, validator)
+    return Rule.createRule('pattern', msg, validator, pattern)
   }
 
   static min(minValue, msg = 'Minimum value of %v') {
@@ -74,8 +92,7 @@ export class Rule {
       value = Number(value) || 0
       return value >= minValue
     }
-    msg = msg.replaceAll('%v', minValue)
-    return new Rule('min', msg, validator)
+    return Rule.createRule('minValue', msg, validator, minValue)
   }
 
   static max(maxValue, msg = 'Maximum value of %v') {
@@ -84,21 +101,6 @@ export class Rule {
       value = Number(value) || 0
       return value <= maxValue
     }
-    msg = msg.replaceAll('%v', maxValue)
-    return new Rule('max', msg, validator)
+    return Rule.createRule('max', msg, validator, maxValue)
   }
-}
-
-export function createRulesFromAttributes(atts, messages = {}) {
-  const rules = []
-  Objecter.forEachEntry(atts, (k, v) => {
-    if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
-      const msg = messages[k]
-      const rule = Rule[k](v, msg)
-      rules.push(rule)
-    }
-  })
-  const validationRules = new ValidationRules()
-  validationRules.add(...rules)
-  return validationRules
 }

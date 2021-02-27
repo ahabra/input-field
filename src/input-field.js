@@ -1,7 +1,7 @@
 import * as webitem from '@techexp/webitem'
 import {Domer, Objecter, Stringer} from '@techexp/jshelper'
 
-import * as Validation from './input-field-validation'
+import {ValidationRules, Rule} from './input-field-validation'
 import template from './input-field.html'
 import css from './input-field.tcss'
 
@@ -14,7 +14,7 @@ export function define(messages = {}) {
     css,  // FIXME allow override
     html: el => {
       const atts = getAttributes(el)
-      validationRules = Validation.createRulesFromAttributes(atts, messages)
+      validationRules = ValidationRules.createFromAttributes(atts, messages)
       return buildHtml(atts, validationRules)
     },
     propertyList: [
@@ -34,7 +34,7 @@ export function define(messages = {}) {
       {
         name: 'addRule',
         action: function(name, message, validator) {
-          const rule = new Validation.Rule(name, message, validator)
+          const rule = new Rule(name, message, validator)
           if (!validationRules.add(rule)) return
 
           addRuleHtml(this, rule)
