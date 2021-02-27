@@ -1,21 +1,20 @@
 import * as webitem from '@techexp/webitem'
-import {Domer, Stringer} from '@techexp/jshelper'
+import {Domer, Objecter, Stringer} from '@techexp/jshelper'
 
 import * as Validation from './input-field-validation'
 import template from './input-field.html'
 import css from './input-field.tcss'
 
-// TODO allow message override
 
-export function define() {
+export function define(messages = {}) {
   let validationRules
 
   webitem.defineElement({
     nameWithDash: 'input-field',
     css,  // FIXME allow override
     html: el => {
-      const atts = Domer.getAttributes(el)
-      validationRules = createInitialValidationRules(atts)
+      const atts = getAttributes(el)
+      validationRules = Validation.createRulesFromAttributes(atts, messages)
       return buildHtml(atts, validationRules)
     },
     propertyList: [
@@ -35,10 +34,10 @@ export function define() {
       {
         name: 'addRule',
         action: function(name, message, validator) {
-          name = normalizeName(name)
-          if (!validationRules.addRule(name, message, validator)) return
+          const rule = new Validation.Rule(name, message, validator)
+          if (!validationRules.add(rule)) return
 
-          addRuleHtml(this, name, message)
+          addRuleHtml(this, rule)
         }
       }
     ]
@@ -46,13 +45,14 @@ export function define() {
   })
 }
 
-function createInitialValidationRules(atts) {
-  const rulesNames = ['required', 'minlength', 'pattern', 'min', 'max']
-  const validationRules = new Validation.ValidationRules()
-  const basicRules = rulesNames.map(rn => Validation.getBasicRule(rn, atts[rn]))
-  basicRules.forEach(br => validationRules.add(br))
-
-  return validationRules
+// Make sure attributes names are all lower case
+function getAttributes(el) {
+  const domAtts = Domer.getAttributes(el)
+  const atts = {}
+  Objecter.forEachEntry(domAtts, (k, v) => {
+    atts[k.toLowerCase()] = v
+  })
+  return atts
 }
 
 function buildHtml(atts, validationRules) {
@@ -67,17 +67,9 @@ function buildHtml(atts, validationRules) {
     pattern: getAttr(atts, 'pattern'),
     min: getAttr(atts, 'min'),
     max: getAttr(atts, 'max'),
-    rules: buildInitialValidationRulesHtml(validationRules)
+    rules: validationRules.toHtml()
   }
   return Stringer.replaceTemplate(template, values)
-}
-
-function buildInitialValidationRulesHtml(validationRules) {
-  return validationRules.rules.map(r => buildRuleHtml(r.name, r.message)).join('')
-}
-
-function buildRuleHtml(name, message) {
-  return `<li class="validation-${name}">${message}</li>\n`
 }
 
 
@@ -104,13 +96,8 @@ function validate(el, value, validationRules) {
   Domer.classPresentIf(input, 'bad', !allValid)
 }
 
-function normalizeName(name = '') {
-  return name.replace(/[ \\.]/g, '-')
-}
-
-function addRuleHtml(el, name, message) {
-  const html = buildRuleHtml(name, message)
+function addRuleHtml(el, rule) {
   const rulesHtml = Domer.first('footer ul.rules', el)
-  Domer.add(rulesHtml, html)
+  Domer.add(rulesHtml, rule.toHtml())
 }
 

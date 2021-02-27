@@ -1,3 +1,4 @@
+import {Objecter, Stringer} from '@techexp/jshelper'
 
 export class ValidationRules {
   constructor() {
@@ -11,8 +12,9 @@ export class ValidationRules {
     return true
   }
 
-  addRule(name, message, validator) {
-    return this.add(new Rule(name, message, validator))
+  addAll(...rules) {
+    rules = rules.filter(r => !containsName(this.rules, r.name))
+    this.rules.push(...rules)
   }
 
   validate(value, onValidation) {
@@ -20,6 +22,10 @@ export class ValidationRules {
       const isValid = r.isValid(value)
       onValidation(isValid, r.name)
     })
+  }
+
+  toHtml() {
+    return this.rules.map(r => r.toHtml()).join('')
   }
 }
 
@@ -29,8 +35,8 @@ function containsName(rules, name) {
 }
 
 export class Rule {
-  constructor(name, message, validator) {
-    this.name = name
+  constructor(name = '', message, validator) {
+    this.name = name.replace(/[ \\.]/g, '-')
     this.message = message
     this.validator = validator
   }
@@ -39,58 +45,67 @@ export class Rule {
     return this.validator(value)
   }
 
+  toHtml() {
+    return `<li class="validation-${this.name}">${this.message}</li>\n`
+  }
+
 }
 
 const basicRules = {
-  required: ()=> {
+  required: (flag, msg = 'Required Field') => {
     const validator = value => !!value
-    return new Rule('required', 'Required Field', validator)
+    return new Rule('required', msg, validator)
   },
 
-  minlength: minLength => {
+  minlength: (minLength, msg = 'Minimum Length is %v') => {
     const validator = value => {
       const len = value ? value.length : 0
       return len >= minLength
     }
-    const msg = 'Minimum Length is ' + minLength
+    msg = msg.replaceAll('%v', minLength)
     return new Rule('minlength', msg, validator)
   },
 
-  pattern: pattern => {
+  pattern: (pattern, msg = 'Must satisfy the pattern %v') => {
     const validator = value => {
       const regex = new RegExp(pattern)
       return regex.test(value)
     }
-    const msg = 'Must satisfy the pattern ' + pattern
+    msg = msg.replaceAll('%v', pattern)
     return new Rule('pattern', msg, validator)
   },
 
-  min: minValue => {
+  min: (minValue, msg = 'Minimum value of %v') => {
     minValue = Number(minValue) || 0
     const validator = value => {
       value = Number(value) || 0
       return value >= minValue
     }
-    const msg = 'Minimum value of ' + minValue
+    msg = msg.replaceAll('%v', minValue)
     return new Rule('min', msg, validator)
   },
 
-  max: maxValue => {
+  max: (maxValue, msg = 'Maximum value of %v') => {
     maxValue = Number(maxValue) || 0
     const validator = value => {
       value = Number(value) || 0
       return value <= maxValue
     }
-    const msg = 'Maximum value of ' + maxValue
+    msg = msg.replaceAll('%v', maxValue)
     return new Rule('max', msg, validator)
   },
 }
 
-export function getBasicRule(name, limit) {
-  if (!limit) return false
-
-  const func = basicRules[name]
-  if (!func) return false
-
-  return func(limit)
+export function createRulesFromAttributes(atts, messages = {}) {
+  const rules = []
+  Objecter.forEachEntry(atts, (k, v) => {
+    if (!Stringer.isEmpty(v) && Objecter.has(basicRules, k)) {
+      const msg = messages[k]
+      const rule = basicRules[k](v, msg)
+      rules.push(rule)
+    }
+  })
+  const validationRules = new ValidationRules()
+  validationRules.addAll(...rules)
+  return validationRules
 }

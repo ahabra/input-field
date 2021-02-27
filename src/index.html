@@ -7,14 +7,18 @@
     <h1>Visually Testing input-field</h1>
     <input-field type="text" label="Age" required="required"
                  minLength="3" maxlength="5" pattern="[0-9]{3}"
-                 min="150" max="300"></input-field>
+                 MIN="150" max="300"></input-field>
 
 
     <!-- JS code will be added to script element with 'data-app' attribute -->
     <script data-app></script>
 
     <script>
-      InputField.define()
+      const messages = {
+        required: 'This field is required!!',
+        minlength: 'At least %v characters are expected!!'
+      }
+      InputField.define(messages)
     </script>
 
   </body>
