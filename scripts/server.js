@@ -15,6 +15,7 @@ function build(url) {
   if (!url || url.indexOf('.htm') > 0) {
     Print.extra('  rebuilding app ...')
     buildUtils.copyIndexHtml()
+    buildUtils.copyAssets()
     buildUtils.build({format: 'iife', external: [], fileNameSuffix: 'script'})
   }
 }

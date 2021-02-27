@@ -28,6 +28,10 @@ function copyIndexHtml() {
   fs.writeFileSync(`${target}/index.html`, html)
 }
 
+function copyAssets() {
+  fs.copySync('src/input-field.css', `${out}/input-field.css`)
+}
+
 function build({format, minify, external, fileNameSuffix}) {
   const buildOptions = {
     entryPoints: ['src/input-field.js'],
@@ -75,6 +79,7 @@ function checkNodeVersion(majorMinimum) {
 module.exports = {
   clean,
   copyIndexHtml,
+  copyAssets,
   build,
   copyDist,
   nodeVersion,

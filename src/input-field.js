@@ -3,19 +3,16 @@ import {Domer, Objecter, Stringer} from '@techexp/jshelper'
 
 import {ValidationRules, Rule} from './input-field-validation'
 import template from './input-field.html'
-import css from './input-field.tcss'
 
-
-export function define(messages = {}) {
+export function define({messages = {}, cssFilePath = ''} = {}) {
   let validationRules
 
   webitem.defineElement({
     nameWithDash: 'input-field',
-    css,  // FIXME allow override
     html: el => {
       const atts = getAttributes(el)
       validationRules = ValidationRules.createFromAttributes(atts, messages)
-      return buildHtml(atts, validationRules)
+      return buildHtml(atts, cssFilePath, validationRules)
     },
     propertyList: [
       {name: 'value', value: '', sel: 'input', attr: 'value'}
@@ -55,8 +52,9 @@ function getAttributes(el) {
   return atts
 }
 
-function buildHtml(atts, validationRules) {
+function buildHtml(atts, cssFilePath, validationRules) {
   const values = {
+    cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     type: atts.type || 'text',
     'style-label': getAttr(atts, 'style-label', 'style'),
@@ -72,6 +70,10 @@ function buildHtml(atts, validationRules) {
   return Stringer.replaceTemplate(template, values)
 }
 
+function buildCssLink(cssFilePath) {
+  if (Stringer.isEmpty(cssFilePath)) return ''
+  return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`
+}
 
 function getAttr(atts, attName, paramName = attName) {
   const value = atts[attName]

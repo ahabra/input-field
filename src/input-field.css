@@ -1,0 +1,104 @@
+.input-field {
+  --width-label: 10em;
+  --width-input: calc(100% - var(--width-label) - 4em);
+  --footer-padding-left: calc(var(--width-label) + 1em);
+  --footer-font-size: 0.9em;
+  --required-marker: " *";
+
+  --color-normal: green;
+  --color-dark: #3c643c;
+  --color-verydark: #0f190f;
+  --color-light: #e0fde0;
+  --color-bad: red;
+  --color-bad-light: LavenderBlush;
+
+  --input-border-color: Gainsboro;
+  --input-border-color-bad: var(--color-bad);
+  --input-background-image-focus: linear-gradient(to right, var(--color-light), white);
+  --input-background-image-bad: linear-gradient(to right, var(--color-bad-light), white);
+  --input-background-image-focus-bad: linear-gradient(to right, var(--color-bad-light), var(--color-light), white);
+}
+
+.input-field label {
+  display: inline-block;
+  width: var(--width-label);
+  text-align: right;
+  margin: 0.4em 0.2em 0.1em 0.4em;
+
+  color: var(--color-dark, darkgreen);
+  font-weight: bold;
+}
+
+.input-field label.required:after {
+  content: var(--required-marker);
+  color: var(--color-normal);
+}
+
+
+.input-field input {
+  width: var(--width-input);
+  margin: 0.4em 0.4em 0.1em 0.2em;
+  padding: 1em 0.7em;
+
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid var(--input-border-color);
+  height: 2em;
+  font-size: 1em;
+
+  color: var(--color-verydark, dimgray)
+}
+
+.input-field input:focus {
+  background-image: var(--input-background-image-focus);
+  outline-color: var(--color-normal);
+}
+
+.input-field input.bad {
+  border-color: var(--input-border-color-bad, red);
+  background-image: var(--input-background-image-bad);
+}
+
+
+.input-field input.bad:focus {
+  border-color: var(--input-border-color-bad, red);
+  background-image: var(--input-background-image-focus-bad);
+  outline-color: var(--input-border-color-bad);
+}
+
+.input-field footer {
+  padding-left: var(--footer-padding-left);
+  margin-bottom: 1em;
+  font-size: var(--footer-font-size);
+}
+
+.input-field footer ul {
+  margin: 0.5em 0;
+}
+
+.input-field footer ul.rules li.bad {
+  color: var(--color-bad);
+}
+
+@media screen and (max-width: 600px) {
+  .input-field label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.1em;
+    margin-left: 1.2em;
+  }
+
+  .input-field input {
+    margin-top: 0.1em;
+    width: 80%;
+    margin-left: 1em;
+  }
+
+  .input-field footer {
+    padding-left: 1em;
+  }
+
+  .input-field footer ul {
+    padding-left: 2em;
+  }
+}

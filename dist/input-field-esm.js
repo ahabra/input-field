@@ -321,21 +321,17 @@ var Rule = class {
 };
 
 // src/input-field.html
-var input_field_default = '<!--<link rel="stylesheet" href="assets/css/input-field.css">-->\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input}\n         ${required} ${minlength} ${maxlength} ${pattern} ${min} ${max}>\n  <footer>\n    <ul class="rules">${rules}</ul>\n  </footer>\n</div>\n';
-
-// src/input-field.tcss
-var input_field_default2 = '.input-field {\n  --width-label: 10em;\n  --width-input: calc(100% - var(--width-label) - 4em);\n  --footer-padding-left: calc(var(--width-label) + 1em);\n  --footer-font-size: 0.9em;\n  --required-marker: " *";\n\n  --color-normal: green;\n  --color-dark: #3c643c;\n  --color-verydark: #0f190f;\n  --color-light: #e0fde0;\n  --color-bad: red;\n  --color-bad-light: LavenderBlush;\n\n  --input-border-color: Gainsboro;\n  --input-border-color-bad: var(--color-bad);\n  --input-background-image-focus: linear-gradient(to right, var(--color-light), white);\n  --input-background-image-bad: linear-gradient(to right, var(--color-bad-light), white);\n  --input-background-image-focus-bad: linear-gradient(to right, var(--color-bad-light), var(--color-light), white);\n}\n\n.input-field label {\n  display: inline-block;\n  width: var(--width-label);\n  text-align: right;\n  margin: 0.4em 0.2em 0.1em 0.4em;\n\n  color: var(--color-dark, darkgreen);\n  font-weight: bold;\n}\n\n.input-field label.required:after {\n  content: var(--required-marker);\n  color: var(--color-normal);\n}\n\n\n.input-field input {\n  width: var(--width-input);\n  margin: 0.4em 0.4em 0.1em 0.2em;\n  padding: 1em 0.7em;\n\n  background-color: white;\n  border-radius: 4px;\n  border: 1px solid var(--input-border-color);\n  height: 2em;\n  font-size: 1em;\n\n  color: var(--color-verydark, dimgray)\n}\n\n.input-field input:focus {\n  background-image: var(--input-background-image-focus);\n  outline-color: var(--color-normal);\n}\n\n.input-field input.bad {\n  border-color: var(--input-border-color-bad, red);\n  background-image: var(--input-background-image-bad);\n}\n\n\n.input-field input.bad:focus {\n  border-color: var(--input-border-color-bad, red);\n  background-image: var(--input-background-image-focus-bad);\n  outline-color: var(--input-border-color-bad);\n}\n\n.input-field footer {\n  padding-left: var(--footer-padding-left);\n  margin-bottom: 1em;\n  font-size: var(--footer-font-size);\n}\n\n.input-field footer ul {\n  margin: 0.5em 0;\n}\n\n.input-field footer ul.rules li.bad {\n  color: var(--color-bad);\n}\n\n@media screen and (max-width: 600px) {\n  .input-field label {\n    display: block;\n    text-align: left;\n    margin-bottom: 0.1em;\n    margin-left: 1.2em;\n  }\n\n  .input-field input {\n    margin-top: 0.1em;\n    width: 80%;\n    margin-left: 1em;\n  }\n\n  .input-field footer {\n    padding-left: 1em;\n  }\n\n  .input-field footer ul {\n    padding-left: 2em;\n  }\n}';
+var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input}\n         ${required} ${minlength} ${maxlength} ${pattern} ${min} ${max}>\n  <footer>\n    <ul class="rules">${rules}</ul>\n  </footer>\n</div>\n';
 
 // src/input-field.js
-function define(messages = {}) {
+function define({messages = {}, cssFilePath = ""} = {}) {
   let validationRules;
   defineElement({
     nameWithDash: "input-field",
-    css: input_field_default2,
     html: (el) => {
       const atts = getAttributes(el);
       validationRules = ValidationRules.createFromAttributes(atts, messages);
-      return buildHtml(atts, validationRules);
+      return buildHtml(atts, cssFilePath, validationRules);
     },
     propertyList: [
       {name: "value", value: "", sel: "input", attr: "value"}
@@ -371,8 +367,9 @@ function getAttributes(el) {
   });
   return atts;
 }
-function buildHtml(atts, validationRules) {
+function buildHtml(atts, cssFilePath, validationRules) {
   const values = {
+    cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     type: atts.type || "text",
     "style-label": getAttr(atts, "style-label", "style"),
@@ -386,6 +383,11 @@ function buildHtml(atts, validationRules) {
     rules: validationRules.toHtml()
   };
   return Stringer3.replaceTemplate(input_field_default, values);
+}
+function buildCssLink(cssFilePath) {
+  if (Stringer3.isEmpty(cssFilePath))
+    return "";
+  return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
 }
 function getAttr(atts, attName, paramName = attName) {
   const value = atts[attName];

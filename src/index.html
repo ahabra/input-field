@@ -18,7 +18,8 @@
         required: 'This field is required!!',
         minlength: 'At least %v characters are expected!!'
       }
-      InputField.define(messages)
+      const cssFilePath = './out/input-field.css'
+      InputField.define({messages, cssFilePath})
 
       const inp = document.getElementById('t1')
       inp.actions.addRule('no7', 'Cannot have the number 7', v => !v.includes('7'))
