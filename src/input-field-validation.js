@@ -5,16 +5,12 @@ export class ValidationRules {
     this.rules = []
   }
 
-  add(rule) {
-    if (!rule || containsName(this.rules, rule.name)) return false
-
-    this.rules.push(rule)
-    return true
-  }
-
-  addAll(...rules) {
+  add(...rules) {
     rules = rules.filter(r => !containsName(this.rules, r.name))
+    if (rules.length === 0) return false
+
     this.rules.push(...rules)
+    return rules
   }
 
   validate(value, onValidation) {
@@ -106,6 +102,6 @@ export function createRulesFromAttributes(atts, messages = {}) {
     }
   })
   const validationRules = new ValidationRules()
-  validationRules.addAll(...rules)
+  validationRules.add(...rules)
   return validationRules
 }
