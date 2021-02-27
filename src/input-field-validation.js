@@ -86,11 +86,11 @@ const basicRules = {
   },
 }
 
-export function getBasicRule(name, formula) {
-  if (!formula) return false
+export function getBasicRule(name, limit) {
+  if (!limit) return false
 
   const func = basicRules[name]
   if (!func) return false
 
-  return func(formula)
+  return func(limit)
 }

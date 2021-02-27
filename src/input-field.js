@@ -46,12 +46,6 @@ export function define() {
   })
 }
 
-function addRuleHtml(el, name, message) {
-  const html = buildRuleHtml(name, message)
-  const rulesHtml = Domer.first('footer ul.rules', el)
-  Domer.add(rulesHtml, html)
-}
-
 function createInitialValidationRules(atts) {
   const rulesNames = ['required', 'minlength', 'pattern', 'min', 'max']
   const validationRules = new Validation.ValidationRules()
@@ -112,5 +106,11 @@ function validate(el, value, validationRules) {
 
 function normalizeName(name = '') {
   return name.replace(/[ \\.]/g, '-')
+}
+
+function addRuleHtml(el, name, message) {
+  const html = buildRuleHtml(name, message)
+  const rulesHtml = Domer.first('footer ul.rules', el)
+  Domer.add(rulesHtml, html)
 }
 
