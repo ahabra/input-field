@@ -16,7 +16,6 @@ export class ValidationRules {
 
   validate(value, onValidation) {
     this.rules.forEach(r => {
-      console.log('>>>', r.name)
       const isValid = r.isValid(value)
       onValidation(isValid, r.name)
     })

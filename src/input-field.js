@@ -5,34 +5,36 @@ import {ValidationRules, Rule} from './input-field-validation'
 import template from './input-field.html'
 
 export function define(cssFilePath = '') {
-  let validationRules
 
   webitem.defineElement({
     nameWithDash: 'input-field',
     html: el => {
       const atts = getAttributes(el)
-      validationRules = ValidationRules.createFromAttributes(atts)
-      return buildHtml(atts, cssFilePath, validationRules)
+      el.validationRules = ValidationRules.createFromAttributes(atts)
+      return buildHtml(atts, cssFilePath, el.validationRules)
     },
+
     propertyList: [
       {name: 'value', value: '', sel: 'input', attr: 'value'}
     ],
+
     eventHandlerList: [
       {
         sel: 'input',
         eventName: 'input',
         listener: (ev, el) => {
           const value = ev.target.value
-          validate(el, value, validationRules)
+          validate(el, value, el.validationRules)
         }
       }
     ],
+
     actionList: [
       {
         name: 'addRule',
         action: function(name, message, validator) {
           const rule = new Rule(name, message, validator)
-          if (!validationRules.add(rule)) return
+          if (!this.validationRules.add(rule)) return
 
           addRuleHtml(this, rule)
         }

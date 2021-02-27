@@ -24,9 +24,11 @@
       const cssFilePath = './out/input-field.css'
       InputField.define(cssFilePath)
 
-      const inp = document.getElementById('age')
-      inp.actions.addRule('no7', 'Cannot have the number 7', v => !v.includes('7'))
+      const age = document.getElementById('age')
+      age.actions.addRule('no7', 'Cannot have the number 7', v => !v.includes('7'))
 
+      const name = document.getElementById('name')
+      name.actions.addRule('start-ab', 'Must start with ab', v => v.startsWith('ab'))
     </script>
 
   </body>
