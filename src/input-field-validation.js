@@ -16,6 +16,7 @@ export class ValidationRules {
 
   validate(value, onValidation) {
     this.rules.forEach(r => {
+      console.log('>>>', r.name)
       const isValid = r.isValid(value)
       onValidation(isValid, r.name)
     })
@@ -25,11 +26,11 @@ export class ValidationRules {
     return this.rules.map(r => r.toHtml()).join('')
   }
 
-  static createFromAttributes(atts, messages = {}) {
+  static createFromAttributes(atts) {
     const rules = []
     Objecter.forEachEntry(atts, (k, v) => {
       if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
-        const msg = messages[k]
+        const msg = atts[k + '-message']
         const rule = Rule[k](v, msg)
         rules.push(rule)
       }
@@ -56,6 +57,7 @@ export class Rule {
   }
 
   toHtml() {
+    if (Stringer.isEmpty(this.message)) return ''
     return `<li class="validation-${this.name}">${this.message}</li>\n`
   }
 

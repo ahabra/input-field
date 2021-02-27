@@ -4,14 +4,14 @@ import {Domer, Objecter, Stringer} from '@techexp/jshelper'
 import {ValidationRules, Rule} from './input-field-validation'
 import template from './input-field.html'
 
-export function define({messages = {}, cssFilePath = ''} = {}) {
+export function define(cssFilePath = '') {
   let validationRules
 
   webitem.defineElement({
     nameWithDash: 'input-field',
     html: el => {
       const atts = getAttributes(el)
-      validationRules = ValidationRules.createFromAttributes(atts, messages)
+      validationRules = ValidationRules.createFromAttributes(atts)
       return buildHtml(atts, cssFilePath, validationRules)
     },
     propertyList: [
