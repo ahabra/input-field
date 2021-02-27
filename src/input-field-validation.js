@@ -1,8 +1,9 @@
 import {Objecter, Stringer} from '@techexp/jshelper'
 
 export class ValidationRules {
-  constructor() {
+  constructor(rules) {
     this.rules = []
+    this.add(...rules)
   }
 
   add(...rules) {
@@ -33,9 +34,7 @@ export class ValidationRules {
         rules.push(rule)
       }
     })
-    const validationRules = new ValidationRules()
-    validationRules.add(...rules)
-    return validationRules
+    return new ValidationRules(rules)
   }
 
 }
@@ -47,7 +46,7 @@ function containsName(rules, name) {
 
 export class Rule {
   constructor(name = '', message, validator) {
-    this.name = name.replace(/[ \\.]/g, '-')
+    this.name = name.replace(/[ \\.]/g, '-').toLowerCase()
     this.message = message
     this.validator = validator
   }
