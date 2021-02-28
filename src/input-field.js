@@ -38,8 +38,15 @@ export function define(cssFilePath = '') {
     },
 
     propertyList: [
-      {name: 'value', value: '', sel: 'input',
-       onChange: (el, oldValue, newValue) => validate(el, newValue) }
+      { name: 'value', value: '', sel: 'input',
+        onChange: (el, oldValue, newValue) => validate(el, newValue) },
+      { name: 'isShowRules', value: true,
+        onChange: (el, oldValue, newValue) => {
+          const rulesList = Domer.first('footer ul.rules', el)
+          newValue = newValue === true || newValue === 'true'
+          rulesList.style.display = newValue === true ? '' : 'none'
+        }
+      }
     ],
 
     eventHandlerList: [
