@@ -52,7 +52,7 @@ export class Rule {
   }
 
   isValid(value) {
-    return this.validator(value)
+    return this.validator(String(value))
   }
 
   toHtml() {

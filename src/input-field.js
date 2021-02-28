@@ -38,7 +38,8 @@ export function define(cssFilePath = '') {
     },
 
     propertyList: [
-      {name: 'value', value: '', sel: 'input'}
+      {name: 'value', value: '', sel: 'input',
+       onChange: (el, oldValue, newValue) => validate(el, newValue) }
     ],
 
     eventHandlerList: [
@@ -47,7 +48,7 @@ export function define(cssFilePath = '') {
         eventName: 'input',
         listener: (ev, el) => {
           const value = ev.target.value
-          validate(el, value, el.validationRules)
+          validate(el, value)
         }
       }
     ],
@@ -110,10 +111,10 @@ function getAttr(atts, attName, paramName = attName) {
   return ''
 }
 
-function validate(el, value, validationRules) {
+function validate(el, value) {
   const rulesList = Domer.first('footer ul.rules', el)
   let allValid = true
-  validationRules.validate(value, (isValid, name) => {
+  el.validationRules.validate(value, (isValid, name) => {
     const li = Domer.first(`li.validation-${name}`, rulesList)
     Domer.classPresentIf(li, 'bad', !isValid)
     allValid = allValid && isValid
