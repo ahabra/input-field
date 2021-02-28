@@ -7,9 +7,9 @@
     <h1>Visually Testing input-field</h1>
     <input-field id="age" type="text" label="Age"
                  required="required" required-message="This field is required++"
-                 minlength="3" minlength-message="Minimum of %v characters++"
-                 maxlength="5" pattern="[0-9]{3}"
-                 MIN="150" max="900"
+                 minlength="2" minlength-message="Minimum of %v characters++"
+                 maxlength="5" pattern="[0-9]{2,3}"
+                 MIN="18" max="900"
     ></input-field>
 
     <input-field id="name" type="text" label="Name"

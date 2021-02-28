@@ -38,7 +38,7 @@ export function define(cssFilePath = '') {
     },
 
     propertyList: [
-      {name: 'value', value: '', sel: 'input', attr: 'value'}
+      {name: 'value', value: '', sel: 'input'}
     ],
 
     eventHandlerList: [

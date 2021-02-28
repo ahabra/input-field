@@ -1,3 +1,9 @@
+/**
+Control the style on input-field component.
+In most scenarios, you should only change the values of the
+CSS variables.
+ */
+
 .input-field {
   --width-label: 10em;
   --width-input: calc(100% - var(--width-label) - 4em);
