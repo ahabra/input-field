@@ -251,11 +251,11 @@ var ValidationRules = class {
   toHtml() {
     return this.rules.map((r) => r.toHtml()).join("");
   }
-  static createFromAttributes(atts, messages = {}) {
+  static createFromAttributes(atts) {
     const rules = [];
     Objecter2.forEachEntry(atts, (k, v) => {
       if (!Stringer2.isEmpty(v) && Objecter2.has(Rule, k)) {
-        const msg = messages[k];
+        const msg = atts[k + "-message"];
         const rule = Rule[k](v, msg);
         rules.push(rule);
       }
@@ -274,9 +274,11 @@ var Rule = class {
     this.validator = validator;
   }
   isValid(value) {
-    return this.validator(value);
+    return this.validator(String(value));
   }
   toHtml() {
+    if (Stringer2.isEmpty(this.message))
+      return "";
     return `<li class="validation-${this.name}">${this.message}</li>
 `;
   }
@@ -321,20 +323,33 @@ var Rule = class {
 };
 
 // src/input-field.html
-var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input}\n         ${required} ${minlength} ${maxlength} ${pattern} ${min} ${max}>\n  <footer>\n    <ul class="rules">${rules}</ul>\n  </footer>\n</div>\n';
+var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input} value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules">${rules}</ul>\n  </footer>\n</div>\n';
 
 // src/input-field.js
-function define({messages = {}, cssFilePath = ""} = {}) {
-  let validationRules;
+function define(cssFilePath = "") {
   defineElement({
     nameWithDash: "input-field",
     html: (el) => {
       const atts = getAttributes(el);
-      validationRules = ValidationRules.createFromAttributes(atts, messages);
-      return buildHtml(atts, cssFilePath, validationRules);
+      el.validationRules = ValidationRules.createFromAttributes(atts);
+      return buildHtml(atts, cssFilePath, el.validationRules);
     },
     propertyList: [
-      {name: "value", value: "", sel: "input", attr: "value"}
+      {
+        name: "value",
+        value: "",
+        sel: "input",
+        onChange: (el, oldValue, newValue) => validate(el, newValue)
+      },
+      {
+        name: "isShowRules",
+        value: true,
+        onChange: (el, oldValue, newValue) => {
+          const rulesList = Domer2.first("footer ul.rules", el);
+          newValue = newValue === true || newValue === "true";
+          rulesList.style.display = newValue === true ? "" : "none";
+        }
+      }
     ],
     eventHandlerList: [
       {
@@ -342,7 +357,7 @@ function define({messages = {}, cssFilePath = ""} = {}) {
         eventName: "input",
         listener: (ev, el) => {
           const value = ev.target.value;
-          validate(el, value, validationRules);
+          validate(el, value);
         }
       }
     ],
@@ -351,7 +366,7 @@ function define({messages = {}, cssFilePath = ""} = {}) {
         name: "addRule",
         action: function(name, message, validator) {
           const rule = new Rule(name, message, validator);
-          if (!validationRules.add(rule))
+          if (!this.validationRules.add(rule))
             return;
           addRuleHtml(this, rule);
         }
@@ -398,10 +413,10 @@ function getAttr(atts, attName, paramName = attName) {
   }
   return "";
 }
-function validate(el, value, validationRules) {
+function validate(el, value) {
   const rulesList = Domer2.first("footer ul.rules", el);
   let allValid = true;
-  validationRules.validate(value, (isValid, name) => {
+  el.validationRules.validate(value, (isValid, name) => {
     const li = Domer2.first(`li.validation-${name}`, rulesList);
     Domer2.classPresentIf(li, "bad", !isValid);
     allValid = allValid && isValid;
