@@ -96,6 +96,7 @@ The component supports the following attributes
 12. `max`: The maximum (numeric) value accepted in the field.
 13. `max-message`: The message to display explaining the maximum value for the field. Default is
     `Maximum value of %v`.
+14. `showrules`: Boolean. Default is true. Show or hide validation rules.
 
 
 ### JavaScript
@@ -119,15 +120,6 @@ age.properties.value = 10
 console.log(age.properties.value)
 ```
 
-2. `isShowRules`: A read/write boolean property which controls if the rules description should be
-   shown under the input-field. Default is true.
-
-```javascript
-const age = document.getElementById('age')
-age.properties.isShowRules = false   // hide rules
-age.properties.isShowRules = true    // show rules
-
-```
 
 #### Actions Defined on the Component
 The component defines a single _action_ which allows you to define custom validation rules.

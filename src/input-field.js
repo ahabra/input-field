@@ -22,6 +22,7 @@ import template from './input-field.html'
  * max: Number. Maximum acceptable numeric value.
  * max-message: Optional. The message to show when there is a max requirement.
  *    Default is "Maximum value of %v"
+ * showrules: Boolean. Default is true. Show or hide validation riules
  *
  * Additionally, you can add custom validation rules to the component using:
  *
@@ -36,21 +37,15 @@ export function define(cssFilePath = '') {
   webitem.defineElement({
     nameWithDash: 'input-field',
     html: el => {
-      const atts = getAttributes(el)
+      const atts = extractAttributes(el)
       el.validationRules = ValidationRules.createFromAttributes(atts)
-      return buildHtml(atts, cssFilePath, el.validationRules)
+      const h = buildHtml(atts, cssFilePath, el.validationRules)
+      return h
     },
 
     propertyList: [
       { name: 'value', value: '', sel: 'input',
-        onChange: (el, oldValue, newValue) => validate(el, newValue) },
-      { name: 'isShowRules', value: true,
-        onChange: (el, oldValue, newValue) => {
-          const rulesList = Domer.first('footer ul.rules', el)
-          newValue = newValue === true || newValue === 'true'
-          rulesList.style.display = newValue === true ? '' : 'none'
-        }
-      }
+        onChange: (el, oldValue, newValue) => validate(el, newValue) }
     ],
 
     eventHandlerList: [
@@ -80,12 +75,15 @@ export function define(cssFilePath = '') {
 }
 
 // Make sure attributes names are all lower case
-function getAttributes(el) {
+function extractAttributes(el) {
   const domAtts = Domer.getAttributes(el)
   const atts = {}
   Objecter.forEachEntry(domAtts, (k, v) => {
     atts[k.toLowerCase()] = v
   })
+  const showRules = Stringer.trim(atts.showrules).toLowerCase()
+  atts.showrules = showRules === '' || showRules === 'true'
+
   return atts
 }
 
@@ -102,6 +100,7 @@ function buildHtml(atts, cssFilePath, validationRules) {
     pattern: getAttr(atts, 'pattern'),
     min: getAttr(atts, 'min'),
     max: getAttr(atts, 'max'),
+    showrules: atts.showrules ? '' : 'none',
     rules: validationRules.toHtml()
   }
   return Stringer.replaceTemplate(template, values)

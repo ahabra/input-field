@@ -644,16 +644,17 @@ var InputField = (() => {
   };
 
   // src/input-field.html
-  var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input} value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules">${rules}</ul>\n  </footer>\n</div>\n';
+  var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input} value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
 
   // src/input-field.js
   function define(cssFilePath = "") {
     defineElement({
       nameWithDash: "input-field",
       html: (el) => {
-        const atts = getAttributes2(el);
+        const atts = extractAttributes(el);
         el.validationRules = ValidationRules.createFromAttributes(atts);
-        return buildHtml(atts, cssFilePath, el.validationRules);
+        const h = buildHtml(atts, cssFilePath, el.validationRules);
+        return h;
       },
       propertyList: [
         {
@@ -661,15 +662,6 @@ var InputField = (() => {
           value: "",
           sel: "input",
           onChange: (el, oldValue, newValue) => validate(el, newValue)
-        },
-        {
-          name: "isShowRules",
-          value: true,
-          onChange: (el, oldValue, newValue) => {
-            const rulesList = Domer_exports.first("footer ul.rules", el);
-            newValue = newValue === true || newValue === "true";
-            rulesList.style.display = newValue === true ? "" : "none";
-          }
         }
       ],
       eventHandlerList: [
@@ -695,12 +687,14 @@ var InputField = (() => {
       ]
     });
   }
-  function getAttributes2(el) {
+  function extractAttributes(el) {
     const domAtts = Domer_exports.getAttributes(el);
     const atts = {};
     Objecter_exports.forEachEntry(domAtts, (k, v) => {
       atts[k.toLowerCase()] = v;
     });
+    const showRules = Stringer_exports.trim(atts.showrules).toLowerCase();
+    atts.showrules = showRules === "" || showRules === "true";
     return atts;
   }
   function buildHtml(atts, cssFilePath, validationRules) {
@@ -716,6 +710,7 @@ var InputField = (() => {
       pattern: getAttr(atts, "pattern"),
       min: getAttr(atts, "min"),
       max: getAttr(atts, "max"),
+      showrules: atts.showrules ? "" : "none",
       rules: validationRules.toHtml()
     };
     return Stringer_exports.replaceTemplate(input_field_default, values);

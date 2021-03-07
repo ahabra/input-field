@@ -323,16 +323,17 @@ var Rule = class {
 };
 
 // src/input-field.html
-var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input} value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules">${rules}</ul>\n  </footer>\n</div>\n';
+var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input} value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
 
 // src/input-field.js
 function define(cssFilePath = "") {
   defineElement({
     nameWithDash: "input-field",
     html: (el) => {
-      const atts = getAttributes(el);
+      const atts = extractAttributes(el);
       el.validationRules = ValidationRules.createFromAttributes(atts);
-      return buildHtml(atts, cssFilePath, el.validationRules);
+      const h = buildHtml(atts, cssFilePath, el.validationRules);
+      return h;
     },
     propertyList: [
       {
@@ -340,15 +341,6 @@ function define(cssFilePath = "") {
         value: "",
         sel: "input",
         onChange: (el, oldValue, newValue) => validate(el, newValue)
-      },
-      {
-        name: "isShowRules",
-        value: true,
-        onChange: (el, oldValue, newValue) => {
-          const rulesList = Domer2.first("footer ul.rules", el);
-          newValue = newValue === true || newValue === "true";
-          rulesList.style.display = newValue === true ? "" : "none";
-        }
       }
     ],
     eventHandlerList: [
@@ -374,12 +366,14 @@ function define(cssFilePath = "") {
     ]
   });
 }
-function getAttributes(el) {
+function extractAttributes(el) {
   const domAtts = Domer2.getAttributes(el);
   const atts = {};
   Objecter3.forEachEntry(domAtts, (k, v) => {
     atts[k.toLowerCase()] = v;
   });
+  const showRules = Stringer3.trim(atts.showrules).toLowerCase();
+  atts.showrules = showRules === "" || showRules === "true";
   return atts;
 }
 function buildHtml(atts, cssFilePath, validationRules) {
@@ -395,6 +389,7 @@ function buildHtml(atts, cssFilePath, validationRules) {
     pattern: getAttr(atts, "pattern"),
     min: getAttr(atts, "min"),
     max: getAttr(atts, "max"),
+    showrules: atts.showrules ? "" : "none",
     rules: validationRules.toHtml()
   };
   return Stringer3.replaceTemplate(input_field_default, values);

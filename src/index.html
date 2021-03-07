@@ -10,11 +10,13 @@
                  minlength="2" minlength-message="Minimum of %v characters++"
                  maxlength="5" pattern="[0-9]{2,3}"
                  MIN="18" max="900"
+                 showrules="true"
     ></input-field>
 
     <input-field id="name" type="text" label="Name"
                  minlength="3"
                  maxlength="10"
+                 showrules="false"
     ></input-field>
 
     <!-- JS code will be added to script element with 'data-app' attribute -->
@@ -27,8 +29,8 @@
       const age = document.getElementById('age')
       age.actions.addRule('no7', 'Cannot have the number 7', v => !v.includes('7'))
 
-      const name = document.getElementById('name')
-      name.actions.addRule('start-ab', 'Must start with ab', v => v.startsWith('ab'))
+      // const name = document.getElementById('name')
+      // name.actions.addRule('start-ab', 'Must start with ab', v => v.startsWith('ab'))
     </script>
 
   </body>
