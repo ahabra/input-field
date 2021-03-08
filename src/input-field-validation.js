@@ -27,6 +27,10 @@ export class ValidationRules {
 
   static createFromAttributes(atts) {
     const rules = []
+    if (atts.type === 'email') {
+      const msg = atts['email-message']
+      rules.push(Rule.email(msg))
+    }
     Objecter.forEachEntry(atts, (k, v) => {
       if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
         const msg = atts[k + '-message']
@@ -63,6 +67,11 @@ export class Rule {
   static createRule(name, message, validator, value) {
     message = message.replaceAll('%v', value)
     return new Rule(name, message, validator)
+  }
+
+  static email(msg = 'Must be a valid email address') {
+    const validator = value => /\S+@\S+\.\S+/.test(value)
+    return new Rule('email', msg, validator)
   }
 
   static required(flag, msg = 'Required Field') {

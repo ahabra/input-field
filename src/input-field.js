@@ -7,6 +7,7 @@ import template from './input-field.html'
 /**
  * Define a responsive input field with its label.
  * You can control the field with the following attributes:
+ * type: String. Optional. "text" or "email". Default is "text"
  * required: is the field required. The value should be "required"
  * required-message: Optional. The message to show for required fields. Default is "Required Field"
  * minlength: Integer. The minimum number of characters.
@@ -39,8 +40,7 @@ export function define(cssFilePath = '') {
     html: el => {
       const atts = extractAttributes(el)
       el.validationRules = ValidationRules.createFromAttributes(atts)
-      const h = buildHtml(atts, cssFilePath, el.validationRules)
-      return h
+      return buildHtml(atts, cssFilePath, el.validationRules)
     },
 
     propertyList: [

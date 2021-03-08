@@ -77,7 +77,7 @@ The library defines a new _Web Component_ (a.k.a. _Custom Element_) named `input
 The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
-1. `type`: Currently, the only supported value is `text`
+1. `type`: `text` or `email`.  Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `required`: If the field is required, then this attribute's definition will be `required="required"`.
     Additionally, a _required_ marker (Star) will be displayed after the label.

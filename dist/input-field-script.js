@@ -576,6 +576,10 @@ var InputField = (() => {
     }
     static createFromAttributes(atts) {
       const rules = [];
+      if (atts.type === "email") {
+        const msg = atts["email-message"];
+        rules.push(Rule.email(msg));
+      }
       Objecter_exports.forEachEntry(atts, (k, v) => {
         if (!Stringer_exports.isEmpty(v) && Objecter_exports.has(Rule, k)) {
           const msg = atts[k + "-message"];
@@ -608,6 +612,10 @@ var InputField = (() => {
     static createRule(name, message, validator, value) {
       message = message.replaceAll("%v", value);
       return new Rule(name, message, validator);
+    }
+    static email(msg = "Must be a valid email address") {
+      const validator = (value) => /\S+@\S+\.\S+/.test(value);
+      return new Rule("email", msg, validator);
     }
     static required(flag, msg = "Required Field") {
       const validator = (value) => !!value;
@@ -655,8 +663,7 @@ var InputField = (() => {
       html: (el) => {
         const atts = extractAttributes(el);
         el.validationRules = ValidationRules.createFromAttributes(atts);
-        const h = buildHtml(atts, cssFilePath, el.validationRules);
-        return h;
+        return buildHtml(atts, cssFilePath, el.validationRules);
       },
       propertyList: [
         {
