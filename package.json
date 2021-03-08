@@ -31,7 +31,7 @@
     "serve": "^11.3.2"
   },
   "dependencies": {
-    "@techexp/jshelper": "^0.1.1",
+    "@techexp/jshelper": "^0.1.3",
     "@techexp/webitem": "^0.3.1"
   }
 }
