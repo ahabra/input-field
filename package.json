@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "@techexp/jshelper": "^0.1.3",
-    "@techexp/webitem": "^0.3.1"
+    "@techexp/webitem": "^0.3.2"
   }
 }

@@ -398,6 +398,8 @@ var InputField = (() => {
     }
     if (isRadio(el)) {
       el = elements.filter(isRadio).find((e) => e.checked);
+      if (!el)
+        return void 0;
     }
     return el.value;
   }
