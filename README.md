@@ -77,7 +77,7 @@ The library defines a new _Web Component_ (a.k.a. _Custom Element_) named `input
 The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
-1. `type`: `text` or `email`.  Optional. Default is `text`
+1. `type`: `text`, `password` or `email`.  Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `required`: If the field is required, then this attribute's definition will be `required="required"`.
     Additionally, a _required_ marker (Star) will be displayed after the label.
@@ -86,7 +86,7 @@ The component supports the following attributes
 6. `minlength-message`: The message to display explaining the minimum number of characters.
    If the message contains `%v`, it will be replaced by the value of minimum length. Default is
    `Minimum Length is %v`, where `%v` is replaced by the value of `minlength`.
-7. `maxlength`: The minimum number of characters allowed in the field.
+7. `maxlength`: The maximum number of characters allowed in the field.
 8. `pattern`: A regular expression that must match the input.
 9. `pattern-message`: The message to display explaining the matching pattern. Default is
    `Must satisfy the pattern %v`.
