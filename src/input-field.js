@@ -7,7 +7,9 @@ import template from './input-field.html'
 /**
  * Define a responsive input field with its label.
  * You can control the field with the following attributes:
- * type: String. Optional. "text" or "email". Default is "text"
+ * type: String. Optional. "text", "password" or "email". Default is "text"
+ * label: String
+ * sublabel: String
  * required: is the field required. The value should be "required"
  * required-message: Optional. The message to show for required fields. Default is "Required Field"
  * minlength: Integer. The minimum number of characters.

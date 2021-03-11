@@ -79,24 +79,25 @@ The component supports the following attributes
 
 1. `type`: `text`, `password` or `email`.  Optional. Default is `text`
 2. `label`: The label to display before the input field
-3. `required`: If the field is required, then this attribute's definition will be `required="required"`.
+3. `sublabel`: Text that will appear under the label, with smaller font.
+4. `required`: If the field is required, then this attribute's definition will be `required="required"`.
     Additionally, a _required_ marker (Star) will be displayed after the label.
-4. `required-message`: The message to display explaining that this field is required. Default is `Required Field`.
-5. `minlength`: The minimum number of characters in the field.
-6. `minlength-message`: The message to display explaining the minimum number of characters.
+5. `required-message`: The message to display explaining that this field is required. Default is `Required Field`.
+6. `minlength`: The minimum number of characters in the field.
+7. `minlength-message`: The message to display explaining the minimum number of characters.
    If the message contains `%v`, it will be replaced by the value of minimum length. Default is
    `Minimum Length is %v`, where `%v` is replaced by the value of `minlength`.
-7. `maxlength`: The maximum number of characters allowed in the field.
-8. `pattern`: A regular expression that must match the input.
-9. `pattern-message`: The message to display explaining the matching pattern. Default is
+8. `maxlength`: The maximum number of characters allowed in the field.
+9. `pattern`: A regular expression that must match the input.
+10. `pattern-message`: The message to display explaining the matching pattern. Default is
    `Must satisfy the pattern %v`.
-10. `min`: The minimum (numeric) value accepted in the field.
-11. `min-message`: The message to display explaining the minimum value for the field. Default is
+11. `min`: The minimum (numeric) value accepted in the field.
+12. `min-message`: The message to display explaining the minimum value for the field. Default is
     `Minimum value of %v`.
-12. `max`: The maximum (numeric) value accepted in the field.
-13. `max-message`: The message to display explaining the maximum value for the field. Default is
+13. `max`: The maximum (numeric) value accepted in the field.
+14. `max-message`: The message to display explaining the maximum value for the field. Default is
     `Maximum value of %v`.
-14. `showrules`: Boolean. Default is true. Show or hide validation rules.
+15. `showrules`: Boolean. Default is true. Show or hide validation rules.
 
 
 ### JavaScript
@@ -140,7 +141,9 @@ easily using the provided rules.
 
 ## TODO
 This is my wishlist for this library.
-1. 2021-03-10: Allow more customization to label, e.g. add little help button, details on label, ...
+1. 2021-03-10: Allow more customization to label
+    1. add little help button
+    2. ~~sublabel.~~ Done. 2020-03-11
 2. 2021-03-10: Support data types: Integer, Number, String
 3. 2021-03-10: Support one of a group, e.g.: one of `red`, `green`, `blue`.
 4. 2021-03-10: Support combo-box
