@@ -152,4 +152,4 @@ This is my wishlist for this library.
 7. 2021-03-10: Support check boxes
 8. 2021-03-10: Show validation rule text on error
 9. 2021-03-10: Allow showing help icon
-10. 2021-03-10: Refactor input-feild.css to use variables better
+10. 2021-03-10: ~~Refactor input-feild.css to use variables better~~. Done. 2020-03-11
