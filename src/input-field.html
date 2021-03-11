@@ -1,8 +1,11 @@
 ${cssFile}
 
 <div class="input-field">
-  <label class="label ${required}" ${style-label}>${label}</label>
-  <input type="${type}" class="input" ${style-input} value=""
+  <label class="label">
+    <span class="superlabel ${required}">${label}</span>
+    <span class="sublabel">${sublabel}</span>
+  </label>
+  <input type="${type}" class="input" value=""
          ${required} ${minlength} ${maxlength} ${pattern}>
   <footer>
     <ul class="rules" style="display:${showrules};">${rules}</ul>

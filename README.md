@@ -138,3 +138,15 @@ The `addRule` action takes the following arguments:
 The `addRule` action can be used to define ajax-based validation, or rules that cannot be expressed
 easily using the provided rules.
 
+## TODO
+This is my wishlist for this library.
+1. 2021-03-10: Allow more customization to label, e.g. add little help button, details on label, ...
+2. 2021-03-10: Support data types: Integer, Number, String
+3. 2021-03-10: Support one of a group, e.g.: one of `red`, `green`, `blue`.
+4. 2021-03-10: Support combo-box
+5. 2021-03-10: Support list-box
+6. 2021-03-10: Support radio buttons
+7. 2021-03-10: Support check boxes
+8. 2021-03-10: Show validation rule text on error
+9. 2021-03-10: Allow showing help icon
+10. 2021-03-10: Refactor input-feild.css to use variables better

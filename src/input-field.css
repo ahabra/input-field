@@ -33,13 +33,18 @@ CSS variables.
 
   color: var(--color-dark, darkgreen);
   font-weight: bold;
+  vertical-align: bottom;
 }
 
-.input-field label.required:after {
+
+.input-field label .required:after {
   content: var(--required-marker);
   color: var(--color-normal);
 }
-
+.input-field .sublabel {
+  font-weight: lighter;
+  font-size: 0.9em;
+}
 
 .input-field input {
   width: var(--width-input);

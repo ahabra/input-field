@@ -91,9 +91,8 @@ function buildHtml(atts, cssFilePath, validationRules) {
   const values = {
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
+    sublabel: getSublabel(atts),
     type: atts.type || 'text',
-    'style-label': getAttr(atts, 'style-label', 'style'),
-    'style-input': getAttr(atts, 'style-input', 'style'),
     required: getAttr(atts, 'required'),
     minlength: getAttr(atts, 'minlength'),
     maxlength: getAttr(atts, 'maxlength'),
@@ -106,19 +105,24 @@ function buildHtml(atts, cssFilePath, validationRules) {
   return Stringer.replaceTemplate(template, values)
 }
 
+function getSublabel(atts) {
+  const sublabel = atts.sublabel
+  if (!sublabel) return ''
+  return `<br>${sublabel}`
+}
+
 function buildCssLink(cssFilePath) {
   if (Stringer.isEmpty(cssFilePath)) return ''
   return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`
 }
 
-function getAttr(atts, attName, paramName = attName) {
+function getAttr(atts, attName) {
   const value = atts[attName]
+  if (!value) return ''
+
   if (value === 'required') return value
 
-  if (value) {
-    return ` ${paramName}="${value}"`
-  }
-  return ''
+  return ` ${attName}="${value}"`
 }
 
 function validate(el, value) {

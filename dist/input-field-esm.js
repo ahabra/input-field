@@ -333,7 +333,7 @@ var Rule = class {
 };
 
 // src/input-field.html
-var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label ${required}" ${style-label}>${label}</label>\n  <input type="${type}" class="input" ${style-input} value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
+var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label">\n    <span class="superlabel ${required}">${label}</span>\n    <span class="sublabel">${sublabel}</span>\n  </label>\n  <input type="${type}" class="input" value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
 
 // src/input-field.js
 function define(cssFilePath = "") {
@@ -389,9 +389,8 @@ function buildHtml(atts, cssFilePath, validationRules) {
   const values = {
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
+    sublabel: getSublabel(atts),
     type: atts.type || "text",
-    "style-label": getAttr(atts, "style-label", "style"),
-    "style-input": getAttr(atts, "style-input", "style"),
     required: getAttr(atts, "required"),
     minlength: getAttr(atts, "minlength"),
     maxlength: getAttr(atts, "maxlength"),
@@ -403,19 +402,24 @@ function buildHtml(atts, cssFilePath, validationRules) {
   };
   return Stringer3.replaceTemplate(input_field_default, values);
 }
+function getSublabel(atts) {
+  const sublabel = atts.sublabel;
+  if (!sublabel)
+    return "";
+  return `<br>${sublabel}`;
+}
 function buildCssLink(cssFilePath) {
   if (Stringer3.isEmpty(cssFilePath))
     return "";
   return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
 }
-function getAttr(atts, attName, paramName = attName) {
+function getAttr(atts, attName) {
   const value = atts[attName];
+  if (!value)
+    return "";
   if (value === "required")
     return value;
-  if (value) {
-    return ` ${paramName}="${value}"`;
-  }
-  return "";
+  return ` ${attName}="${value}"`;
 }
 function validate(el, value) {
   const rulesList = Domer2.first("footer ul.rules", el);
