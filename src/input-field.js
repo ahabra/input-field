@@ -25,7 +25,8 @@ import template from './input-field.html'
  * max: Number. Maximum acceptable numeric value.
  * max-message: Optional. The message to show when there is a max requirement.
  *    Default is "Maximum value of %v"
- * showrules: Boolean. Default is true. Show or hide validation riules
+ * showrules: Boolean. Default is true. Show or hide validation rules.
+ * tooltip: A string to show if the user clicks on the label.
  *
  * Additionally, you can add custom validation rules to the component using:
  *

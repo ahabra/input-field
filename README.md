@@ -59,6 +59,7 @@ InputField.define(cssFilePath)
              minlength="2" maxlength="3"
              min="18" max="150"
              pattern="[0-9]{2,3}"
+             tooltip="Your Age in Solar Years"
 ></input-field>
 ```
 
@@ -98,6 +99,8 @@ The component supports the following attributes
 14. `max-message`: The message to display explaining the maximum value for the field. Default is
     `Maximum value of %v`.
 15. `showrules`: Boolean. Default is true. Show or hide validation rules.
+16. `tooltip`: String. If a provide, a question parm icon is displayed at the end of
+    the label. When User clicks on the label a tooltip will pop up.
 
 
 ### JavaScript
