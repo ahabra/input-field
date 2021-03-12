@@ -30,6 +30,8 @@ export class ValidationRules {
     if (atts.type === 'email') {
       const msg = atts['email-message']
       rules.push(Rule.email(msg))
+    } else if (atts.type === 'number') {
+      rules.push(Rule.isNumber(atts['number-message']))
     }
     Objecter.forEachEntry(atts, (k, v) => {
       if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
@@ -111,5 +113,10 @@ export class Rule {
       return value <= maxValue
     }
     return Rule.createRule('max', msg, validator, maxValue)
+  }
+
+  static isNumber(msg = 'Must be a valid number') {
+    const validator = value => !isNaN(value)
+    return new Rule('isNumber', msg, validator)
   }
 }
