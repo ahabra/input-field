@@ -58,6 +58,14 @@ export function define(cssFilePath = '') {
           const value = ev.target.value
           validate(el, value)
         }
+      },
+      {
+        sel: 'label .tooltip',
+        eventName: 'click',
+        listener: (ev, el) => {
+          const tooltipText = Domer.first('label .tooltip-text', el)
+          tooltipText.classList.toggle('show')
+        }
       }
     ],
 
@@ -104,7 +112,13 @@ function buildHtml(atts, cssFilePath, validationRules) {
     showrules: atts.showrules ? '' : 'none',
     rules: validationRules.toHtml()
   }
+  setTooltipValues(atts, values)
   return Stringer.replaceTemplate(template, values)
+}
+
+function buildCssLink(cssFilePath) {
+  if (Stringer.isEmpty(cssFilePath)) return ''
+  return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`
 }
 
 function getSublabel(atts) {
@@ -113,9 +127,17 @@ function getSublabel(atts) {
   return `<br>${sublabel}`
 }
 
-function buildCssLink(cssFilePath) {
-  if (Stringer.isEmpty(cssFilePath)) return ''
-  return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`
+function setTooltipValues(atts, values) {
+  const tooltip = atts.tooltip
+  if (tooltip) {
+    values.tooltip = 'tooltip'
+    values.tooltipIcon = '<span class="circle">?</span>'
+    values.tooltipText = tooltip
+  } else {
+    values.tooltip = ''
+    values.tooltipIcon = ''
+    values.tooltipText = ''
+  }
 }
 
 function getAttr(atts, attName) {

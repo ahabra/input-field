@@ -20,6 +20,11 @@ CSS variables.
   --required-marker: " *";
   --required-marker-color: green;
 
+  --tooltip-icon-color: white;
+  --tooltip-icon-background: green;
+  --tooltip-color: darkgreen;
+  --tooltip-background: HoneyDew;
+
   --input-color: black;
   --input-background-color: white;
   --input-background-bad: linear-gradient(to right, LavenderBlush, white);
@@ -125,5 +130,69 @@ CSS variables.
 
   .input-field footer ul {
     padding-left: 2em;
+  }
+}
+
+.input-field .circle {
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.1em 0.3em;
+  margin: 0 0.1em 0 0.06em;
+
+  color: var(--tooltip-icon-color, white);
+  background: var(--tooltip-icon-background, green);
+  text-align: center;
+  font-size: small;
+  font-family: "Courier New", monospace;
+  transform: translateY(-0.2em);
+}
+
+.input-field .tooltip {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.input-field .tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+
+  background-color: var(--tooltip-background, dimgray);
+  color: var(--tooltip-color, white);
+  border-radius: 4px;
+
+  text-align: center;
+  width: 15em;
+  bottom: 125%;
+  left: 50%;
+  padding: 0.7em;
+  margin-left: -6em;
+  font-weight: normal;
+}
+
+
+.input-field .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 40%;
+  border-width: 0.4em;
+  border-style: solid;
+  border-color: var(--tooltip-background, dimgray) transparent transparent transparent;
+}
+
+.input-field .tooltip .show {
+  visibility: visible;
+}
+
+@media screen and (max-width: 600px) {
+  .input-field .tooltip-text {
+    margin-left: -4em;
+  }
+
+  .input-field .tooltip-text::after {
+    left: 15%;
   }
 }
