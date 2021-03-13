@@ -5,13 +5,13 @@
 
   <body>
     <h1>Visually Testing input-field</h1>
-    <input-field id="age" type="number" label="Age"
+    <input-field id="age" type="integer" label="Age"
                  sublabel="Your age in years"
                  required="required" required-message="This field is required++"
                  minlength="2" minlength-message="Minimum of %v characters++"
                  maxlength="5" pattern="[0-9]{2,3}"
                  MIN="18" max="900"
-                 number-message="We need a number here"
+                 integer-message="We need an integer here"
                  showrules="true"
                  tooltip="What is your age in lunar years?"
     ></input-field>

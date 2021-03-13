@@ -103,7 +103,7 @@ function buildHtml(atts, cssFilePath, validationRules) {
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     sublabel: getSublabel(atts),
-    type: atts.type || 'text',
+    type: getType(atts),
     required: getAttr(atts, 'required'),
     minlength: getAttr(atts, 'minlength'),
     maxlength: getAttr(atts, 'maxlength'),
@@ -115,6 +115,14 @@ function buildHtml(atts, cssFilePath, validationRules) {
   }
   setTooltipValues(atts, values)
   return Stringer.replaceTemplate(template, values)
+}
+
+function getType(atts) {
+  const type = atts.type
+  if (!type) return 'text'
+  if (type === 'integer') return 'number'
+
+  return type
 }
 
 function buildCssLink(cssFilePath) {

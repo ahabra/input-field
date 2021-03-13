@@ -27,12 +27,7 @@ export class ValidationRules {
 
   static createFromAttributes(atts) {
     const rules = []
-    if (atts.type === 'email') {
-      const msg = atts['email-message']
-      rules.push(Rule.email(msg))
-    } else if (atts.type === 'number') {
-      rules.push(Rule.isNumber(atts['number-message']))
-    }
+    checkType(rules, atts)
     Objecter.forEachEntry(atts, (k, v) => {
       if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
         const msg = atts[k + '-message']
@@ -43,6 +38,20 @@ export class ValidationRules {
     return new ValidationRules(rules)
   }
 
+}
+
+function checkType(rules, atts) {
+  const type = atts.type
+  if (type === 'email') {
+    return rules.push(Rule.email(atts['email-message']))
+  }
+  if (type === 'number') {
+    return rules.push(Rule.isNumber(atts['number-message']))
+  }
+
+  if (type === 'integer') {
+    return rules.push(Rule.isInteger(atts['integer-message']))
+  }
 }
 
 function containsName(rules, name) {
@@ -116,7 +125,13 @@ export class Rule {
   }
 
   static isNumber(msg = 'Must be a valid number') {
-    const validator = value => !isNaN(value)
+    const validator = v => Objecter.isNumber(v)
     return new Rule('isNumber', msg, validator)
   }
+
+  static isInteger(msg = 'Must be a valid whole number') {
+    const validator = v => Objecter.isInteger(v)
+    return new Rule('isInteger', msg, validator)
+  }
+
 }
