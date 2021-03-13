@@ -61,9 +61,14 @@ InputField.define(cssFilePath)
              pattern="[0-9]{2,3}"
              tooltip="Your Age in Solar Years"
 ></input-field>
+
+<input-field type="set" label="RGB Colors"
+             tooltip="One of: red, green, blue"
+             options="red, green, blue"
+></input-field>
 ```
 
-The above code will show an input field with some validation rules.
+The above code will show input fields with some validation rules.
 
 ## API
 ### CSS Style
@@ -78,7 +83,7 @@ The library defines a new _Web Component_ (a.k.a. _Custom Element_) named `input
 The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
-1. `type`: `text`, `password`, `email`, `number`, or `integer`.
+1. `type`: `text`, `password`, `email`, `number`, `integer`, or `set`.
     Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `sublabel`: Text that will appear under the label, with smaller font.
@@ -100,10 +105,12 @@ The component supports the following attributes
 14. `max-message`: The message to display explaining the maximum value for the field. Default is
     `Maximum value of %v`.
 15. `number-message`: The message to show when the value must be a number.
-15. `integer-message`: The message to show when the value must be an integer.
-15. `showrules`: Boolean. Default is true. Show or hide validation rules.
-16. `tooltip`: String. If a provide, a question parm icon is displayed at the end of
+16. `integer-message`: The message to show when the value must be an integer.
+17. `showrules`: Boolean. Default is true. Show or hide validation rules.
+18. `tooltip`: String. If provided, a question parm icon is displayed at the end of
     the label. When User clicks on the label a tooltip will pop up.
+19. `options`: A comma separated list of options used with `set` type.
+20. `set-message`: Optional. The message to show when there is a set of options.
 
 
 ### JavaScript
@@ -151,7 +158,7 @@ This is my wishlist for this library.
     1. ~~add little help button.~~ Done. 2020-03-12
     2. ~~sublabel.~~ Done. 2020-03-11
 2. 2021-03-10: ~~Support data types: Integer, Number, String.~~ Done. 2020-03-12
-3. 2021-03-10: Support one of a group, e.g.: one of `red`, `green`, `blue`.
+3. 2021-03-10: ~~Support one of a group, e.g.: one of `red`, `green`, `blue`.~~ Done. 2020-03-12
 4. 2021-03-10: Support combo-box
 5. 2021-03-10: Support list-box
 6. 2021-03-10: Support radio buttons

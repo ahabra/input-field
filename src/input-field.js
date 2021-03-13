@@ -7,7 +7,8 @@ import template from './input-field.html'
 /**
  * Define a responsive input field with its label.
  * You can control the field with the following attributes:
- * type: String. Optional. "text", "password" or "email". Default is "text"
+ * type: String. Optional. "text", "password", "email", or "set".
+ *    Default is "text"
  * label: String
  * sublabel: String
  * required: is the field required. The value should be "required"
@@ -29,6 +30,8 @@ import template from './input-field.html'
  * integer-message: Optional. The message to show when the value must be an integer.
  * showrules: Boolean. Default is true. Show or hide validation rules.
  * tooltip: A string to show if the user clicks on the label.
+ * options: A comma separated list of options used with set type
+ * set-message: Optional. The message to show when there is a set of options.
  *
  * Additionally, you can add custom validation rules to the component using:
  *
