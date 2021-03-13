@@ -40,19 +40,20 @@ export class ValidationRules {
 
 }
 
+/* eslint-disable complexity */
 function checkType(rules, atts) {
-  const type = atts.type
-  if (type === 'email') {
+  switch (atts.type) {
+  case 'email':
     return rules.push(Rule.email(atts['email-message']))
-  }
-  if (type === 'number') {
+  case 'number':
     return rules.push(Rule.isNumber(atts['number-message']))
-  }
-
-  if (type === 'integer') {
+  case 'integer':
     return rules.push(Rule.isInteger(atts['integer-message']))
+  case 'set':
+    return rules.push(Rule.set(atts.options, atts['set-message']))
   }
 }
+/* eslint-enable */
 
 function containsName(rules, name) {
   const found = rules.find(r => r.name === name)
@@ -132,6 +133,12 @@ export class Rule {
   static isInteger(msg = 'Must be a valid whole number') {
     const validator = v => Objecter.isInteger(v)
     return new Rule('isInteger', msg, validator)
+  }
+
+  static set(options, msg = 'Value must be one of [%v]') {
+    const set = new Set( options.split(',').map(op => op.trim().toLowerCase()) )
+    const validator = v => v === '' || set.has(v.toLowerCase())
+    return Rule.createRule('set', msg, validator, options)
   }
 
 }

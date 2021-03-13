@@ -120,9 +120,9 @@ function buildHtml(atts, cssFilePath, validationRules) {
 }
 
 function getType(atts) {
-  const type = atts.type
+  const type = Stringer.trim(atts.type).toLowerCase()
   if (!type) return 'text'
-  if (type.toLowerCase() === 'integer') return 'number'
+  if (type === 'integer') return 'number'
 
   return type
 }
