@@ -24,7 +24,9 @@ import template from './input-field.html'
  *    Default is "Minimum value of %v"
  * max: Number. Maximum acceptable numeric value.
  * max-message: Optional. The message to show when there is a max requirement.
- *    Default is "Maximum value of %v"
+ *    Default is "Maximum value of %v".
+ * number-message: Optional. The message to show when the value must be a number.
+ * integer-message: Optional. The message to show when the value must be an integer.
  * showrules: Boolean. Default is true. Show or hide validation rules.
  * tooltip: A string to show if the user clicks on the label.
  *
@@ -120,7 +122,7 @@ function buildHtml(atts, cssFilePath, validationRules) {
 function getType(atts) {
   const type = atts.type
   if (!type) return 'text'
-  if (type === 'integer') return 'number'
+  if (type.toLowerCase() === 'integer') return 'number'
 
   return type
 }

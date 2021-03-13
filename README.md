@@ -78,7 +78,8 @@ The library defines a new _Web Component_ (a.k.a. _Custom Element_) named `input
 The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
-1. `type`: `text`, `password` or `email`.  Optional. Default is `text`
+1. `type`: `text`, `password`, `email`, `number`, or `integer`.
+    Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `sublabel`: Text that will appear under the label, with smaller font.
 4. `required`: If the field is required, then this attribute's definition will be `required="required"`.
@@ -91,13 +92,15 @@ The component supports the following attributes
 8. `maxlength`: The maximum number of characters allowed in the field.
 9. `pattern`: A regular expression that must match the input.
 10. `pattern-message`: The message to display explaining the matching pattern. Default is
-   `Must satisfy the pattern %v`.
+    `Must satisfy the pattern %v`.
 11. `min`: The minimum (numeric) value accepted in the field.
 12. `min-message`: The message to display explaining the minimum value for the field. Default is
     `Minimum value of %v`.
 13. `max`: The maximum (numeric) value accepted in the field.
 14. `max-message`: The message to display explaining the maximum value for the field. Default is
     `Maximum value of %v`.
+15. `number-message`: The message to show when the value must be a number.
+15. `integer-message`: The message to show when the value must be an integer.
 15. `showrules`: Boolean. Default is true. Show or hide validation rules.
 16. `tooltip`: String. If a provide, a question parm icon is displayed at the end of
     the label. When User clicks on the label a tooltip will pop up.
@@ -147,7 +150,7 @@ This is my wishlist for this library.
 1. 2021-03-10: Allow more customization to label
     1. ~~add little help button.~~ Done. 2020-03-12
     2. ~~sublabel.~~ Done. 2020-03-11
-2. 2021-03-10: Support data types: Integer, Number, String
+2. 2021-03-10: ~~Support data types: Integer, Number, String.~~ Done. 2020-03-12
 3. 2021-03-10: Support one of a group, e.g.: one of `red`, `green`, `blue`.
 4. 2021-03-10: Support combo-box
 5. 2021-03-10: Support list-box
