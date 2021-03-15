@@ -159,9 +159,87 @@ This is my wishlist for this library.
     2. ~~sublabel.~~ Done. 2020-03-11
 2. 2021-03-10: ~~Support data types: Integer, Number, String.~~ Done. 2020-03-12
 3. 2021-03-10: ~~Support one of a group, e.g.: one of `red`, `green`, `blue`.~~ Done. 2020-03-12
-4. 2021-03-10: Support combo-box
-5. 2021-03-10: Support list-box
-6. 2021-03-10: Support radio buttons
-7. 2021-03-10: Support check boxes
-8. 2021-03-10: Show validation rule text on error
-9. 2021-03-10: ~~Refactor input-feild.css to use variables better~~. Done. 2020-03-11
+4. 2021-03-10: Support combo-box, list-box
+5. 2021-03-10: Support radio buttons
+6. 2021-03-10: Support check boxes
+7. 2021-03-10: Show validation rule text on error
+8. 2021-03-10: ~~Refactor input-feild.css to use variables better~~. Done. 2020-03-11
+
+### Playing
+#### Radio
+```html
+<input type="radio" name="gender" id="male" value="male" checked>
+<label for="male">Male</label><br>
+
+<input type="radio" name="gender" id="female" value="female">
+<label for="female">Female</label><br>
+```
+
+name will be an attribute on element ??
+
+```json
+{
+  "name": "gender",
+  "options": [
+    {
+      "label": "Male",   "id": "male",   "value": "male", "checked": true },
+    { "label": "Female", "id": "female", "value": "female" }
+  ]
+}
+```
+
+#### Checkbox
+```html
+<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+<label for="vehicle1"> I have a bike</label><br>
+
+<input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+<label for="vehicle2"> I have a car</label><br>
+```
+
+```json
+{
+  "options": [
+    { "label": "Have a bike",  "id": "vehicle1", "name": "vehicle1", "value": "Bike", "checked": true},
+    { "label": "Have a car",   "id": "vehicle2", "name": "vehicle2", "value": "Car" },
+    { "label": "Horse"}
+  ]
+}
+```
+
+
+#### List/Combo box
+```html
+<select name="cars" id="cars" size="4">
+  <optgroup label="Swedish Cars">
+    <option value="volvo">Volvo</option>
+    <option value="saab" disabled>Saab</option>
+  </optgroup>
+  <optgroup label="German Cars">
+    <option value="mercedes">Mercedes</option>
+    <option value="audi">Audi</option>
+  </optgroup>
+</select>
+```
+
+```json
+{
+  "name": "cars",
+  "id": "cars",
+  "multiple": true,
+  "size": 1,
+  "options": [
+    { "label": "Toyota", "value": "Toyota" },
+    { "label": "GM"},
+    { "value": "Tesla"},
+    { "label": "Swedish Cars", "options": [
+      {"label": "Volvo"},
+      {"label": "Saab", "disabled": true}
+    ]},
+    { "label": "German Cars", "options": [
+      {"label": "Mercedes"},
+      {"label": "Audi"}
+    ]}
+  ]
+}
+```
