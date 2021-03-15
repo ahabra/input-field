@@ -5,90 +5,109 @@ CSS variables.
  */
 
 .input-field {
-  --width-label: 10em;
-  --width-input: calc(100% - var(--width-label) - 4em);
-  --footer-padding-left: calc(var(--width-label) + 1em);
-  --footer-font-size: 0.9em;
+  --label-width: 10em;
+  --input-width: calc(100% - var(--label-width) - 4em);
+  --rule-padding-left: calc(var(--label-width) + 1em);
+
+  --label-color: darkgreen;
+  --label-font-weight: bold;
+  --label-font-size: 1em;
+
+  --sublabel-color: darkgreen;
+  --sublabel-font-weight: lighter;
+  --sublabel-font-size: 0.9em;
+
   --required-marker: " *";
+  --required-marker-color: green;
 
-  --color-normal: green;
-  --color-dark: #3c643c;
-  --color-verydark: #0f190f;
-  --color-light: #e0fde0;
-  --color-bad: red;
-  --color-bad-light: LavenderBlush;
+  --tooltip-icon-color: white;
+  --tooltip-icon-background: green;
+  --tooltip-color: darkgreen;
+  --tooltip-background: HoneyDew;
 
+  --input-color: black;
+  --input-background-color: white;
+  --input-background-bad: linear-gradient(to right, LavenderBlush, white);
+  --input-background-focus: linear-gradient(to right, HoneyDew, white);
+  --input-background-focus-bad: linear-gradient(to right, LavenderBlush, HoneyDew, white);
   --input-border-color: Gainsboro;
-  --input-border-color-bad: var(--color-bad);
-  --input-background-image-focus: linear-gradient(to right, var(--color-light), white);
-  --input-background-image-bad: linear-gradient(to right, var(--color-bad-light), white);
-  --input-background-image-focus-bad: linear-gradient(to right, var(--color-bad-light), var(--color-light), white);
+  --input-border-color-bad: red;
+  --input-border-focus: green;
+
+  --rule-font-size: 0.9em;
+  --rule-color: green;
+  --rule-color-bad: red;
 }
 
 .input-field label {
   display: inline-block;
-  width: var(--width-label);
+  width: var(--label-width);
   text-align: right;
   margin: 0.4em 0.2em 0.1em 0.4em;
-
-  color: var(--color-dark, darkgreen);
-  font-weight: bold;
   vertical-align: bottom;
-}
 
+  color: var(--label-color);
+  font-size: var(--label-font-size);
+  font-weight: var(--label-font-weight);
+}
 
 .input-field label .required:after {
   content: var(--required-marker);
-  color: var(--color-normal);
+  color: var(--required-marker-color);
 }
+
 .input-field .sublabel {
-  font-weight: lighter;
-  font-size: 0.9em;
+  font-size: var(--sublabel-font-size);
+  font-weight: var(--sublabel-font-weight);
+  color: var(--sublabel-color);
 }
 
 .input-field input {
-  width: var(--width-input);
+  width: var(--input-width);
   margin: 0.4em 0.4em 0.1em 0.2em;
   padding: 1em 0.7em;
 
-  background-color: white;
+  color: var(--input-color);
+  background-color: var(--input-background-color, white);
   border-radius: 4px;
   border: 1px solid var(--input-border-color);
   height: 2em;
   font-size: 1em;
-
-  color: var(--color-verydark, dimgray)
 }
 
 .input-field input:focus {
-  background-image: var(--input-background-image-focus);
-  outline-color: var(--color-normal);
+  background-image: var(--input-background-focus);
+  outline: none;
+  border-color: var(--input-border-focus);
 }
 
 .input-field input.bad {
   border-color: var(--input-border-color-bad, red);
-  background-image: var(--input-background-image-bad);
+  background-image: var(--input-background-bad);
 }
 
 
 .input-field input.bad:focus {
-  border-color: var(--input-border-color-bad, red);
-  background-image: var(--input-background-image-focus-bad);
-  outline-color: var(--input-border-color-bad);
+  border-color: var(--input-border-color-bad);
+  background-image: var(--input-background-focus-bad);
 }
 
 .input-field footer {
-  padding-left: var(--footer-padding-left);
+  padding-left: var(--rule-padding-left);
   margin-bottom: 1em;
-  font-size: var(--footer-font-size);
+  font-size: var(--rule-font-size);
 }
 
 .input-field footer ul {
   margin: 0.5em 0;
 }
 
+.input-field footer ul.rules li {
+  color: var(--rule-color);
+}
+
 .input-field footer ul.rules li.bad {
-  color: var(--color-bad);
+  color: var(--rule-color-bad);
 }
 
 @media screen and (max-width: 600px) {
@@ -111,5 +130,69 @@ CSS variables.
 
   .input-field footer ul {
     padding-left: 2em;
+  }
+}
+
+.input-field .circle {
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.1em 0.3em;
+  margin: 0 0.1em 0 0.06em;
+
+  color: var(--tooltip-icon-color, white);
+  background: var(--tooltip-icon-background, green);
+  text-align: center;
+  font-size: small;
+  font-family: "Courier New", monospace;
+  transform: translateY(-0.2em);
+}
+
+.input-field .tooltip {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.input-field .tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+
+  background-color: var(--tooltip-background, dimgray);
+  color: var(--tooltip-color, white);
+  border-radius: 4px;
+
+  text-align: center;
+  width: 15em;
+  bottom: 125%;
+  left: 50%;
+  padding: 0.7em;
+  margin-left: -6em;
+  font-weight: normal;
+}
+
+
+.input-field .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 40%;
+  border-width: 0.4em;
+  border-style: solid;
+  border-color: var(--tooltip-background, dimgray) transparent transparent transparent;
+}
+
+.input-field .tooltip .show {
+  visibility: visible;
+}
+
+@media screen and (max-width: 600px) {
+  .input-field .tooltip-text {
+    margin-left: -4em;
+  }
+
+  .input-field .tooltip-text::after {
+    left: 15%;
   }
 }

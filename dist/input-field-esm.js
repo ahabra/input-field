@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 0.4.0.
+// Copyright 2021 (C) Abdul Habra. Version 0.5.0.
 // Apache License Version 2.0
 
 
@@ -255,10 +255,7 @@ var ValidationRules = class {
   }
   static createFromAttributes(atts) {
     const rules = [];
-    if (atts.type === "email") {
-      const msg = atts["email-message"];
-      rules.push(Rule.email(msg));
-    }
+    checkType(rules, atts);
     Objecter2.forEachEntry(atts, (k, v) => {
       if (!Stringer2.isEmpty(v) && Objecter2.has(Rule, k)) {
         const msg = atts[k + "-message"];
@@ -269,6 +266,18 @@ var ValidationRules = class {
     return new ValidationRules(rules);
   }
 };
+function checkType(rules, atts) {
+  switch (atts.type) {
+    case "email":
+      return rules.push(Rule.email(atts["email-message"]));
+    case "number":
+      return rules.push(Rule.isNumber(atts["number-message"]));
+    case "integer":
+      return rules.push(Rule.isInteger(atts["integer-message"]));
+    case "set":
+      return rules.push(Rule.set(atts.options, atts["set-message"]));
+  }
+}
 function containsName(rules, name) {
   const found = rules.find((r) => r.name === name);
   return !!found;
@@ -330,10 +339,23 @@ var Rule = class {
     };
     return Rule.createRule("max", msg, validator, maxValue);
   }
+  static isNumber(msg = "Must be a valid number") {
+    const validator = (v) => Objecter2.isNumber(v);
+    return new Rule("isNumber", msg, validator);
+  }
+  static isInteger(msg = "Must be a valid whole number") {
+    const validator = (v) => Objecter2.isInteger(v);
+    return new Rule("isInteger", msg, validator);
+  }
+  static set(options, msg = "Value must be one of [%v]") {
+    const set = new Set(options.split(",").map((op) => op.trim().toLowerCase()));
+    const validator = (v) => v === "" || set.has(v.toLowerCase());
+    return Rule.createRule("set", msg, validator, options);
+  }
 };
 
 // src/input-field.html
-var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label">\n    <span class="superlabel ${required}">${label}</span>\n    <span class="sublabel">${sublabel}</span>\n  </label>\n  <input type="${type}" class="input" value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
+var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label">\n    <span class="superlabel ${required} ${tooltip}">\n      ${label} ${tooltipIcon}\n      <span class="tooltip-text">${tooltipText}</span>\n    </span>\n    <span class="sublabel">${sublabel}</span>\n  </label>\n  <input type="${type}" class="input" value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
 
 // src/input-field.js
 function define(cssFilePath = "") {
@@ -359,6 +381,14 @@ function define(cssFilePath = "") {
         listener: (ev, el) => {
           const value = ev.target.value;
           validate(el, value);
+        }
+      },
+      {
+        sel: "label .tooltip",
+        eventName: "click",
+        listener: (ev, el) => {
+          const tooltipText = Domer2.first("label .tooltip-text", el);
+          tooltipText.classList.toggle("show");
         }
       }
     ],
@@ -390,7 +420,7 @@ function buildHtml(atts, cssFilePath, validationRules) {
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     sublabel: getSublabel(atts),
-    type: atts.type || "text",
+    type: getType(atts),
     required: getAttr(atts, "required"),
     minlength: getAttr(atts, "minlength"),
     maxlength: getAttr(atts, "maxlength"),
@@ -400,7 +430,21 @@ function buildHtml(atts, cssFilePath, validationRules) {
     showrules: atts.showrules ? "" : "none",
     rules: validationRules.toHtml()
   };
+  setTooltipValues(atts, values);
   return Stringer3.replaceTemplate(input_field_default, values);
+}
+function getType(atts) {
+  const type = Stringer3.trim(atts.type).toLowerCase();
+  if (!type)
+    return "text";
+  if (type === "integer")
+    return "number";
+  return type;
+}
+function buildCssLink(cssFilePath) {
+  if (Stringer3.isEmpty(cssFilePath))
+    return "";
+  return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
 }
 function getSublabel(atts) {
   const sublabel = atts.sublabel;
@@ -408,10 +452,17 @@ function getSublabel(atts) {
     return "";
   return `<br>${sublabel}`;
 }
-function buildCssLink(cssFilePath) {
-  if (Stringer3.isEmpty(cssFilePath))
-    return "";
-  return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
+function setTooltipValues(atts, values) {
+  const tooltip = atts.tooltip;
+  if (tooltip) {
+    values.tooltip = "tooltip";
+    values.tooltipIcon = '<span class="circle">?</span>';
+    values.tooltipText = tooltip;
+  } else {
+    values.tooltip = "";
+    values.tooltipIcon = "";
+    values.tooltipText = "";
+  }
 }
 function getAttr(atts, attName) {
   const value = atts[attName];
