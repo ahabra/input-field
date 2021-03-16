@@ -54,7 +54,7 @@ export function define(cssFilePath = '') {
     },
 
     propertyList: [
-      { name: 'value', value: '', sel: 'input',
+      { name: 'value', sel: 'input',
         onChange: (el, oldValue, newValue) => {
           console.log('oldValue=', oldValue, 'newValue=', newValue)
           validate(el, newValue)
