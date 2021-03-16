@@ -12,8 +12,14 @@ export function jsonToHtml(json) {
   json = JSON.parse(json)
   if (!validateJsonObject(json)) return ''
 
-  const html = json.options.map(op => buildOneRadioButton(json.name, op))
-  return html.join('\n')
+  const buttons = buildRadioButtons(json)
+  return `\n<div class="radio-buttons">\n${buttons}\n</div>\n`
+}
+
+function buildRadioButtons(json) {
+  const name = json.name
+  const sep = json.flow === 'vertical' ? '<br>\n' : '\n'
+  return json.options.map(op => buildOneRadioButton(name, op)).join(sep)
 }
 
 function validateJsonString(json) {
@@ -34,13 +40,21 @@ function validateJsonObject(json) {
 }
 
 function buildOneRadioButton(name, option) {
+  validateOption(option)
+
   const params = {
     name,
-    id: option.id,
-    value: option.value,
     checked: option.checked ? ' checked' : '',
-    label: option.label
+    id: option.id ? `id="${option.id}"` : '',
+    value: option.value || option.label,
+    label: option.label || option.value
   }
-  return Stringer.replaceTemplate(template, params, '{')
+
+  return Stringer.replaceTemplate(template.trim(), params, '{')
 }
 
+function validateOption({label, value}) {
+  if (label === undefined && value === undefined) {
+    throw 'Radio button definition requires at least a label or value'
+  }
+}

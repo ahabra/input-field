@@ -66,6 +66,18 @@ InputField.define(cssFilePath)
              tooltip="One of: red, green, blue"
              options="red, green, blue"
 ></input-field>
+
+<input-field type="radio" label="Gender">
+  {
+    "name": "gender",
+    "flow": "vertical",
+    "options": [
+      { "label": "Male",   "id":"male",   "value": "M", "checked": true },
+      { "label": "Female", "id":"female", "value": "F" },
+      { "label": "Other" }
+    ]
+  }
+</input-field>
 ```
 
 The above code will show input fields with some validation rules.
@@ -83,7 +95,7 @@ The library defines a new _Web Component_ (a.k.a. _Custom Element_) named `input
 The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
-1. `type`: `text`, `password`, `email`, `number`, `integer`, or `set`.
+1. `type`: `text`, `password`, `email`, `number`, `integer`, `set`, `radio`.
     Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `sublabel`: Text that will appear under the label, with smaller font.
@@ -112,6 +124,20 @@ The component supports the following attributes
 19. `options`: A comma separated list of options used with `set` type.
 20. `set-message`: Optional. The message to show when there is a set of options.
 
+### Radio type
+When the type is `radio`, provide a JSON string as the content of the `input-field` element.
+The JSON string describes the radio buttons to be displayed.
+It has the following keys:
+* `name`: The name to use for the radio buttons
+* `flow`: Optional. If its value is `vertical` then the radio buttons will be displayed
+          one under the other. Otherwise, they will be displayed horizontally.
+*  `options`: An array of objects describing each radio button. Each object has:
+  * `label`: The label to display next to the radio button
+  * `value`: The value associated with the radio button
+  * `id`: Id of the radio button. Optional
+  * `checked`: Boolean. Optional.
+
+For each option at least `label` or `value` must be present.
 
 ### JavaScript
 There is a single function available `InputField.define(cssFilePath)`.
@@ -160,7 +186,7 @@ This is my wishlist for this library.
 2. 2021-03-10: ~~Support data types: Integer, Number, String.~~ Done. 2020-03-12
 3. 2021-03-10: ~~Support one of a group, e.g.: one of `red`, `green`, `blue`.~~ Done. 2020-03-12
 4. 2021-03-10: Support combo-box, list-box
-5. 2021-03-10: Support radio buttons
+5. 2021-03-10: ~~Support radio buttons.~~ Done. 2020-03-15
 6. 2021-03-10: Support check boxes
 7. 2021-03-10: Show validation rule text on error
 8. 2021-03-10: ~~Refactor input-feild.css to use variables better~~. Done. 2020-03-11

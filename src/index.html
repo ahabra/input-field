@@ -27,13 +27,16 @@
                  required="required"
     ></input-field>
 
-    <input-field id="radio" type="radio" label="Gender"
+    <input-field type="radio" label="Gender"
+                 tooltip="What is your preferred gender?"
     >
       {
         "name": "gender",
+        "flow": "vertical",
         "options": [
           { "label": "Male",   "id":"male",   "value": "M", "checked": true },
-          { "label": "Female", "id":"female", "value": "F" }
+          { "label": "Female", "id":"female", "value": "F" },
+          { "label": "Other" }
         ]
       }
     </input-field>

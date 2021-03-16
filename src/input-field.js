@@ -9,7 +9,7 @@ import * as Radio from './widgets/radio'
 /**
  * Define a responsive input field with its label.
  * You can control the field with the following attributes:
- * type: String. Optional. "text", "password", "email", or "set".
+ * type: String. Optional. "text", "password", "email", "set", "radio".
  *    Default is "text"
  * label: String
  * sublabel: String
@@ -56,7 +56,6 @@ export function define(cssFilePath = '') {
     propertyList: [
       { name: 'value', sel: 'input',
         onChange: (el, oldValue, newValue) => {
-          console.log('oldValue=', oldValue, 'newValue=', newValue)
           validate(el, newValue)
         }
       }

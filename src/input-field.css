@@ -8,6 +8,7 @@ CSS variables.
   --label-width: 10em;
   --input-width: calc(100% - var(--label-width) - 4em);
   --rule-padding-left: calc(var(--label-width) + 1em);
+  --radio-item-width: 8em;
 
   --label-color: darkgreen;
   --label-font-weight: bold;
@@ -39,19 +40,20 @@ CSS variables.
   --rule-color-bad: red;
 }
 
-.input-field label {
+.input-field label.label {
   display: inline-block;
   width: var(--label-width);
   text-align: right;
   margin: 0.4em 0.2em 0.1em 0.4em;
-  vertical-align: bottom;
+  padding-top: 0.2em;
+  vertical-align: top;
 
   color: var(--label-color);
   font-size: var(--label-font-size);
   font-weight: var(--label-font-weight);
 }
 
-.input-field label .required:after {
+.input-field label.label .required:after {
   content: var(--required-marker);
   color: var(--required-marker-color);
 }
@@ -111,14 +113,14 @@ CSS variables.
 }
 
 @media screen and (max-width: 600px) {
-  .input-field label {
+  .input-field label.label {
     display: block;
     text-align: left;
     margin-bottom: 0.1em;
     margin-left: 1.2em;
   }
 
-  .input-field input {
+  .input-field input.input {
     margin-top: 0.1em;
     width: 80%;
     margin-left: 1em;
@@ -194,5 +196,27 @@ CSS variables.
 
   .input-field .tooltip-text::after {
     left: 15%;
+  }
+}
+
+.input-field .radio-buttons {
+  display: inline-block;
+  margin-top: 0.4em;
+  /*padding-top: 0.2em;*/
+  width: var(--input-width);
+}
+
+.input-field .radio {
+  display: inline-block;
+  width: var(--radio-item-width, 10em);
+}
+
+.input-field .radio .radio-label {
+  color: var(--label-color);
+}
+
+@media screen and (max-width: 600px) {
+  .input-field .radio {
+    margin-left: 1em;
   }
 }
