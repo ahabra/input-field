@@ -10,6 +10,7 @@ export function getHtml(atts) {
     minlength: getAttr(atts, 'minlength'),
     maxlength: getAttr(atts, 'maxlength'),
     pattern: getAttr(atts, 'pattern'),
+    value: atts.value || ''
   }
   return Stringer.replaceTemplate(template, params, '{')
 }

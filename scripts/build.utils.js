@@ -36,6 +36,7 @@ function build({format, minify, external, fileNameSuffix}) {
   const buildOptions = {
     entryPoints: ['src/input-field.js'],
     bundle: true,
+    sourcemap: true,
     banner,
     outfile: `${out}/input-field-${fileNameSuffix}.js`,
     minify: !!minify,

@@ -3,6 +3,7 @@ import {template} from './radio.html.js'
 
 export function contentToHtml(element) {
   if (!element) return ''
+
   return jsonToHtml(element.innerHTML)
 }
 

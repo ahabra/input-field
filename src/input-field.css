@@ -62,7 +62,7 @@ CSS variables.
   color: var(--sublabel-color);
 }
 
-.input-field input {
+.input-field input.input {
   width: var(--input-width);
   margin: 0.4em 0.4em 0.1em 0.2em;
   padding: 1em 0.7em;
@@ -75,7 +75,7 @@ CSS variables.
   font-size: 1em;
 }
 
-.input-field input:focus {
+.input-field input.input:focus {
   background-image: var(--input-background-focus);
   outline: none;
   border-color: var(--input-border-focus);
