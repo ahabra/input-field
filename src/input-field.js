@@ -3,6 +3,8 @@ import {Domer, Objecter, Stringer} from '@techexp/jshelper'
 
 import {ValidationRules, Rule} from './input-field-validation'
 import template from './input-field.html'
+import * as Input from './widgets/input'
+import * as Radio from './widgets/radio'
 
 /**
  * Define a responsive input field with its label.
@@ -48,7 +50,7 @@ export function define(cssFilePath = '') {
     html: el => {
       const atts = extractAttributes(el)
       el.validationRules = ValidationRules.createFromAttributes(atts)
-      return buildHtml(atts, cssFilePath, el.validationRules)
+      return buildHtml(el, atts, cssFilePath)
     },
 
     propertyList: [
@@ -103,23 +105,27 @@ function extractAttributes(el) {
   return atts
 }
 
-function buildHtml(atts, cssFilePath, validationRules) {
+function buildHtml(el, atts, cssFilePath) {
+  const input = getInputHtml(el, atts)
+
   const values = {
+    input,
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     sublabel: getSublabel(atts),
-    type: getType(atts),
     required: getAttr(atts, 'required'),
-    minlength: getAttr(atts, 'minlength'),
-    maxlength: getAttr(atts, 'maxlength'),
-    pattern: getAttr(atts, 'pattern'),
-    min: getAttr(atts, 'min'),
-    max: getAttr(atts, 'max'),
     showrules: atts.showrules ? '' : 'none',
-    rules: validationRules.toHtml()
+    rules: el.validationRules.toHtml()
   }
   setTooltipValues(atts, values)
   return Stringer.replaceTemplate(template, values)
+}
+
+function getInputHtml(el, atts) {
+  const type = getType(atts)
+  if (type === 'radio') return Radio.contentToHtml(el)
+
+  return Input.getHtml(atts)
 }
 
 function getType(atts) {

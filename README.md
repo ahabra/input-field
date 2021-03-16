@@ -175,14 +175,11 @@ This is my wishlist for this library.
 <label for="female">Female</label><br>
 ```
 
-name will be an attribute on element ??
-
 ```json
 {
   "name": "gender",
   "options": [
-    {
-      "label": "Male",   "id": "male",   "value": "male", "checked": true },
+    { "label": "Male",   "id": "male",   "value": "male", "checked": true },
     { "label": "Female", "id": "female", "value": "female" }
   ]
 }
