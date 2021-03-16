@@ -7,12 +7,15 @@ const Print = require('./console.utils').Print
 const target = 'target'
 const out = `${target}/out`
 const dist = 'dist'
-const banner = `// input-field Web Component. Responsive input field with label and validation
+const banner = {
+  js: `// input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
 // Copyright 2021 (C) Abdul Habra. Version ${process.env.npm_package_version}.
 // Apache License Version 2.0
 
 `
+}
+
 
 function clean() {
   fs.rmSync(target, { recursive: true, force: true})
