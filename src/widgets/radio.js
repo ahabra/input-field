@@ -15,7 +15,7 @@ export function contentToHtml(element) {
 }
 
 export function jsonToHtml(json) {
-  json = WidgetUtils.parseAndVaslidate(json, 'Radio', 'name')
+  json = WidgetUtils.parseAndValidate(json, 'Radio', 'name')
   if (!json) return ''
 
   const buttons = buildRadioButtons(json)
@@ -29,7 +29,7 @@ function buildRadioButtons(json) {
 }
 
 function buildOneRadioButton(name, option) {
-  validateOption(option)
+  WidgetUtils.validateOption('Radio', option)
 
   const params = {
     name,
@@ -40,10 +40,4 @@ function buildOneRadioButton(name, option) {
   }
 
   return Stringer.replaceTemplate(template.trim(), params, '{')
-}
-
-function validateOption({label, value}) {
-  if (label === undefined && value === undefined) {
-    throw 'Radio button definition requires at least a label or value'
-  }
 }

@@ -15,7 +15,7 @@ export function contentToHtml(element) {
 }
 
 export function jsonToHtml(json) {
-  json = WidgetUtils.parseAndVaslidate(json, 'Checkbox')
+  json = WidgetUtils.parseAndValidate(json, 'Checkbox')
   if (!json) return ''
 
   const buttons = buildCheckboxButtons(json)
@@ -28,7 +28,7 @@ function buildCheckboxButtons(json) {
 }
 
 function buildOneCheckboxButton(option) {
-  validateOption(option)
+  WidgetUtils.validateOption('Checkbox', option)
 
   const params = {
     name: option.name ? `name="${option.name}"` : '',
@@ -39,10 +39,4 @@ function buildOneCheckboxButton(option) {
   }
 
   return Stringer.replaceTemplate(template.trim(), params, '{')
-}
-
-function validateOption({label, value}) {
-  if (label === undefined && value === undefined) {
-    throw 'Checkbox button definition requires at least a label or value'
-  }
 }

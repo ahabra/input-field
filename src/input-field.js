@@ -6,6 +6,7 @@ import template from './input-field.html'
 import * as Input from './widgets/input'
 import * as Radio from './widgets/radio'
 import * as Checkbox from './widgets/checkbox'
+import * as Listbox from './widgets/listbox'
 import {setTooltipParams} from './widgets/tooltip'
 
 /**
@@ -130,6 +131,7 @@ function getInputHtml(el, atts) {
   const type = getType(atts)
   if (type === 'radio') return Radio.contentToHtml(el)
   if (type === 'checkbox') return Checkbox.contentToHtml(el)
+  if (type === 'listbox') return Listbox.contentToHtml(el)
 
   return Input.getHtml(atts)
 }

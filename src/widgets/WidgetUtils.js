@@ -1,6 +1,6 @@
 import {Objecter, Stringer} from '@techexp/jshelper'
 
-export function parseAndVaslidate(json, widgetType, ...required) {
+export function parseAndValidate(json, widgetType, ...required) {
   if (!validateString(json)) return false
   json = JSON.parse(json)
   if (!validateJsonObject(json, widgetType, ...required)) return false
@@ -25,4 +25,10 @@ function validateJsonObject(json, widgetType, ...required) {
   }
 
   return true
+}
+
+export function validateOption(widgetType, {label, value}) {
+  if (label === undefined && value === undefined) {
+    throw `${widgetType} definition requires at least a label or value`
+  }
 }

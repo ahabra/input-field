@@ -52,7 +52,47 @@
       }
     </input-field>
 
+    <input-field type="listbox" label="States">
+      {
+        "name": "states",
+        "id": "states",
+        "multiple": false,
+        "size": 1,
+        "options": [
+          { "label":"Michigan", "value":"MI"},
+          { "label":"Ohio", "value":"OH", "disabled": true},
+          { "label":"New York"},
+          { "label": "Southern", "options": [
+              { "label":"Florida"},
+              { "value":"Texas"},
+              { "label":"Alabama"},
+              { "label":"Georgia"}
+            ]
+          }
+        ]
+      }
+    </input-field>
 
+    <input-field type="listbox" label="Multiple States">
+      {
+        "name": "states2",
+        "id": "states2",
+        "multiple": true,
+        "size": 5,
+        "options": [
+          { "label":"Michigan"},
+          { "label":"Ohio"},
+          { "label":"New York"},
+          { "label": "Southern", "options": [
+              { "label":"Florida"},
+              { "value":"Texas"},
+              { "label":"Alabama"},
+              { "label":"Georgia"}
+            ]
+          }
+        ]
+      }
+    </input-field>
     <!-- JS code will be added to script element with 'data-app' attribute -->
     <script data-app></script>
 
