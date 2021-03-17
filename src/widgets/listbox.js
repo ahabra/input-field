@@ -2,14 +2,13 @@ import * as WidgetUtils from './WidgetUtils'
 import {Stringer} from '@techexp/jshelper'
 
 const templates = {
-  select: '<select{name}{id}{size}{multiple}>{options}</select>',
+  select: '<select{name}{id}{size}{multiple} class="{widgetType}">{options}</select>',
   group: '<optgroup label="{label}">{options}</optgroup>',
   option: '<option{disabled}{selected}{value}>{label}</option>'
 }
 
 export function contentToHtml(element) {
   if (!element) return ''
-
   return jsonToHtml(element.innerHTML)
 }
 
@@ -21,15 +20,16 @@ export function jsonToHtml(json) {
     name: json.name ? ` name="${json.name}"` : '',
     id: json.id ? ` id="${json.id}"` : '',
     size: json.size ? ` size="${json.size}"` : '',
-    multiple: getMultiple(json),
+    widgetType: getWidgetType(json),
+    multiple: json.multiple ? ' multiple' : '',
     options: buildOptions(json.options)
   }
   return Stringer.replaceTemplate(templates.select, params, '{')
 }
 
-function getMultiple({multiple, size}) {
-  if (size === 1) return ''
-  return multiple ? ' multiple' : ''
+function getWidgetType({multiple, size}) {
+  if (multiple || size > 1) return 'listbox'
+  return 'combobox'
 }
 
 function buildOptionGroup(json) {
