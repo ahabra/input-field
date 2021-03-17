@@ -2,7 +2,7 @@ import * as WidgetUtils from './WidgetUtils'
 import {Stringer} from '@techexp/jshelper'
 
 const templates = {
-  select: '<select{name}{id}{size}{multiple} class="{widgetType}">{options}</select>',
+  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}">{options}</select>',
   group: '<optgroup label="{label}">{options}</optgroup>',
   option: '<option{disabled}{selected}{value}>{label}</option>'
 }
