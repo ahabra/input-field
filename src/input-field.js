@@ -5,6 +5,7 @@ import {ValidationRules, Rule} from './input-field-validation'
 import template from './input-field.html'
 import * as Input from './widgets/input'
 import * as Radio from './widgets/radio'
+import * as Checkbox from './widgets/checkbox'
 
 /**
  * Define a responsive input field with its label.
@@ -127,6 +128,7 @@ function buildHtml(el, atts, cssFilePath) {
 function getInputHtml(el, atts) {
   const type = getType(atts)
   if (type === 'radio') return Radio.contentToHtml(el)
+  if (type === 'checkbox') return Checkbox.contentToHtml(el)
 
   return Input.getHtml(atts)
 }

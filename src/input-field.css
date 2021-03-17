@@ -202,7 +202,6 @@ CSS variables.
 .input-field .radio-buttons {
   display: inline-block;
   margin-top: 0.4em;
-  /*padding-top: 0.2em;*/
   width: var(--input-width);
 }
 
@@ -211,12 +210,28 @@ CSS variables.
   width: var(--radio-item-width, 10em);
 }
 
+
 .input-field .radio .radio-label {
   color: var(--label-color);
 }
 
+.input-field .checkbox-buttons {
+  display: inline-block;
+  margin-top: 0.4em;
+  width: var(--input-width);
+}
+
+.input-field .checkbox {
+  display: inline-block;
+  width: var(--radio-item-width, 10em);
+}
+
+.input-field .checkbox .checkbox-label {
+  color: var(--label-color);
+}
 @media screen and (max-width: 600px) {
-  .input-field .radio {
+  .input-field .radio, .input-field .checkbox {
     margin-left: 1em;
   }
+  
 }

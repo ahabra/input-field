@@ -41,8 +41,16 @@
       }
     </input-field>
 
-
-
+    <input-field type="checkbox" label="Vehicle">
+      {
+        "flow": "vertical",
+        "options": [
+          { "label":"Have a bike", "id":"vehicle1", "name":"vehicle1", "value":"Bike", "checked":true},
+          { "label":"Have a car",  "id":"vehicle2", "name":"vehicle2", "value":"Car" },
+          { "label":"Horse"}
+        ]
+      }
+    </input-field>
 
 
     <!-- JS code will be added to script element with 'data-app' attribute -->

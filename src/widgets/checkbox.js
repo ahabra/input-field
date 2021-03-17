@@ -1,5 +1,5 @@
 import {Stringer} from '@techexp/jshelper'
-import {template} from './radio.html.js'
+import {template} from './checkbox.html.js'
 import * as WidgetUtils from './WidgetUtils'
 
 export function contentToHtml(element) {
@@ -9,24 +9,23 @@ export function contentToHtml(element) {
 }
 
 export function jsonToHtml(json) {
-  json = WidgetUtils.parseAndVaslidate(json, 'Radio', 'name')
+  json = WidgetUtils.parseAndVaslidate(json, 'Checkbox')
   if (!json) return ''
 
-  const buttons = buildRadioButtons(json)
-  return `\n<div class="radio-buttons">\n${buttons}\n</div>\n`
+  const buttons = buildCheckboxButtons(json)
+  return `\n<div class="checkbox-buttons">\n${buttons}\n</div>\n`
 }
 
-function buildRadioButtons(json) {
-  const name = json.name
+function buildCheckboxButtons(json) {
   const sep = json.flow === 'vertical' ? '<br>\n' : '\n'
-  return json.options.map(op => buildOneRadioButton(name, op)).join(sep)
+  return json.options.map(op => buildOneCheckboxButton(op)).join(sep)
 }
 
-function buildOneRadioButton(name, option) {
+function buildOneCheckboxButton(option) {
   validateOption(option)
 
   const params = {
-    name,
+    name: option.name ? `name="${option.name}"` : '',
     checked: option.checked ? ' checked' : '',
     id: option.id ? `id="${option.id}"` : '',
     value: option.value || option.label,
@@ -38,6 +37,6 @@ function buildOneRadioButton(name, option) {
 
 function validateOption({label, value}) {
   if (label === undefined && value === undefined) {
-    throw 'Radio button definition requires at least a label or value'
+    throw 'Checkbox button definition requires at least a label or value'
   }
 }
