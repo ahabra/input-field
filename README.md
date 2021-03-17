@@ -214,7 +214,7 @@ This is my wishlist for this library.
 3. 2021-03-10: ~~Support one of a group, e.g.: one of `red`, `green`, `blue`.~~ Done. 2020-03-12
 4. 2021-03-10: Support combo-box, list-box
 5. 2021-03-10: ~~Support radio buttons.~~ Done. 2020-03-15
-6. 2021-03-10: Support check boxes
+6. 2021-03-10: ~~Support check boxes.~~ Done. 2020-03-16
 7. 2021-03-10: Show validation rule text on error
 8. 2021-03-10: ~~Refactor input-feild.css to use variables better~~. Done. 2020-03-11
 
