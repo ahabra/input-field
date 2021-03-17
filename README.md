@@ -78,9 +78,20 @@ InputField.define(cssFilePath)
     ]
   }
 </input-field>
+
+<input-field type="checkbox" label="Vehicle">
+  {
+    "flow": "vertical",
+    "options": [
+      { "label":"Have a bike", "id":"vehicle1", "name":"vehicle1", "value":"Bike", "checked":true},
+      { "label":"Have a car",  "id":"vehicle2", "name":"vehicle2", "value":"Car" },
+      { "label":"Horse"}
+    ]
+  }
+</input-field>
 ```
 
-The above code will show input fields with some validation rules.
+The above code will show different input fields with some validation rules.
 
 ## API
 ### CSS Style
@@ -95,8 +106,8 @@ The library defines a new _Web Component_ (a.k.a. _Custom Element_) named `input
 The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
-1. `type`: `text`, `password`, `email`, `number`, `integer`, `set`, `radio`.
-    Optional. Default is `text`
+1. `type`: `text`, `password`, `email`, `number`, `integer`, `set`,
+   `radio`, `checkbox`. Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `sublabel`: Text that will appear under the label, with smaller font.
 4. `required`: If the field is required, then this attribute's definition will be `required="required"`.
@@ -132,12 +143,28 @@ It has the following keys:
 * `flow`: Optional. If its value is `vertical` then the radio buttons will be displayed
           one under the other. Otherwise, they will be displayed horizontally.
 *  `options`: An array of objects describing each radio button. Each object has:
-  * `label`: The label to display next to the radio button
-  * `value`: The value associated with the radio button
-  * `id`: Id of the radio button. Optional
-  * `checked`: Boolean. Optional.
+    * `label`: The label to display next to the radio button
+    * `value`: The value associated with the radio button
+    * `id`: Id of the radio button. Optional
+    * `checked`: Boolean. Optional.
 
 For each option at least `label` or `value` must be present.
+
+### Checkbox type
+When the type is `checkbox`, provide a JSON string as the content of the `input-field` element.
+The JSON string describes the radio buttons to be displayed.
+It has the following keys:
+* `flow`: Optional. If its value is `vertical` then the checkbox buttons will be displayed
+  one under the other. Otherwise, they will be displayed horizontally.
+*  `options`: An array of objects describing each checkbox button. Each object has:
+    * `label`: The label to display next to the checkbox button
+    * `value`: The value associated with the checkbox button
+    * `id`: Id of the checkbox button. Optional
+    * `name`: Name of the checkbox. Optional
+    * `checked`: Boolean. Optional.
+
+For each option at least `label` or `value` must be present.
+
 
 ### JavaScript
 There is a single function available `InputField.define(cssFilePath)`.

@@ -6,12 +6,13 @@ import template from './input-field.html'
 import * as Input from './widgets/input'
 import * as Radio from './widgets/radio'
 import * as Checkbox from './widgets/checkbox'
+import {setTooltipParams} from './widgets/tooltip'
 
 /**
  * Define a responsive input field with its label.
  * You can control the field with the following attributes:
- * type: String. Optional. "text", "password", "email", "set", "radio".
- *    Default is "text"
+ * type: String. Optional. "text", "password", "email", "set", "radio",
+ *    "checkbox". Default is "text".
  * label: String
  * sublabel: String
  * required: is the field required. The value should be "required"
@@ -121,7 +122,7 @@ function buildHtml(el, atts, cssFilePath) {
     showrules: atts.showrules ? '' : 'none',
     rules: el.validationRules.toHtml()
   }
-  setTooltipValues(atts, values)
+  setTooltipParams(atts, values)
   return Stringer.replaceTemplate(template, values)
 }
 
@@ -150,19 +151,6 @@ function getSublabel(atts) {
   const sublabel = atts.sublabel
   if (!sublabel) return ''
   return `<br>${sublabel}`
-}
-
-function setTooltipValues(atts, values) {
-  const tooltip = atts.tooltip
-  if (tooltip) {
-    values.tooltip = 'tooltip'
-    values.tooltipIcon = '<span class="circle">?</span>'
-    values.tooltipText = tooltip
-  } else {
-    values.tooltip = ''
-    values.tooltipIcon = ''
-    values.tooltipText = ''
-  }
 }
 
 function getAttr(atts, attName) {
