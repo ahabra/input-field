@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 0.5.0.
+// Copyright 2021 (C) Abdul Habra. Version 0.6.0.
 // Apache License Version 2.0
 
 
@@ -153,7 +153,9 @@ function bindProperties(root, propertyList) {
 function addProperty(obj, prop, root) {
   const onChange = createOnChange(prop, root);
   bind({obj, prop: prop.name, sel: prop.sel, attr: prop.attr, root: root.shadowRoot, onChange});
-  obj[prop.name] = prop.value;
+  if (prop.value !== void 0) {
+    obj[prop.name] = prop.value;
+  }
 }
 function createOnChange(prop, root) {
   if (!prop.onChange)
@@ -228,7 +230,7 @@ function displayStyle(display) {
 }
 
 // src/input-field.js
-import {Domer as Domer2, Objecter as Objecter3, Stringer as Stringer3} from "@techexp/jshelper";
+import {Domer as Domer2, Objecter as Objecter4, Stringer as Stringer7} from "@techexp/jshelper";
 
 // src/input-field-validation.js
 import {Objecter as Objecter2, Stringer as Stringer2} from "@techexp/jshelper";
@@ -355,7 +357,179 @@ var Rule = class {
 };
 
 // src/input-field.html
-var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label">\n    <span class="superlabel ${required} ${tooltip}">\n      ${label} ${tooltipIcon}\n      <span class="tooltip-text">${tooltipText}</span>\n    </span>\n    <span class="sublabel">${sublabel}</span>\n  </label>\n  <input type="${type}" class="input" value=""\n         ${required} ${minlength} ${maxlength} ${pattern}>\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
+var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label">\n    <span class="superlabel ${required} ${tooltip}">\n      ${label} ${tooltipIcon}\n      <span class="tooltip-text">${tooltipText}</span>\n    </span>\n    <span class="sublabel">${sublabel}</span>\n  </label>\n\n  ${input}\n\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
+
+// src/widgets/input.js
+import {Stringer as Stringer3} from "@techexp/jshelper";
+var template = `
+ <input type="{type}" class="input" value="{value}"
+  {required} {minlength} {maxlength} {pattern}>
+`;
+var required = "required";
+function getHtml2(atts) {
+  const params = {
+    type: getType(atts),
+    required: getAttr(atts, required),
+    minlength: getAttr(atts, "minlength"),
+    maxlength: getAttr(atts, "maxlength"),
+    pattern: getAttr(atts, "pattern"),
+    value: atts.value || ""
+  };
+  return Stringer3.replaceTemplate(template, params, "{");
+}
+function getType(atts) {
+  const type = Stringer3.trim(atts.type).toLowerCase();
+  if (!type)
+    return "text";
+  if (type === "integer")
+    return "number";
+  return type;
+}
+function getAttr(atts, attName) {
+  const value = atts[attName];
+  if (!value)
+    return "";
+  if (attName === required && value === required)
+    return required;
+  return `${attName}="${value}"`;
+}
+
+// src/widgets/radio.js
+import {Stringer as Stringer5} from "@techexp/jshelper";
+
+// src/widgets/WidgetUtils.js
+import {Objecter as Objecter3, Stringer as Stringer4} from "@techexp/jshelper";
+function parseAndVaslidate(json, widgetType, ...required2) {
+  if (!validateString(json))
+    return false;
+  json = JSON.parse(json);
+  if (!validateJsonObject(json, widgetType, ...required2))
+    return false;
+  return json;
+}
+function validateString(json) {
+  if (!Objecter3.isString(json))
+    return false;
+  if (Stringer4.isEmpty(json))
+    return false;
+  json = json.trim();
+  return json.length !== 0;
+}
+function validateJsonObject(json, widgetType, ...required2) {
+  if (!Array.isArray(json.options))
+    return false;
+  if (json.options.length === 0)
+    return false;
+  const found = required2.find((r) => !Objecter3.has(json, r));
+  if (found) {
+    throw `${widgetType} definition requires ${found} attribute`;
+  }
+  return true;
+}
+
+// src/widgets/radio.js
+var template2 = `
+<label class="radio">
+  <input type="radio" name="{name}" {id} value="{value}"{checked}>
+  <span class="radio-label">{label}</span>
+</label>
+`;
+function contentToHtml(element) {
+  if (!element)
+    return "";
+  return jsonToHtml(element.innerHTML);
+}
+function jsonToHtml(json) {
+  json = parseAndVaslidate(json, "Radio", "name");
+  if (!json)
+    return "";
+  const buttons = buildRadioButtons(json);
+  return `
+<div class="radio-buttons">
+${buttons}
+</div>
+`;
+}
+function buildRadioButtons(json) {
+  const name = json.name;
+  const sep = json.flow === "vertical" ? "<br>\n" : "\n";
+  return json.options.map((op) => buildOneRadioButton(name, op)).join(sep);
+}
+function buildOneRadioButton(name, option) {
+  validateOption(option);
+  const params = {
+    name,
+    checked: option.checked ? " checked" : "",
+    id: option.id ? `id="${option.id}"` : "",
+    value: option.value || option.label,
+    label: option.label || option.value
+  };
+  return Stringer5.replaceTemplate(template2.trim(), params, "{");
+}
+function validateOption({label, value}) {
+  if (label === void 0 && value === void 0) {
+    throw "Radio button definition requires at least a label or value";
+  }
+}
+
+// src/widgets/checkbox.js
+import {Stringer as Stringer6} from "@techexp/jshelper";
+var template3 = `
+<label class="checkbox">
+  <input type="checkbox" {name} {id} value="{value}"{checked}>
+  <span class="checkbox-label">{label}</span>
+</label>
+`;
+function contentToHtml2(element) {
+  if (!element)
+    return "";
+  return jsonToHtml2(element.innerHTML);
+}
+function jsonToHtml2(json) {
+  json = parseAndVaslidate(json, "Checkbox");
+  if (!json)
+    return "";
+  const buttons = buildCheckboxButtons(json);
+  return `
+<div class="checkbox-buttons">
+${buttons}
+</div>
+`;
+}
+function buildCheckboxButtons(json) {
+  const sep = json.flow === "vertical" ? "<br>\n" : "\n";
+  return json.options.map((op) => buildOneCheckboxButton(op)).join(sep);
+}
+function buildOneCheckboxButton(option) {
+  validateOption2(option);
+  const params = {
+    name: option.name ? `name="${option.name}"` : "",
+    checked: option.checked ? " checked" : "",
+    id: option.id ? `id="${option.id}"` : "",
+    value: option.value || option.label,
+    label: option.label || option.value
+  };
+  return Stringer6.replaceTemplate(template3.trim(), params, "{");
+}
+function validateOption2({label, value}) {
+  if (label === void 0 && value === void 0) {
+    throw "Checkbox button definition requires at least a label or value";
+  }
+}
+
+// src/widgets/tooltip.js
+function setTooltipParams(atts, params) {
+  const tooltip = atts.tooltip;
+  if (tooltip) {
+    params.tooltip = "tooltip";
+    params.tooltipIcon = '<span class="circle">?</span>';
+    params.tooltipText = tooltip;
+  } else {
+    params.tooltip = "";
+    params.tooltipIcon = "";
+    params.tooltipText = "";
+  }
+}
 
 // src/input-field.js
 function define(cssFilePath = "") {
@@ -364,14 +538,15 @@ function define(cssFilePath = "") {
     html: (el) => {
       const atts = extractAttributes(el);
       el.validationRules = ValidationRules.createFromAttributes(atts);
-      return buildHtml(atts, cssFilePath, el.validationRules);
+      return buildHtml(el, atts, cssFilePath);
     },
     propertyList: [
       {
         name: "value",
-        value: "",
         sel: "input",
-        onChange: (el, oldValue, newValue) => validate(el, newValue)
+        onChange: (el, oldValue, newValue) => {
+          validate(el, newValue);
+        }
       }
     ],
     eventHandlerList: [
@@ -408,33 +583,37 @@ function define(cssFilePath = "") {
 function extractAttributes(el) {
   const domAtts = Domer2.getAttributes(el);
   const atts = {};
-  Objecter3.forEachEntry(domAtts, (k, v) => {
+  Objecter4.forEachEntry(domAtts, (k, v) => {
     atts[k.toLowerCase()] = v;
   });
-  const showRules = Stringer3.trim(atts.showrules).toLowerCase();
+  const showRules = Stringer7.trim(atts.showrules).toLowerCase();
   atts.showrules = showRules === "" || showRules === "true";
   return atts;
 }
-function buildHtml(atts, cssFilePath, validationRules) {
+function buildHtml(el, atts, cssFilePath) {
+  const input = getInputHtml(el, atts);
   const values = {
+    input,
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     sublabel: getSublabel(atts),
-    type: getType(atts),
-    required: getAttr(atts, "required"),
-    minlength: getAttr(atts, "minlength"),
-    maxlength: getAttr(atts, "maxlength"),
-    pattern: getAttr(atts, "pattern"),
-    min: getAttr(atts, "min"),
-    max: getAttr(atts, "max"),
+    required: getAttr2(atts, "required"),
     showrules: atts.showrules ? "" : "none",
-    rules: validationRules.toHtml()
+    rules: el.validationRules.toHtml()
   };
-  setTooltipValues(atts, values);
-  return Stringer3.replaceTemplate(input_field_default, values);
+  setTooltipParams(atts, values);
+  return Stringer7.replaceTemplate(input_field_default, values);
 }
-function getType(atts) {
-  const type = Stringer3.trim(atts.type).toLowerCase();
+function getInputHtml(el, atts) {
+  const type = getType2(atts);
+  if (type === "radio")
+    return contentToHtml(el);
+  if (type === "checkbox")
+    return contentToHtml2(el);
+  return getHtml2(atts);
+}
+function getType2(atts) {
+  const type = Stringer7.trim(atts.type).toLowerCase();
   if (!type)
     return "text";
   if (type === "integer")
@@ -442,7 +621,7 @@ function getType(atts) {
   return type;
 }
 function buildCssLink(cssFilePath) {
-  if (Stringer3.isEmpty(cssFilePath))
+  if (Stringer7.isEmpty(cssFilePath))
     return "";
   return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
 }
@@ -452,19 +631,7 @@ function getSublabel(atts) {
     return "";
   return `<br>${sublabel}`;
 }
-function setTooltipValues(atts, values) {
-  const tooltip = atts.tooltip;
-  if (tooltip) {
-    values.tooltip = "tooltip";
-    values.tooltipIcon = '<span class="circle">?</span>';
-    values.tooltipText = tooltip;
-  } else {
-    values.tooltip = "";
-    values.tooltipIcon = "";
-    values.tooltipText = "";
-  }
-}
-function getAttr(atts, attName) {
+function getAttr2(atts, attName) {
   const value = atts[attName];
   if (!value)
     return "";
@@ -490,3 +657,4 @@ function addRuleHtml(el, rule) {
 export {
   define
 };
+//# sourceMappingURL=input-field-esm.js.map
