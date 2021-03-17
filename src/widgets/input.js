@@ -1,6 +1,9 @@
 import {Stringer} from '@techexp/jshelper'
-import {template} from './input.html.js'
 
+const template = `
+ <input type="{type}" class="input" value="{value}"
+  {required} {minlength} {maxlength} {pattern}>
+`
 const required = 'required'
 
 export function getHtml(atts) {

@@ -1,6 +1,12 @@
 import {Stringer} from '@techexp/jshelper'
-import {template} from './radio.html.js'
 import * as WidgetUtils from './WidgetUtils'
+
+const template = `
+<label class="radio">
+  <input type="radio" name="{name}" {id} value="{value}"{checked}>
+  <span class="radio-label">{label}</span>
+</label>
+`
 
 export function contentToHtml(element) {
   if (!element) return ''

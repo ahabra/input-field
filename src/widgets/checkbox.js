@@ -1,6 +1,12 @@
 import {Stringer} from '@techexp/jshelper'
-import {template} from './checkbox.html.js'
 import * as WidgetUtils from './WidgetUtils'
+
+const template = `
+<label class="checkbox">
+  <input type="checkbox" {name} {id} value="{value}"{checked}>
+  <span class="checkbox-label">{label}</span>
+</label>
+`
 
 export function contentToHtml(element) {
   if (!element) return ''
