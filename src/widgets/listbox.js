@@ -21,10 +21,15 @@ export function jsonToHtml(json) {
     name: json.name ? ` name="${json.name}"` : '',
     id: json.id ? ` id="${json.id}"` : '',
     size: json.size ? ` size="${json.size}"` : '',
-    multiple: json.multiple ? ' multiple' : '',
+    multiple: getMultiple(json),
     options: buildOptions(json.options)
   }
   return Stringer.replaceTemplate(templates.select, params, '{')
+}
+
+function getMultiple({multiple, size}) {
+  if (size === 1) return ''
+  return multiple ? ' multiple' : ''
 }
 
 function buildOptionGroup(json) {
