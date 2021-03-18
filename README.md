@@ -44,6 +44,7 @@ If you installed as a Script, the library is available at `window.InputField`
 ### Quick Code Demo
 This example shows how to use the component:
 
+#### JS Code
 ```js
 import * as InputField from '@techexp/input-field'
 // or use window.InputField
@@ -53,6 +54,7 @@ const cssFilePath = '/css/input-field.css'
 InputField.define(cssFilePath)
 ```
 
+#### HTML Code
 ```html
 <input-field id="age" type="text" label="Age"
              required="required"
@@ -89,9 +91,31 @@ InputField.define(cssFilePath)
     ]
   }
 </input-field>
+
+<input-field type="listbox" label="Multiple States"
+             tooltip="select multiple states">
+  {
+    "name": "states",
+    "id": "states",
+    "multiple": true,
+    "size": 5,
+    "options": [
+      { "label":"Michigan", "value":"MI"},
+      { "label":"Ohio"},
+      { "label":"New York", "disabled": true},
+      { "label": "Southern", "options": [
+          { "label":"Florida"},
+          { "value":"Texas"},
+          { "label":"Alabama", "selected": true},
+          { "label":"Georgia"}
+        ]
+      }
+    ]
+  }
+</input-field>
 ```
 
-The above code will show different input fields with some validation rules.
+The above code shows different input fields with some validation rules.
 
 ## API
 ### CSS Style
@@ -107,7 +131,7 @@ The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
 1. `type`: `text`, `password`, `email`, `number`, `integer`, `set`,
-   `radio`, `checkbox`. Optional. Default is `text`
+   `radio`, `checkbox`, `listbox`. Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `sublabel`: Text that will appear under the label, with smaller font.
 4. `required`: If the field is required, then this attribute's definition will be `required="required"`.
@@ -165,6 +189,11 @@ It has the following keys:
 
 For each option at least `label` or `value` must be present.
 
+### Listbox type
+When the type is `listbox`, provide JSON string as the content of the `input-field` element.
+The JSON string describes the listbox (select) to be displayed.
+
+**TODO** Add more details here
 
 ### JavaScript
 There is a single function available `InputField.define(cssFilePath)`.
@@ -208,15 +237,15 @@ easily using the provided rules.
 ## TODO
 This is my wishlist for this library.
 1. 2021-03-10: Allow more customization to label
-    1. ~~add little help button.~~ Done. 2020-03-12
-    2. ~~sublabel.~~ Done. 2020-03-11
-2. 2021-03-10: ~~Support data types: Integer, Number, String.~~ Done. 2020-03-12
-3. 2021-03-10: ~~Support one of a group, e.g.: one of `red`, `green`, `blue`.~~ Done. 2020-03-12
-4. 2021-03-10: Support combo-box, list-box
-5. 2021-03-10: ~~Support radio buttons.~~ Done. 2020-03-15
-6. 2021-03-10: ~~Support check boxes.~~ Done. 2020-03-16
+    1. ~~add little help button.~~ Done. 2021-03-12
+    2. ~~sublabel.~~ Done. 2021-03-11
+2. 2021-03-10: ~~Support data types: Integer, Number, String.~~ Done. 2021-03-12
+3. 2021-03-10: ~~Support one of a group, e.g.: one of `red`, `green`, `blue`.~~ Done. 2021-03-12
+4. 2021-03-10: ~~Support combo-box, list-box~~: Done. 2021-03-18
+5. 2021-03-10: ~~Support radio buttons.~~ Done. 2021-03-15
+6. 2021-03-10: ~~Support check boxes.~~ Done. 2021-03-16
 7. 2021-03-10: Show validation rule text on error
-8. 2021-03-10: ~~Refactor input-feild.css to use variables better~~. Done. 2020-03-11
+8. 2021-03-10: ~~Refactor input-feild.css to use variables better~~. Done. 2021-03-11
 
 ### Playing
 #### Radio

@@ -13,7 +13,7 @@ import {setTooltipParams} from './widgets/tooltip'
  * Define a responsive input field with its label.
  * You can control the field with the following attributes:
  * type: String. Optional. "text", "password", "email", "set", "radio",
- *    "checkbox". Default is "text".
+ *    "checkbox", "listbox". Default is "text".
  * label: String
  * sublabel: String
  * required: is the field required. The value should be "required"
