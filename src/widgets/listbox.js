@@ -70,7 +70,7 @@ export function mousedownListener(ev, inputField) {
 
   toggleOptionSelected(ev.target)
 
-  select.scrollTop = scrollTop
+  setTimeout(()=> { select.scrollTop = scrollTop })
 }
 
 function toggleOptionSelected(option) {

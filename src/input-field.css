@@ -12,7 +12,6 @@ CSS variables.
   --border-radius: 4px;
   --border-radius-circle: 50%;
 
-
   --label-color: darkgreen;
   --label-font-weight: bold;
   --label-font-size: 1em;
@@ -317,7 +316,7 @@ CSS variables.
 }
 /*#endregion Checkbox*/
 
-/*#region select / listbox styling */
+/*#region listbox / select styling */
 .input-field select {
   width: var(--input-width);
   margin: 0.4em 0.4em 0.1em 0.2em;
