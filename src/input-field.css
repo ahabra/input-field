@@ -44,6 +44,7 @@ CSS variables.
   --checkbox-background-color: white;
   --checkbox-background-color-selected: green;
   --checkbox-color-selected: white;
+  --checkbox-size: 1em;
 
   --rule-font-size: 0.9em;
   --rule-color: green;
@@ -278,7 +279,7 @@ CSS variables.
 .input-field .checkbox .checkbox-label {
   color: var(--label-color);
   display: inline-block;
-  transform: translateY(-6px);
+  transform: translateY(calc(var(--checkbox-size) * -0.4));
 }
 
 .input-field .checkbox input[type="checkbox"] {
@@ -286,10 +287,10 @@ CSS variables.
   outline: none;
   background-color: var(--checkbox-background-color);
   border: 1px solid var(--input-border-color);
-  padding: 9px;
-  border-radius: 3px;
+  border-radius: 4px;
   display: inline-block;
   position: relative;
+  padding: calc(var(--checkbox-size) * 0.7);
 }
 
 .input-field .checkbox input[type="checkbox"]:checked {
@@ -300,13 +301,12 @@ CSS variables.
 
 .input-field .checkbox input[type="checkbox"]:checked:after {
   content: '\2714';
-  font-size: 14px;
+  font-size: var(--checkbox-size);
   position: absolute;
-  top: 0;
-  left: 3px;
+  top: calc(var(--checkbox-size) * 0.2);
+  left: calc(var(--checkbox-size) * 0.3);
   color: var(--checkbox-color-selected);
 }
-
 
 @media screen and (max-width: 600px) {
   .input-field .checkbox {
