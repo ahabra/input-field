@@ -43,6 +43,7 @@ CSS variables.
   --listbox-optgroup-font-weight: bold;
 }
 
+/*#region Label */
 .input-field label.label {
   display: inline-block;
   width: var(--label-width);
@@ -67,6 +68,18 @@ CSS variables.
   color: var(--sublabel-color);
 }
 
+@media screen and (max-width: 600px) {
+  .input-field label.label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.1em;
+    margin-left: 1.2em;
+  }
+}
+
+/*#endregion Label */
+
+/*#region input */
 .input-field input.input {
   width: var(--input-width);
   margin: 0.4em 0.4em 0.1em 0.2em;
@@ -91,12 +104,21 @@ CSS variables.
   background-image: var(--input-background-bad);
 }
 
-
 .input-field input.bad:focus {
   border-color: var(--input-border-color-bad);
   background-image: var(--input-background-focus-bad);
 }
 
+@media screen and (max-width: 600px) {
+  .input-field input.input {
+    margin-top: 0.1em;
+    width: 80%;
+    margin-left: 1em;
+  }
+}
+/*#endregion input */
+
+/*#region Footer/Rules*/
 .input-field footer {
   padding-left: var(--rule-padding-left);
   margin-bottom: 1em;
@@ -116,19 +138,6 @@ CSS variables.
 }
 
 @media screen and (max-width: 600px) {
-  .input-field label.label {
-    display: block;
-    text-align: left;
-    margin-bottom: 0.1em;
-    margin-left: 1.2em;
-  }
-
-  .input-field input.input {
-    margin-top: 0.1em;
-    width: 80%;
-    margin-left: 1em;
-  }
-
   .input-field footer {
     padding-left: 1em;
   }
@@ -137,7 +146,9 @@ CSS variables.
     padding-left: 2em;
   }
 }
+/*#endregion Footer/Rules*/
 
+/*#region Tooltip */
 .input-field .circle {
   display: inline-block;
   cursor: pointer;
@@ -201,7 +212,9 @@ CSS variables.
     left: 15%;
   }
 }
+/*#endregion Tooltip */
 
+/*#region Radio*/
 .input-field .radio-buttons {
   display: inline-block;
   margin-top: 0.4em;
@@ -213,11 +226,18 @@ CSS variables.
   width: var(--radio-item-width, 10em);
 }
 
-
 .input-field .radio .radio-label {
   color: var(--label-color);
 }
 
+@media screen and (max-width: 600px) {
+  .input-field .radio {
+    margin-left: 1em;
+  }
+}
+/*#endregion Radio*/
+
+/*#region Checkbox*/
 .input-field .checkbox-buttons {
   display: inline-block;
   margin-top: 0.4em;
@@ -234,11 +254,13 @@ CSS variables.
 }
 
 @media screen and (max-width: 600px) {
-  .input-field .radio, .input-field .checkbox {
+  .input-field .checkbox {
     margin-left: 1em;
   }
 }
+/*#endregion Checkbox*/
 
+/*#region select / listbox styling */
 .input-field select {
   width: var(--input-width);
   margin: 0.4em 0.4em 0.1em 0.2em;
@@ -292,3 +314,6 @@ CSS variables.
     margin-left: 1em;
   }
 }
+
+/*#endregion listbox styling */
+
