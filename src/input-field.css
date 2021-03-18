@@ -41,6 +41,10 @@ CSS variables.
   --radio-border-width: calc(var(--radio-button-size) * 0.15);
   --radio-border-width-selected: calc(var(--radio-border-width) * 2);
 
+  --checkbox-background-color: white;
+  --checkbox-background-color-selected: green;
+  --checkbox-color-selected: white;
+
   --rule-font-size: 0.9em;
   --rule-color: green;
   --rule-color-bad: red;
@@ -273,7 +277,36 @@ CSS variables.
 
 .input-field .checkbox .checkbox-label {
   color: var(--label-color);
+  display: inline-block;
+  transform: translateY(-6px);
 }
+
+.input-field .checkbox input[type="checkbox"] {
+  appearance: none;
+  outline: none;
+  background-color: var(--checkbox-background-color);
+  border: 1px solid var(--input-border-color);
+  padding: 9px;
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+}
+
+.input-field .checkbox input[type="checkbox"]:checked {
+  background-color: var(--checkbox-background-color-selected);
+  border: 1px solid var(--input-border-color);
+  color: white;
+}
+
+.input-field .checkbox input[type="checkbox"]:checked:after {
+  content: '\2714';
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  left: 3px;
+  color: var(--checkbox-color-selected);
+}
+
 
 @media screen and (max-width: 600px) {
   .input-field .checkbox {
