@@ -96,6 +96,27 @@
         ]
       }
     </input-field>
+
+    <input-field type="listbox" label="One State">
+      {
+        "name": "states2",
+        "id": "states2",
+        "multiple": false,
+        "size": 5,
+        "options": [
+          { "label":"Michigan", "value":"MI"},
+          { "label":"Ohio"},
+          { "label":"New York"},
+          { "label": "Southern", "options": [
+              { "label":"Florida"},
+              { "value":"Texas"},
+              { "label":"Alabama"},
+              { "label":"Georgia"}
+            ]
+          }
+        ]
+      }
+    </input-field>
     <!-- JS code will be added to script element with 'data-app' attribute -->
     <script data-app></script>
 

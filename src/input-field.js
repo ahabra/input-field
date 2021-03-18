@@ -84,7 +84,7 @@ export function define(cssFilePath = '') {
       {
         sel: 'select.listbox.multiple option',
         eventName: 'mousedown',
-        listener: ev => Listbox.mousedownListener(ev)
+        listener: (ev, el) => Listbox.mousedownListener(ev, el)
       }
     ],
 

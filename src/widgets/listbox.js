@@ -1,5 +1,5 @@
 import * as WidgetUtils from './WidgetUtils'
-import {Stringer} from '@techexp/jshelper'
+import {Domer, Stringer} from '@techexp/jshelper'
 
 const templates = {
   select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}">{options}</select>',
@@ -63,9 +63,17 @@ function buildOption(option) {
   return Stringer.replaceTemplate(templates.option, params, '{')
 }
 
-export function mousedownListener(ev) {
+export function mousedownListener(ev, inputField) {
   ev.preventDefault()
-  const target = ev.target
-  target.selected = !target.selected
-  target.parentElement.focus()
+  const select = Domer.first('select', inputField)
+  const scrollTop = select.scrollTop
+
+  toggleOptionSelected(ev.target)
+
+  select.scrollTop = scrollTop
+}
+
+function toggleOptionSelected(option) {
+  option.selected = !option.selected
+  option.parentElement.focus()
 }
