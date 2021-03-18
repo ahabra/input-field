@@ -8,7 +8,10 @@ CSS variables.
   --label-width: 10em;
   --input-width: calc(100% - var(--label-width) - 4em);
   --rule-padding-left: calc(var(--label-width) + 1em);
-  --radio-item-width: 8em;
+
+  --border-radius: 4px;
+  --border-radius-circle: 50%;
+
 
   --label-color: darkgreen;
   --label-font-weight: bold;
@@ -35,11 +38,10 @@ CSS variables.
   --input-border-color-bad: red;
   --input-border-focus: green;
 
+  --radio-item-width: 8em;
   --radio-background-color: white;
   --radio-background-color-selected: green;
   --radio-button-size: 1.2em;
-  --radio-border-width: calc(var(--radio-button-size) * 0.15);
-  --radio-border-width-selected: calc(var(--radio-border-width) * 2);
 
   --checkbox-background-color: white;
   --checkbox-background-color-selected: green;
@@ -98,7 +100,7 @@ CSS variables.
 
   color: var(--input-color);
   background-color: var(--input-background-color, white);
-  border-radius: 4px;
+  border-radius: var(--border-radius, 4px);
   border: 1px solid var(--input-border-color);
   height: 2em;
   font-size: 1em;
@@ -163,7 +165,7 @@ CSS variables.
 .input-field .circle {
   display: inline-block;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--border-radius-circle, 50%);
   padding: 0.1em 0.3em;
   margin: 0 0.1em 0 0.06em;
 
@@ -188,7 +190,7 @@ CSS variables.
 
   background-color: var(--tooltip-background, dimgray);
   color: var(--tooltip-color, white);
-  border-radius: 4px;
+  border-radius: var(--border-radius, 4px);
 
   text-align: center;
   width: 15em;
@@ -244,17 +246,17 @@ CSS variables.
 .input-field .radio input[type="radio"] {
   appearance: none;
   outline: none;
-  border-radius: 50%;
+  border-radius: var(--border-radius-circle, 50%);
   background-color: var(--radio-background-color, white);
   background-clip: content-box;
-  border: var(--radio-border-width) solid var(--input-border-color, gray);
+  border: calc(var(--radio-button-size) * 0.15) solid var(--input-border-color, gray);
   width: var(--radio-button-size);
   height: var(--radio-button-size);
 }
 
 .input-field .radio input[type="radio"]:checked {
   background-color: var(--radio-background-color-selected, green);
-  border: var(--radio-border-width-selected) double var(--input-border-color, gray);
+  border: calc(var(--radio-button-size) * 0.3) double var(--input-border-color, gray);
 }
 
 @media screen and (max-width: 600px) {
@@ -287,7 +289,7 @@ CSS variables.
   outline: none;
   background-color: var(--checkbox-background-color);
   border: 1px solid var(--input-border-color);
-  border-radius: 4px;
+  border-radius: var(--border-radius, 4px);
   display: inline-block;
   position: relative;
   padding: calc(var(--checkbox-size) * 0.7);
@@ -322,7 +324,7 @@ CSS variables.
   padding: 0.45em 0.5em;
   color: var(--input-color);
   background-color: var(--input-background-color, white);
-  border-radius: 4px;
+  border-radius: var(--border-radius, 4px);
   border: 1px solid var(--input-border-color);
   font-size: 1em;
 }
