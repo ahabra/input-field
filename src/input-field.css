@@ -268,20 +268,20 @@ CSS variables.
 .input-field select option {
   background-color: var(--input-background-color);
   color: var(--input-color);
-  height: 1.4em;
+  padding: 0.2em 0 0.1em 0.5em;
+}
+
+.input-field select.multiple option {
+  padding: 0 2px 1px 2px;
 }
 
 .input-field select.listbox optgroup {
   color: var(--listbox-optgroup-color, black);
-  padding: 0.5em 0;
+  padding: 0.5em 0 0.5em 0.3em;
   font-weight: var(--listbox-optgroup-font-weight);
 }
 
 .input-field select.listbox optgroup option {
-  padding: 0.2em 0 0.1em 1em;
-}
-
-.input-field select.listbox.multiple optgroup option {
   padding-left: 1.5em;
 }
 
