@@ -57,7 +57,7 @@ export function define(cssFilePath = '') {
     },
 
     propertyList: [
-      { name: 'value', sel: 'input',
+      { name: 'value', sel: 'input, select',
         onChange: (el, oldValue, newValue) => {
           validate(el, newValue)
         }
@@ -80,6 +80,11 @@ export function define(cssFilePath = '') {
           const tooltipText = Domer.first('label .tooltip-text', el)
           tooltipText.classList.toggle('show')
         }
+      },
+      {
+        sel: 'select.listbox.multiple option',
+        eventName: 'mousedown',
+        listener: ev => Listbox.mousedownListener(ev)
       }
     ],
 

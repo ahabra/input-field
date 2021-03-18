@@ -38,6 +38,9 @@ CSS variables.
   --rule-font-size: 0.9em;
   --rule-color: green;
   --rule-color-bad: red;
+
+  --listbox-optgroup-color: green;
+  --listbox-optgroup-font-weight: bold;
 }
 
 .input-field label.label {
@@ -239,7 +242,7 @@ CSS variables.
 .input-field select {
   width: var(--input-width);
   margin: 0.4em 0.4em 0.1em 0.2em;
-  padding: 0.45em 0.7em;
+  padding: 0.45em 0.25em;
   color: var(--input-color);
   background-color: var(--input-background-color, white);
   border-radius: 4px;
@@ -248,9 +251,33 @@ CSS variables.
 }
 
 .input-field select:focus {
-  background-image: var(--input-background-focus);
   outline: none;
   border-color: var(--input-border-focus);
+}
+
+.input-field select.listbox.multiple option::before {
+  content: "\2610";
+  padding-right: 0.1em;
+  font-size: 1.5em;
+}
+
+.input-field select.listbox.multiple option:checked:before {
+  content: "\2611";
+}
+
+.input-field select option {
+  background-color: var(--input-background-color);
+  color: var(--input-color);
+}
+
+.input-field select.listbox optgroup {
+  color: var(--listbox-optgroup-color, black);
+  padding: 0.3em 0;
+  font-weight: var(--listbox-optgroup-font-weight);
+}
+
+.input-field select.listbox optgroup option {
+  padding-left: 1em;
 }
 
 @media screen and (max-width: 600px) {

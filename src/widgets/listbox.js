@@ -62,3 +62,10 @@ function buildOption(option) {
   }
   return Stringer.replaceTemplate(templates.option, params, '{')
 }
+
+export function mousedownListener(ev) {
+  ev.preventDefault()
+  const target = ev.target
+  target.selected = !target.selected
+  target.parentElement.focus()
+}
