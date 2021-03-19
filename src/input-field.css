@@ -333,7 +333,7 @@ CSS variables.
 .input-field select.listbox.multiple option::before {
   content: "\25A2";  /* square */
   line-height: calc(var(--listbox-size) * 1.5);
-  padding-right: calc(var(--listbox-size) * 0.2);
+  padding-right: calc(var(--listbox-size) * 0.3);
   color: var(--input-border-color);
   font-weight: bold;
 }
@@ -341,7 +341,7 @@ CSS variables.
 .input-field select.listbox.multiple option:checked:before {
   content: "\2714";  /* Check mark */
   line-height: calc(var(--listbox-size) * 1.5);
-  padding-right: 0.35em;
+  padding-right: calc(var(--listbox-size) * 0.46);
   color: var(--listbox-checkmark-color, green);
 }
 
@@ -352,7 +352,7 @@ CSS variables.
 }
 
 .input-field select.multiple option {
-  padding: 0 2px 1px 2px;
+  padding-left: 0.1em;
 }
 
 .input-field select.listbox optgroup {
@@ -362,7 +362,7 @@ CSS variables.
 }
 
 .input-field select.listbox optgroup option {
-  padding-left: 1.5em;
+  padding-left: calc(var(--listbox-size) * 1.5);
 }
 
 @media screen and (max-width: 600px) {
