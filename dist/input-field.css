@@ -8,7 +8,9 @@ CSS variables.
   --label-width: 10em;
   --input-width: calc(100% - var(--label-width) - 4em);
   --rule-padding-left: calc(var(--label-width) + 1em);
-  --radio-item-width: 8em;
+
+  --border-radius: 4px;
+  --border-radius-circle: 50%;
 
   --label-color: darkgreen;
   --label-font-weight: bold;
@@ -35,11 +37,27 @@ CSS variables.
   --input-border-color-bad: red;
   --input-border-focus: green;
 
+  --radio-item-width: 8em;
+  --radio-background-color: white;
+  --radio-background-color-selected: green;
+  --radio-button-size: 1.2em;
+
+  --checkbox-background-color: white;
+  --checkbox-background-color-selected: green;
+  --checkbox-color-selected: white;
+  --checkbox-size: 1em;
+
   --rule-font-size: 0.9em;
   --rule-color: green;
   --rule-color-bad: red;
+
+  --listbox-checkmark-color: green;
+  --listbox-optgroup-color: green;
+  --listbox-optgroup-font-weight: bold;
+  --listbox-size: 1em;
 }
 
+/*#region Label */
 .input-field label.label {
   display: inline-block;
   width: var(--label-width);
@@ -64,6 +82,18 @@ CSS variables.
   color: var(--sublabel-color);
 }
 
+@media screen and (max-width: 600px) {
+  .input-field label.label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.1em;
+    margin-left: 1.2em;
+  }
+}
+
+/*#endregion Label */
+
+/*#region input */
 .input-field input.input {
   width: var(--input-width);
   margin: 0.4em 0.4em 0.1em 0.2em;
@@ -71,7 +101,7 @@ CSS variables.
 
   color: var(--input-color);
   background-color: var(--input-background-color, white);
-  border-radius: 4px;
+  border-radius: var(--border-radius, 4px);
   border: 1px solid var(--input-border-color);
   height: 2em;
   font-size: 1em;
@@ -88,12 +118,21 @@ CSS variables.
   background-image: var(--input-background-bad);
 }
 
-
 .input-field input.bad:focus {
   border-color: var(--input-border-color-bad);
   background-image: var(--input-background-focus-bad);
 }
 
+@media screen and (max-width: 600px) {
+  .input-field input.input {
+    margin-top: 0.1em;
+    width: 80%;
+    margin-left: 1em;
+  }
+}
+/*#endregion input */
+
+/*#region Footer/Rules*/
 .input-field footer {
   padding-left: var(--rule-padding-left);
   margin-bottom: 1em;
@@ -113,19 +152,6 @@ CSS variables.
 }
 
 @media screen and (max-width: 600px) {
-  .input-field label.label {
-    display: block;
-    text-align: left;
-    margin-bottom: 0.1em;
-    margin-left: 1.2em;
-  }
-
-  .input-field input.input {
-    margin-top: 0.1em;
-    width: 80%;
-    margin-left: 1em;
-  }
-
   .input-field footer {
     padding-left: 1em;
   }
@@ -134,11 +160,13 @@ CSS variables.
     padding-left: 2em;
   }
 }
+/*#endregion Footer/Rules*/
 
+/*#region Tooltip */
 .input-field .circle {
   display: inline-block;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--border-radius-circle, 50%);
   padding: 0.1em 0.3em;
   margin: 0 0.1em 0 0.06em;
 
@@ -163,7 +191,7 @@ CSS variables.
 
   background-color: var(--tooltip-background, dimgray);
   color: var(--tooltip-color, white);
-  border-radius: 4px;
+  border-radius: var(--border-radius, 4px);
 
   text-align: center;
   width: 15em;
@@ -198,7 +226,9 @@ CSS variables.
     left: 15%;
   }
 }
+/*#endregion Tooltip */
 
+/*#region Radio*/
 .input-field .radio-buttons {
   display: inline-block;
   margin-top: 0.4em;
@@ -210,11 +240,34 @@ CSS variables.
   width: var(--radio-item-width, 10em);
 }
 
-
 .input-field .radio .radio-label {
   color: var(--label-color);
 }
 
+.input-field .radio input[type="radio"] {
+  appearance: none;
+  outline: none;
+  border-radius: var(--border-radius-circle, 50%);
+  background-color: var(--radio-background-color, white);
+  background-clip: content-box;
+  border: calc(var(--radio-button-size) * 0.15) solid var(--input-border-color, gray);
+  width: var(--radio-button-size);
+  height: var(--radio-button-size);
+}
+
+.input-field .radio input[type="radio"]:checked {
+  background-color: var(--radio-background-color-selected, green);
+  border: calc(var(--radio-button-size) * 0.3) double var(--input-border-color, gray);
+}
+
+@media screen and (max-width: 600px) {
+  .input-field .radio {
+    margin-left: 1em;
+  }
+}
+/*#endregion Radio*/
+
+/*#region Checkbox*/
 .input-field .checkbox-buttons {
   display: inline-block;
   margin-top: 0.4em;
@@ -228,10 +281,97 @@ CSS variables.
 
 .input-field .checkbox .checkbox-label {
   color: var(--label-color);
+  display: inline-block;
+  transform: translateY(calc(var(--checkbox-size) * -0.4));
 }
+
+.input-field .checkbox input[type="checkbox"] {
+  appearance: none;
+  outline: none;
+  background-color: var(--checkbox-background-color);
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--border-radius, 4px);
+  display: inline-block;
+  position: relative;
+  padding: calc(var(--checkbox-size) * 0.7);
+}
+
+.input-field .checkbox input[type="checkbox"]:checked {
+  background-color: var(--checkbox-background-color-selected);
+  border: 1px solid var(--input-border-color);
+  color: white;
+}
+
+.input-field .checkbox input[type="checkbox"]:checked:after {
+  content: "\2714";
+  font-size: var(--checkbox-size);
+  position: absolute;
+  top: calc(var(--checkbox-size) * 0.2);
+  left: calc(var(--checkbox-size) * 0.3);
+  color: var(--checkbox-color-selected);
+}
+
 @media screen and (max-width: 600px) {
-  .input-field .radio, .input-field .checkbox {
+  .input-field .checkbox {
     margin-left: 1em;
   }
-
 }
+/*#endregion Checkbox*/
+
+/*#region listbox / select styling */
+.input-field select {
+  width: var(--input-width);
+  margin: 0.4em 0.4em 0.1em 0.2em;
+  padding: 0.45em 0.5em;
+  color: var(--input-color);
+  background-color: var(--input-background-color, white);
+  border-radius: var(--border-radius, 4px);
+  border: 1px solid var(--input-border-color);
+  font-size: var(--listbox-size, 1em);
+}
+
+.input-field select.listbox.multiple option::before {
+  content: "\25A2";  /* square */
+  line-height: calc(var(--listbox-size) * 1.5);
+  padding-right: calc(var(--listbox-size) * 0.3);
+  color: var(--input-border-color);
+  font-weight: bold;
+}
+
+.input-field select.listbox.multiple option:checked:before {
+  content: "\2714";  /* Check mark */
+  line-height: calc(var(--listbox-size) * 1.5);
+  padding-right: calc(var(--listbox-size) * 0.46);
+  color: var(--listbox-checkmark-color, green);
+}
+
+.input-field select option {
+  background-color: var(--input-background-color);
+  color: var(--input-color);
+  padding: 0.2em 0 0.1em 0.5em;
+}
+
+.input-field select.multiple option {
+  padding-left: 0.1em;
+}
+
+.input-field select.listbox optgroup {
+  color: var(--listbox-optgroup-color, black);
+  padding: 0.5em 0 0.5em 0.2em;
+  font-weight: var(--listbox-optgroup-font-weight);
+}
+
+.input-field select.listbox optgroup option {
+  padding-left: calc(var(--listbox-size) * 1.5);
+}
+
+@media screen and (max-width: 600px) {
+  .input-field select {
+    margin-top: 0.1em;
+    width: 80%;
+    margin-left: 1em;
+  }
+}
+
+/*#endregion listbox styling */
+

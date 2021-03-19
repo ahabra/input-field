@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 0.6.0.
+// Copyright 2021 (C) Abdul Habra. Version 1.0.0.
 // Apache License Version 2.0
 
 
@@ -778,7 +778,7 @@ ${t2}`;
   }
 
   // src/widgets/WidgetUtils.js
-  function parseAndVaslidate(json, widgetType, ...required2) {
+  function parseAndValidate(json, widgetType, ...required2) {
     if (!validateString(json))
       return false;
     json = JSON.parse(json);
@@ -805,6 +805,11 @@ ${t2}`;
     }
     return true;
   }
+  function validateOption(widgetType, {label, value}) {
+    if (label === void 0 && value === void 0) {
+      throw `${widgetType} definition requires at least a label or value`;
+    }
+  }
 
   // src/widgets/radio.js
   var template2 = `
@@ -819,7 +824,7 @@ ${t2}`;
     return jsonToHtml(element.innerHTML);
   }
   function jsonToHtml(json) {
-    json = parseAndVaslidate(json, "Radio", "name");
+    json = parseAndValidate(json, "Radio", "name");
     if (!json)
       return "";
     const buttons = buildRadioButtons(json);
@@ -835,7 +840,7 @@ ${buttons}
     return json.options.map((op) => buildOneRadioButton(name, op)).join(sep);
   }
   function buildOneRadioButton(name, option) {
-    validateOption(option);
+    validateOption("Radio", option);
     const params = {
       name,
       checked: option.checked ? " checked" : "",
@@ -844,11 +849,6 @@ ${buttons}
       label: option.label || option.value
     };
     return Stringer_exports.replaceTemplate(template2.trim(), params, "{");
-  }
-  function validateOption({label, value}) {
-    if (label === void 0 && value === void 0) {
-      throw "Radio button definition requires at least a label or value";
-    }
   }
 
   // src/widgets/checkbox.js
@@ -864,7 +864,7 @@ ${buttons}
     return jsonToHtml2(element.innerHTML);
   }
   function jsonToHtml2(json) {
-    json = parseAndVaslidate(json, "Checkbox");
+    json = parseAndValidate(json, "Checkbox");
     if (!json)
       return "";
     const buttons = buildCheckboxButtons(json);
@@ -879,7 +879,7 @@ ${buttons}
     return json.options.map((op) => buildOneCheckboxButton(op)).join(sep);
   }
   function buildOneCheckboxButton(option) {
-    validateOption2(option);
+    validateOption("Checkbox", option);
     const params = {
       name: option.name ? `name="${option.name}"` : "",
       checked: option.checked ? " checked" : "",
@@ -889,10 +889,77 @@ ${buttons}
     };
     return Stringer_exports.replaceTemplate(template3.trim(), params, "{");
   }
-  function validateOption2({label, value}) {
-    if (label === void 0 && value === void 0) {
-      throw "Checkbox button definition requires at least a label or value";
-    }
+
+  // src/widgets/listbox.js
+  var templates = {
+    select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}">{options}</select>',
+    group: '<optgroup label="{label}">{options}</optgroup>',
+    option: "<option{disabled}{selected}{value}>{label}</option>"
+  };
+  function contentToHtml3(element) {
+    if (!element)
+      return "";
+    return jsonToHtml3(element.innerHTML);
+  }
+  function jsonToHtml3(json) {
+    json = parseAndValidate(json, "Listbox");
+    if (!json)
+      return "";
+    const params = {
+      name: json.name ? ` name="${json.name}"` : "",
+      id: json.id ? ` id="${json.id}"` : "",
+      size: json.size ? ` size="${json.size}"` : "",
+      widgetType: getWidgetType(json),
+      multiple: json.multiple ? " multiple" : "",
+      options: buildOptions(json.options)
+    };
+    return Stringer_exports.replaceTemplate(templates.select, params, "{");
+  }
+  function getWidgetType({multiple, size}) {
+    if (multiple || size > 1)
+      return "listbox";
+    return "combobox";
+  }
+  function buildOptionGroup(json) {
+    const params = {
+      label: json.label,
+      options: buildOptions(json.options)
+    };
+    return Stringer_exports.replaceTemplate(templates.group, params, "{");
+  }
+  function buildOptions(options) {
+    if (!Array.isArray(options))
+      return "";
+    const html = options.map((op) => {
+      if (op.options)
+        return buildOptionGroup(op);
+      return buildOption(op);
+    });
+    return html.join("\n");
+  }
+  function buildOption(option) {
+    validateOption("Listbox", option);
+    const value = option.value || option.label;
+    const params = {
+      disabled: option.disabled ? " disabled" : "",
+      selected: option.selected ? " selected" : "",
+      label: option.label || option.value,
+      value: ` value="${value}"`
+    };
+    return Stringer_exports.replaceTemplate(templates.option, params, "{");
+  }
+  function mousedownListener(ev, inputField) {
+    ev.preventDefault();
+    const select = Domer_exports.first("select", inputField);
+    const scrollTop = select.scrollTop;
+    toggleOptionSelected(ev.target);
+    setTimeout(() => {
+      select.scrollTop = scrollTop;
+    });
+  }
+  function toggleOptionSelected(option) {
+    option.selected = !option.selected;
+    option.parentElement.focus();
   }
 
   // src/widgets/tooltip.js
@@ -921,7 +988,7 @@ ${buttons}
       propertyList: [
         {
           name: "value",
-          sel: "input",
+          sel: "input, select",
           onChange: (el, oldValue, newValue) => {
             validate(el, newValue);
           }
@@ -943,6 +1010,11 @@ ${buttons}
             const tooltipText = Domer_exports.first("label .tooltip-text", el);
             tooltipText.classList.toggle("show");
           }
+        },
+        {
+          sel: "select.listbox.multiple option",
+          eventName: "mousedown",
+          listener: (ev, el) => mousedownListener(ev, el)
         }
       ],
       actionList: [
@@ -988,6 +1060,8 @@ ${buttons}
       return contentToHtml(el);
     if (type === "checkbox")
       return contentToHtml2(el);
+    if (type === "listbox")
+      return contentToHtml3(el);
     return getHtml2(atts);
   }
   function getType2(atts) {

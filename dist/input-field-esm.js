@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 0.6.0.
+// Copyright 2021 (C) Abdul Habra. Version 1.0.0.
 // Apache License Version 2.0
 
 
@@ -230,7 +230,7 @@ function displayStyle(display) {
 }
 
 // src/input-field.js
-import {Domer as Domer2, Objecter as Objecter4, Stringer as Stringer7} from "@techexp/jshelper";
+import {Domer as Domer3, Objecter as Objecter4, Stringer as Stringer8} from "@techexp/jshelper";
 
 // src/input-field-validation.js
 import {Objecter as Objecter2, Stringer as Stringer2} from "@techexp/jshelper";
@@ -399,7 +399,7 @@ import {Stringer as Stringer5} from "@techexp/jshelper";
 
 // src/widgets/WidgetUtils.js
 import {Objecter as Objecter3, Stringer as Stringer4} from "@techexp/jshelper";
-function parseAndVaslidate(json, widgetType, ...required2) {
+function parseAndValidate(json, widgetType, ...required2) {
   if (!validateString(json))
     return false;
   json = JSON.parse(json);
@@ -426,6 +426,11 @@ function validateJsonObject(json, widgetType, ...required2) {
   }
   return true;
 }
+function validateOption(widgetType, {label, value}) {
+  if (label === void 0 && value === void 0) {
+    throw `${widgetType} definition requires at least a label or value`;
+  }
+}
 
 // src/widgets/radio.js
 var template2 = `
@@ -440,7 +445,7 @@ function contentToHtml(element) {
   return jsonToHtml(element.innerHTML);
 }
 function jsonToHtml(json) {
-  json = parseAndVaslidate(json, "Radio", "name");
+  json = parseAndValidate(json, "Radio", "name");
   if (!json)
     return "";
   const buttons = buildRadioButtons(json);
@@ -456,7 +461,7 @@ function buildRadioButtons(json) {
   return json.options.map((op) => buildOneRadioButton(name, op)).join(sep);
 }
 function buildOneRadioButton(name, option) {
-  validateOption(option);
+  validateOption("Radio", option);
   const params = {
     name,
     checked: option.checked ? " checked" : "",
@@ -465,11 +470,6 @@ function buildOneRadioButton(name, option) {
     label: option.label || option.value
   };
   return Stringer5.replaceTemplate(template2.trim(), params, "{");
-}
-function validateOption({label, value}) {
-  if (label === void 0 && value === void 0) {
-    throw "Radio button definition requires at least a label or value";
-  }
 }
 
 // src/widgets/checkbox.js
@@ -486,7 +486,7 @@ function contentToHtml2(element) {
   return jsonToHtml2(element.innerHTML);
 }
 function jsonToHtml2(json) {
-  json = parseAndVaslidate(json, "Checkbox");
+  json = parseAndValidate(json, "Checkbox");
   if (!json)
     return "";
   const buttons = buildCheckboxButtons(json);
@@ -501,7 +501,7 @@ function buildCheckboxButtons(json) {
   return json.options.map((op) => buildOneCheckboxButton(op)).join(sep);
 }
 function buildOneCheckboxButton(option) {
-  validateOption2(option);
+  validateOption("Checkbox", option);
   const params = {
     name: option.name ? `name="${option.name}"` : "",
     checked: option.checked ? " checked" : "",
@@ -511,10 +511,78 @@ function buildOneCheckboxButton(option) {
   };
   return Stringer6.replaceTemplate(template3.trim(), params, "{");
 }
-function validateOption2({label, value}) {
-  if (label === void 0 && value === void 0) {
-    throw "Checkbox button definition requires at least a label or value";
-  }
+
+// src/widgets/listbox.js
+import {Domer as Domer2, Stringer as Stringer7} from "@techexp/jshelper";
+var templates = {
+  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}">{options}</select>',
+  group: '<optgroup label="{label}">{options}</optgroup>',
+  option: "<option{disabled}{selected}{value}>{label}</option>"
+};
+function contentToHtml3(element) {
+  if (!element)
+    return "";
+  return jsonToHtml3(element.innerHTML);
+}
+function jsonToHtml3(json) {
+  json = parseAndValidate(json, "Listbox");
+  if (!json)
+    return "";
+  const params = {
+    name: json.name ? ` name="${json.name}"` : "",
+    id: json.id ? ` id="${json.id}"` : "",
+    size: json.size ? ` size="${json.size}"` : "",
+    widgetType: getWidgetType(json),
+    multiple: json.multiple ? " multiple" : "",
+    options: buildOptions(json.options)
+  };
+  return Stringer7.replaceTemplate(templates.select, params, "{");
+}
+function getWidgetType({multiple, size}) {
+  if (multiple || size > 1)
+    return "listbox";
+  return "combobox";
+}
+function buildOptionGroup(json) {
+  const params = {
+    label: json.label,
+    options: buildOptions(json.options)
+  };
+  return Stringer7.replaceTemplate(templates.group, params, "{");
+}
+function buildOptions(options) {
+  if (!Array.isArray(options))
+    return "";
+  const html = options.map((op) => {
+    if (op.options)
+      return buildOptionGroup(op);
+    return buildOption(op);
+  });
+  return html.join("\n");
+}
+function buildOption(option) {
+  validateOption("Listbox", option);
+  const value = option.value || option.label;
+  const params = {
+    disabled: option.disabled ? " disabled" : "",
+    selected: option.selected ? " selected" : "",
+    label: option.label || option.value,
+    value: ` value="${value}"`
+  };
+  return Stringer7.replaceTemplate(templates.option, params, "{");
+}
+function mousedownListener(ev, inputField) {
+  ev.preventDefault();
+  const select = Domer2.first("select", inputField);
+  const scrollTop = select.scrollTop;
+  toggleOptionSelected(ev.target);
+  setTimeout(() => {
+    select.scrollTop = scrollTop;
+  });
+}
+function toggleOptionSelected(option) {
+  option.selected = !option.selected;
+  option.parentElement.focus();
 }
 
 // src/widgets/tooltip.js
@@ -543,7 +611,7 @@ function define(cssFilePath = "") {
     propertyList: [
       {
         name: "value",
-        sel: "input",
+        sel: "input, select",
         onChange: (el, oldValue, newValue) => {
           validate(el, newValue);
         }
@@ -562,9 +630,14 @@ function define(cssFilePath = "") {
         sel: "label .tooltip",
         eventName: "click",
         listener: (ev, el) => {
-          const tooltipText = Domer2.first("label .tooltip-text", el);
+          const tooltipText = Domer3.first("label .tooltip-text", el);
           tooltipText.classList.toggle("show");
         }
+      },
+      {
+        sel: "select.listbox.multiple option",
+        eventName: "mousedown",
+        listener: (ev, el) => mousedownListener(ev, el)
       }
     ],
     actionList: [
@@ -581,12 +654,12 @@ function define(cssFilePath = "") {
   });
 }
 function extractAttributes(el) {
-  const domAtts = Domer2.getAttributes(el);
+  const domAtts = Domer3.getAttributes(el);
   const atts = {};
   Objecter4.forEachEntry(domAtts, (k, v) => {
     atts[k.toLowerCase()] = v;
   });
-  const showRules = Stringer7.trim(atts.showrules).toLowerCase();
+  const showRules = Stringer8.trim(atts.showrules).toLowerCase();
   atts.showrules = showRules === "" || showRules === "true";
   return atts;
 }
@@ -602,7 +675,7 @@ function buildHtml(el, atts, cssFilePath) {
     rules: el.validationRules.toHtml()
   };
   setTooltipParams(atts, values);
-  return Stringer7.replaceTemplate(input_field_default, values);
+  return Stringer8.replaceTemplate(input_field_default, values);
 }
 function getInputHtml(el, atts) {
   const type = getType2(atts);
@@ -610,10 +683,12 @@ function getInputHtml(el, atts) {
     return contentToHtml(el);
   if (type === "checkbox")
     return contentToHtml2(el);
+  if (type === "listbox")
+    return contentToHtml3(el);
   return getHtml2(atts);
 }
 function getType2(atts) {
-  const type = Stringer7.trim(atts.type).toLowerCase();
+  const type = Stringer8.trim(atts.type).toLowerCase();
   if (!type)
     return "text";
   if (type === "integer")
@@ -621,7 +696,7 @@ function getType2(atts) {
   return type;
 }
 function buildCssLink(cssFilePath) {
-  if (Stringer7.isEmpty(cssFilePath))
+  if (Stringer8.isEmpty(cssFilePath))
     return "";
   return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
 }
@@ -640,19 +715,19 @@ function getAttr2(atts, attName) {
   return ` ${attName}="${value}"`;
 }
 function validate(el, value) {
-  const rulesList = Domer2.first("footer ul.rules", el);
+  const rulesList = Domer3.first("footer ul.rules", el);
   let allValid = true;
   el.validationRules.validate(value, (isValid, name) => {
-    const li = Domer2.first(`li.validation-${name}`, rulesList);
-    Domer2.classPresentIf(li, "bad", !isValid);
+    const li = Domer3.first(`li.validation-${name}`, rulesList);
+    Domer3.classPresentIf(li, "bad", !isValid);
     allValid = allValid && isValid;
   });
-  const input = Domer2.first("input", el);
-  Domer2.classPresentIf(input, "bad", !allValid);
+  const input = Domer3.first("input", el);
+  Domer3.classPresentIf(input, "bad", !allValid);
 }
 function addRuleHtml(el, rule) {
-  const rulesHtml = Domer2.first("footer ul.rules", el);
-  Domer2.add(rulesHtml, rule.toHtml());
+  const rulesHtml = Domer3.first("footer ul.rules", el);
+  Domer3.add(rulesHtml, rule.toHtml());
 }
 export {
   define
