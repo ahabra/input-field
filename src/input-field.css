@@ -51,8 +51,10 @@ CSS variables.
   --rule-color: green;
   --rule-color-bad: red;
 
+  --listbox-checkmark-color: green;
   --listbox-optgroup-color: green;
   --listbox-optgroup-font-weight: bold;
+  --listbox-size: 1em;
 }
 
 /*#region Label */
@@ -301,7 +303,7 @@ CSS variables.
 }
 
 .input-field .checkbox input[type="checkbox"]:checked:after {
-  content: '\2714';
+  content: "\2714";
   font-size: var(--checkbox-size);
   position: absolute;
   top: calc(var(--checkbox-size) * 0.2);
@@ -325,22 +327,22 @@ CSS variables.
   background-color: var(--input-background-color, white);
   border-radius: var(--border-radius, 4px);
   border: 1px solid var(--input-border-color);
-  font-size: 1em;
-}
-
-.input-field select:focus {
-  outline: none;
-  border-color: var(--input-border-focus);
+  font-size: var(--listbox-size, 1em);
 }
 
 .input-field select.listbox.multiple option::before {
-  content: "\2610";
-  padding-right: 0.1em;
-  font-size: 1.5em;
+  content: "\25A2";  /* square */
+  line-height: calc(var(--listbox-size) * 1.5);
+  padding-right: calc(var(--listbox-size) * 0.2);
+  color: var(--input-border-color);
+  font-weight: bold;
 }
 
 .input-field select.listbox.multiple option:checked:before {
-  content: "\2611";
+  content: "\2714";  /* Check mark */
+  line-height: calc(var(--listbox-size) * 1.5);
+  padding-right: 0.35em;
+  color: var(--listbox-checkmark-color, green);
 }
 
 .input-field select option {
@@ -355,7 +357,7 @@ CSS variables.
 
 .input-field select.listbox optgroup {
   color: var(--listbox-optgroup-color, black);
-  padding: 0.5em 0 0.5em 0.3em;
+  padding: 0.5em 0 0.5em 0.2em;
   font-weight: var(--listbox-optgroup-font-weight);
 }
 
