@@ -77,7 +77,7 @@ export class Rule {
   }
 
   static createRule(name, message, validator, value) {
-    message = message.replaceAll('%v', value)
+    message = Stringer.replaceAll(message, '%v', value)
     return new Rule(name, message, validator)
   }
 
