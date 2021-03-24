@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.0.1.
+// Copyright 2021 (C) Abdul Habra. Version 1.0.2.
 // Apache License Version 2.0
 
 
@@ -47,6 +47,7 @@ var InputField = (() => {
     isInteger: () => isInteger,
     isNil: () => isNil,
     isNumber: () => isNumber,
+    isRegExp: () => isRegExp,
     isString: () => isString
   });
   function isNil(x) {
@@ -78,6 +79,9 @@ var InputField = (() => {
     if (!isNumber(n))
       return false;
     return Number.isInteger(Number.parseFloat(n));
+  }
+  function isRegExp(re) {
+    return isType(re, "RegExp");
   }
   function isType(v, type) {
     return Object.prototype.toString.call(v) === `[object ${type}]`;
@@ -258,6 +262,7 @@ var InputField = (() => {
     removePrefix: () => removePrefix,
     removeSuffix: () => removeSuffix,
     removeSurrounding: () => removeSurrounding,
+    replaceAll: () => replaceAll,
     replaceTemplate: () => replaceTemplate,
     startsWith: () => startsWith,
     substringAfter: () => substringAfter,
@@ -344,11 +349,21 @@ var InputField = (() => {
   function isEmpty(s) {
     return s === void 0 || s === null || s === "";
   }
+  function replaceAll(text, search, newStr) {
+    if (isFunction(String.prototype.replaceAll)) {
+      return text.replaceAll(search, newStr);
+    }
+    if (isRegExp(search)) {
+      return text.replace(search, newStr);
+    }
+    const re = new RegExp(search, "g");
+    return text.replace(re, newStr);
+  }
   function replaceTemplate(text = "", values = {}, preTag = "${", postTag = "}") {
     forEachEntry(values, (k, v) => {
       if (v !== void 0) {
         k = preTag + k + postTag;
-        text = text.replaceAll(k, v);
+        text = replaceAll(text, k, v);
       }
     });
     return text;
