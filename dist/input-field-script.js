@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.0.2.
+// Copyright 2021 (C) Abdul Habra. Version 1.0.3.
 // Apache License Version 2.0
 
 
@@ -699,7 +699,7 @@ ${t2}`;
 `;
     }
     static createRule(name, message, validator, value) {
-      message = message.replaceAll("%v", value);
+      message = Stringer_exports.replaceAll(message, "%v", value);
       return new Rule(name, message, validator);
     }
     static email(msg = "Must be a valid email address") {
