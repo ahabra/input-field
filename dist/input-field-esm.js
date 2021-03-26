@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.0.3.
+// Copyright 2021 (C) Abdul Habra. Version 1.1.0.
 // Apache License Version 2.0
 
 
@@ -576,6 +576,7 @@ function mousedownListener(ev, inputField) {
   const select = Domer2.first("select", inputField);
   const scrollTop = select.scrollTop;
   toggleOptionSelected(ev.target);
+  inputField.actions._runValueChangeListeners(ev.target.value);
   setTimeout(() => {
     select.scrollTop = scrollTop;
   });
@@ -606,6 +607,7 @@ function define(cssFilePath = "") {
     html: (el) => {
       const atts = extractAttributes(el);
       el.validationRules = ValidationRules.createFromAttributes(atts);
+      el.valueChangeListeners = [];
       return buildHtml(el, atts, cssFilePath);
     },
     propertyList: [
@@ -614,16 +616,18 @@ function define(cssFilePath = "") {
         sel: "input, select",
         onChange: (el, oldValue, newValue) => {
           validate(el, newValue);
+          el.actions._runValueChangeListeners(newValue);
         }
       }
     ],
     eventHandlerList: [
       {
-        sel: "input",
+        sel: "input, select",
         eventName: "input",
         listener: (ev, el) => {
           const value = ev.target.value;
           validate(el, value);
+          el.actions._runValueChangeListeners(value);
         }
       },
       {
@@ -648,6 +652,21 @@ function define(cssFilePath = "") {
           if (!this.validationRules.add(rule))
             return;
           addRuleHtml(this, rule);
+        }
+      },
+      {
+        name: "addValueChangeListener",
+        action: function(valueChangeListener) {
+          this.valueChangeListeners.push(valueChangeListener);
+        }
+      },
+      {
+        name: "_runValueChangeListeners",
+        action: function(value) {
+          const el = this;
+          el.valueChangeListeners.forEach((listener) => {
+            listener(el, value);
+          });
         }
       }
     ]
