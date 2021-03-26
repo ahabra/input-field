@@ -69,6 +69,7 @@ export function mousedownListener(ev, inputField) {
   const scrollTop = select.scrollTop
 
   toggleOptionSelected(ev.target)
+  inputField.actions._runValueChangeListeners(ev.target.value)
 
   setTimeout(()=> { select.scrollTop = scrollTop })
 }

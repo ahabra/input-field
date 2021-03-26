@@ -29,7 +29,7 @@
                  required="required"
     ></input-field>
 
-    <input-field type="radio" label="Gender"
+    <input-field id="gender" type="radio" label="Gender"
                  tooltip="What is your preferred gender?"
     >
       {
@@ -43,7 +43,7 @@
       }
     </input-field>
 
-    <input-field type="checkbox" label="Vehicle">
+    <input-field id="vehicle" type="checkbox" label="Vehicle">
       {
         "flow": "vertical",
         "options": [
@@ -54,7 +54,7 @@
       }
     </input-field>
 
-    <input-field type="listbox" label="States">
+    <input-field id="states" type="listbox" label="States">
       {
         "name": "states",
         "id": "states",
@@ -75,7 +75,7 @@
       }
     </input-field>
 
-    <input-field type="listbox" label="Multiple States"
+    <input-field id="multiStates" type="listbox" label="Multiple States"
                  tooltip="select multiple states">
       {
         "name": "states2",
@@ -97,7 +97,7 @@
       }
     </input-field>
 
-    <input-field type="listbox" label="One State">
+    <input-field id="oneState" type="listbox" label="One State">
       {
         "name": "states2",
         "id": "states2",
@@ -121,14 +121,36 @@
     <script data-app></script>
 
     <script>
+      function logChange(el, v) {
+        let value = el.properties.value
+        if (!Array.isArray(value)) {
+          value = v
+        }
+        console.log('>>', el.attributes.id.value, ' change:', value)
+      }
+
       const cssFilePath = './out/input-field.css'
       InputField.define(cssFilePath)
 
       const age = document.getElementById('age')
       age.actions.addRule('no7', 'Cannot have the number 7', v => !v.includes('7'))
+      age.actions.addValueChangeListener(logChange)
 
-      // const name = document.getElementById('name')
-      // name.actions.addRule('start-ab', 'Must start with ab', v => v.startsWith('ab'))
+      const gender = document.getElementById('gender')
+      gender.actions.addValueChangeListener(logChange)
+
+      const vehicle = document.getElementById('vehicle')
+      vehicle.actions.addValueChangeListener(logChange)
+
+      const states = document.getElementById('states')
+      states.actions.addValueChangeListener(logChange)
+
+      const multiStates = document.getElementById('multiStates')
+      multiStates.actions.addValueChangeListener(logChange)
+
+      const oneState = document.getElementById('oneState')
+      oneState.actions.addValueChangeListener(logChange)
+
     </script>
 
   </body>

@@ -53,6 +53,7 @@ export function define(cssFilePath = '') {
     html: el => {
       const atts = extractAttributes(el)
       el.validationRules = ValidationRules.createFromAttributes(atts)
+      el.valueChangeListeners = []
       return buildHtml(el, atts, cssFilePath)
     },
 
@@ -60,17 +61,19 @@ export function define(cssFilePath = '') {
       { name: 'value', sel: 'input, select',
         onChange: (el, oldValue, newValue) => {
           validate(el, newValue)
+          el.actions._runValueChangeListeners(newValue)
         }
       }
     ],
 
     eventHandlerList: [
       {
-        sel: 'input',
+        sel: 'input, select',
         eventName: 'input',
         listener: (ev, el) => {
           const value = ev.target.value
           validate(el, value)
+          el.actions._runValueChangeListeners(value)
         }
       },
       {
@@ -96,6 +99,21 @@ export function define(cssFilePath = '') {
           if (!this.validationRules.add(rule)) return
 
           addRuleHtml(this, rule)
+        }
+      },
+      {
+        name: 'addValueChangeListener',
+        action: function(valueChangeListener) {
+          this.valueChangeListeners.push(valueChangeListener)
+        }
+      },
+      {
+        name: '_runValueChangeListeners',
+        action: function(value) {
+          const el = this
+          el.valueChangeListeners.forEach( listener => {
+            listener(el, value)
+          })
         }
       }
     ]
