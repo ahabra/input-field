@@ -212,8 +212,8 @@ For example, if you have this html:
 
 ```javascript
 const age = document.getElementById('age')
-age.properties.value = 10
-console.log(age.properties.value)
+age.wi.properties.value = 10
+console.log(age.wi.properties.value)
 ```
 
 
@@ -224,7 +224,7 @@ The component defines the following _action_s
 
 ```javascript
 const age = document.getElementById('age')
-age.actions.addRule('adult', 'Must be at least 18', v => Number(v) >= 18)
+age.wi.actions.addRule('adult', 'Must be at least 18', v => Number(v) >= 18)
 ```
 
 The `addRule` action takes the following arguments:
@@ -242,11 +242,12 @@ UI or programmatically.
 
 ```javascript
 const age = document.getElementById('age')
-age.actions.addValueChangeListener((el, value) => {
+age.wi.actions.addValueChangeListener((el, value) => {
 	console.log('The new value for age is', value)
 })
 ```
 
 
 ## Change Log
+* 2021-03-30 Upgrade dependency on webitem to version 0.4.0
 * 2021-03-26 Support `addValueChangeListener()`

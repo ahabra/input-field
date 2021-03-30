@@ -40,7 +40,7 @@ import {setTooltipParams} from './widgets/tooltip'
  *
  * Additionally, you can add custom validation rules to the component using:
  *
- * element.actions.addRule(name, message, validator)
+ * element.wi.actions.addRule(name, message, validator)
  * Where validator is a function that takes the current value and returns a boolean.
  *
  * @param cssFilePath The path to a CSS file containing the input-field styles.
@@ -61,7 +61,7 @@ export function define(cssFilePath = '') {
       { name: 'value', sel: 'input, select',
         onChange: (el, oldValue, newValue) => {
           validate(el, newValue)
-          el.actions._runValueChangeListeners(newValue)
+          el.wi.actions._runValueChangeListeners(newValue)
         }
       }
     ],
@@ -73,7 +73,7 @@ export function define(cssFilePath = '') {
         listener: (ev, el) => {
           const value = ev.target.value
           validate(el, value)
-          el.actions._runValueChangeListeners(value)
+          el.wi.actions._runValueChangeListeners(value)
         }
       },
       {

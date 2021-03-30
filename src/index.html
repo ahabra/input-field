@@ -122,7 +122,7 @@
 
     <script>
       function logChange(el, v) {
-        let value = el.properties.value
+        let value = el.wi.properties.value
         if (!Array.isArray(value)) {
           value = v
         }
@@ -133,23 +133,23 @@
       InputField.define(cssFilePath)
 
       const age = document.getElementById('age')
-      age.actions.addRule('no7', 'Cannot have the number 7', v => !v.includes('7'))
-      age.actions.addValueChangeListener(logChange)
+      age.wi.actions.addRule('no7', 'Cannot have the number 7', v => !v.includes('7'))
+      age.wi.actions.addValueChangeListener(logChange)
 
       const gender = document.getElementById('gender')
-      gender.actions.addValueChangeListener(logChange)
+      gender.wi.actions.addValueChangeListener(logChange)
 
       const vehicle = document.getElementById('vehicle')
-      vehicle.actions.addValueChangeListener(logChange)
+      vehicle.wi.actions.addValueChangeListener(logChange)
 
       const states = document.getElementById('states')
-      states.actions.addValueChangeListener(logChange)
+      states.wi.actions.addValueChangeListener(logChange)
 
       const multiStates = document.getElementById('multiStates')
-      multiStates.actions.addValueChangeListener(logChange)
+      multiStates.wi.actions.addValueChangeListener(logChange)
 
       const oneState = document.getElementById('oneState')
-      oneState.actions.addValueChangeListener(logChange)
+      oneState.wi.actions.addValueChangeListener(logChange)
 
     </script>
 
