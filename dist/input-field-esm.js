@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.1.0.
+// Copyright 2021 (C) Abdul Habra. Version 1.1.1.
 // Apache License Version 2.0
 
 
@@ -134,10 +134,18 @@ function defineElement({
   const el = class extends HTMLElement {
     constructor() {
       super();
+      const root = this;
       addHtml(this, html, css, display);
-      this.properties = bindProperties(this, propertyList);
-      this.actions = defineActions(this, actionList);
+      this.wi = {};
+      this.wi.properties = bindProperties(this, propertyList);
+      this.wi.actions = defineActions(this, actionList);
       addEventListeners(this, eventHandlerList);
+      this.wi.addProperty = function(name, value, sel, attr, onChange) {
+        const prop = {name, value, sel, attr, onChange};
+        addProperty(root.wi.properties, prop, root);
+      };
+      this.wi.addAction = (name, action) => addAction(root, root.wi.actions, name, action);
+      this.wi.addEventListener = (sel, eventName, listener) => addHandler(root, {sel, eventName, listener});
     }
   };
   customElements.define(nameWithDash, el);
@@ -175,11 +183,14 @@ function defineActions(root, actionList) {
   if (!actionList)
     return actions;
   actionList.forEach((pair) => {
-    if (pair.name && pair.action) {
-      actions[pair.name] = pair.action.bind(root);
-    }
+    addAction(root, actions, pair.name, pair.action);
   });
   return actions;
+}
+function addAction(root, actions, name, action) {
+  if (!Objecter.isString(name) || !Objecter.isFunction(action))
+    return;
+  actions[name] = action.bind(root);
 }
 function addEventListeners(root, eventHandlerList) {
   if (!eventHandlerList)
@@ -187,12 +198,13 @@ function addEventListeners(root, eventHandlerList) {
   if (!Array.isArray(eventHandlerList)) {
     throw "eventHandlerList must be an array of {sel, eventName, listener} objects";
   }
-  eventHandlerList.forEach((h) => {
-    const elements = Domer.all(h.sel, root.shadowRoot);
-    elements.forEach((el) => {
-      el.addEventListener(h.eventName, (ev) => {
-        h.listener(ev, root);
-      });
+  eventHandlerList.forEach((h) => addHandler(root, h));
+}
+function addHandler(root, {sel, eventName, listener}) {
+  const elements = Domer.all(sel, root.shadowRoot);
+  elements.forEach((el) => {
+    el.addEventListener(eventName, (ev) => {
+      listener(ev, root);
     });
   });
 }
@@ -576,7 +588,7 @@ function mousedownListener(ev, inputField) {
   const select = Domer2.first("select", inputField);
   const scrollTop = select.scrollTop;
   toggleOptionSelected(ev.target);
-  inputField.actions._runValueChangeListeners(ev.target.value);
+  inputField.wi.actions._runValueChangeListeners(ev.target.value);
   setTimeout(() => {
     select.scrollTop = scrollTop;
   });
@@ -616,7 +628,7 @@ function define(cssFilePath = "") {
         sel: "input, select",
         onChange: (el, oldValue, newValue) => {
           validate(el, newValue);
-          el.actions._runValueChangeListeners(newValue);
+          el.wi.actions._runValueChangeListeners(newValue);
         }
       }
     ],
@@ -627,7 +639,7 @@ function define(cssFilePath = "") {
         listener: (ev, el) => {
           const value = ev.target.value;
           validate(el, value);
-          el.actions._runValueChangeListeners(value);
+          el.wi.actions._runValueChangeListeners(value);
         }
       },
       {
