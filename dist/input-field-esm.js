@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.1.1.
+// Copyright 2021 (C) Abdul Habra. Version 1.2.0.
 // Apache License Version 2.0
 
 
@@ -242,60 +242,13 @@ function displayStyle(display) {
 }
 
 // src/input-field.js
-import {Domer as Domer3, Objecter as Objecter4, Stringer as Stringer8} from "@techexp/jshelper";
+import {Domer as Domer3, Objecter as Objecter5, Stringer as Stringer9} from "@techexp/jshelper";
 
-// src/input-field-validation.js
+// src/validation/ValidationRules.js
+import {Objecter as Objecter3, Stringer as Stringer3} from "@techexp/jshelper";
+
+// src/validation/Rule.js
 import {Objecter as Objecter2, Stringer as Stringer2} from "@techexp/jshelper";
-var ValidationRules = class {
-  constructor(rules) {
-    this.rules = [];
-    this.add(...rules);
-  }
-  add(...rules) {
-    rules = rules.filter((r) => !containsName(this.rules, r.name));
-    if (rules.length === 0)
-      return false;
-    this.rules.push(...rules);
-    return rules;
-  }
-  validate(value, onValidation) {
-    this.rules.forEach((r) => {
-      const isValid = r.isValid(value);
-      onValidation(isValid, r.name);
-    });
-  }
-  toHtml() {
-    return this.rules.map((r) => r.toHtml()).join("");
-  }
-  static createFromAttributes(atts) {
-    const rules = [];
-    checkType(rules, atts);
-    Objecter2.forEachEntry(atts, (k, v) => {
-      if (!Stringer2.isEmpty(v) && Objecter2.has(Rule, k)) {
-        const msg = atts[k + "-message"];
-        const rule = Rule[k](v, msg);
-        rules.push(rule);
-      }
-    });
-    return new ValidationRules(rules);
-  }
-};
-function checkType(rules, atts) {
-  switch (atts.type) {
-    case "email":
-      return rules.push(Rule.email(atts["email-message"]));
-    case "number":
-      return rules.push(Rule.isNumber(atts["number-message"]));
-    case "integer":
-      return rules.push(Rule.isInteger(atts["integer-message"]));
-    case "set":
-      return rules.push(Rule.set(atts.options, atts["set-message"]));
-  }
-}
-function containsName(rules, name) {
-  const found = rules.find((r) => r.name === name);
-  return !!found;
-}
 var Rule = class {
   constructor(name = "", message, validator) {
     this.name = name.replace(/[ \\.]/g, "-").toLowerCase();
@@ -368,11 +321,63 @@ var Rule = class {
   }
 };
 
+// src/validation/ValidationRules.js
+var ValidationRules = class {
+  constructor(...rules) {
+    this.rules = [];
+    this.add(...rules);
+  }
+  add(...rules) {
+    rules.forEach((r) => {
+      if (!containsName(this.rules, r.name)) {
+        this.rules.push(r);
+      }
+    });
+  }
+  validate(value, onValidation) {
+    this.rules.forEach((r) => {
+      const isValid = r.isValid(value);
+      onValidation(isValid, r.name);
+    });
+  }
+  toHtml() {
+    return this.rules.map((r) => r.toHtml()).join("");
+  }
+  static createFromAttributes(atts) {
+    const rules = [];
+    checkType(rules, atts);
+    Objecter3.forEachEntry(atts, (k, v) => {
+      if (!Stringer3.isEmpty(v) && Objecter3.has(Rule, k)) {
+        const msg = atts[k + "-message"];
+        const rule = Rule[k](v, msg);
+        rules.push(rule);
+      }
+    });
+    return new ValidationRules(...rules);
+  }
+};
+function checkType(rules, atts) {
+  switch (atts.type) {
+    case "email":
+      return rules.push(Rule.email(atts["email-message"]));
+    case "number":
+      return rules.push(Rule.isNumber(atts["number-message"]));
+    case "integer":
+      return rules.push(Rule.isInteger(atts["integer-message"]));
+    case "set":
+      return rules.push(Rule.set(atts.options, atts["set-message"]));
+  }
+}
+function containsName(rules, name) {
+  const found = rules.find((r) => r.name === name);
+  return !!found;
+}
+
 // src/input-field.html
 var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label">\n    <span class="superlabel ${required} ${tooltip}">\n      ${label} ${tooltipIcon}\n      <span class="tooltip-text">${tooltipText}</span>\n    </span>\n    <span class="sublabel">${sublabel}</span>\n  </label>\n\n  ${input}\n\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
 
 // src/widgets/input.js
-import {Stringer as Stringer3} from "@techexp/jshelper";
+import {Stringer as Stringer4} from "@techexp/jshelper";
 var template = `
  <input type="{type}" class="input" value="{value}"
   {required} {minlength} {maxlength} {pattern}>
@@ -387,10 +392,10 @@ function getHtml2(atts) {
     pattern: getAttr(atts, "pattern"),
     value: atts.value || ""
   };
-  return Stringer3.replaceTemplate(template, params, "{");
+  return Stringer4.replaceTemplate(template, params, "{");
 }
 function getType(atts) {
-  const type = Stringer3.trim(atts.type).toLowerCase();
+  const type = Stringer4.trim(atts.type).toLowerCase();
   if (!type)
     return "text";
   if (type === "integer")
@@ -407,10 +412,10 @@ function getAttr(atts, attName) {
 }
 
 // src/widgets/radio.js
-import {Stringer as Stringer5} from "@techexp/jshelper";
+import {Stringer as Stringer6} from "@techexp/jshelper";
 
 // src/widgets/WidgetUtils.js
-import {Objecter as Objecter3, Stringer as Stringer4} from "@techexp/jshelper";
+import {Objecter as Objecter4, Stringer as Stringer5} from "@techexp/jshelper";
 function parseAndValidate(json, widgetType, ...required2) {
   if (!validateString(json))
     return false;
@@ -420,9 +425,9 @@ function parseAndValidate(json, widgetType, ...required2) {
   return json;
 }
 function validateString(json) {
-  if (!Objecter3.isString(json))
+  if (!Objecter4.isString(json))
     return false;
-  if (Stringer4.isEmpty(json))
+  if (Stringer5.isEmpty(json))
     return false;
   json = json.trim();
   return json.length !== 0;
@@ -432,7 +437,7 @@ function validateJsonObject(json, widgetType, ...required2) {
     return false;
   if (json.options.length === 0)
     return false;
-  const found = required2.find((r) => !Objecter3.has(json, r));
+  const found = required2.find((r) => !Objecter4.has(json, r));
   if (found) {
     throw `${widgetType} definition requires ${found} attribute`;
   }
@@ -481,11 +486,11 @@ function buildOneRadioButton(name, option) {
     value: option.value || option.label,
     label: option.label || option.value
   };
-  return Stringer5.replaceTemplate(template2.trim(), params, "{");
+  return Stringer6.replaceTemplate(template2.trim(), params, "{");
 }
 
 // src/widgets/checkbox.js
-import {Stringer as Stringer6} from "@techexp/jshelper";
+import {Stringer as Stringer7} from "@techexp/jshelper";
 var template3 = `
 <label class="checkbox">
   <input type="checkbox" {name} {id} value="{value}"{checked}>
@@ -521,11 +526,11 @@ function buildOneCheckboxButton(option) {
     value: option.value || option.label,
     label: option.label || option.value
   };
-  return Stringer6.replaceTemplate(template3.trim(), params, "{");
+  return Stringer7.replaceTemplate(template3.trim(), params, "{");
 }
 
 // src/widgets/listbox.js
-import {Domer as Domer2, Stringer as Stringer7} from "@techexp/jshelper";
+import {Domer as Domer2, Stringer as Stringer8} from "@techexp/jshelper";
 var templates = {
   select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}">{options}</select>',
   group: '<optgroup label="{label}">{options}</optgroup>',
@@ -548,7 +553,7 @@ function jsonToHtml3(json) {
     multiple: json.multiple ? " multiple" : "",
     options: buildOptions(json.options)
   };
-  return Stringer7.replaceTemplate(templates.select, params, "{");
+  return Stringer8.replaceTemplate(templates.select, params, "{");
 }
 function getWidgetType({multiple, size}) {
   if (multiple || size > 1)
@@ -560,7 +565,7 @@ function buildOptionGroup(json) {
     label: json.label,
     options: buildOptions(json.options)
   };
-  return Stringer7.replaceTemplate(templates.group, params, "{");
+  return Stringer8.replaceTemplate(templates.group, params, "{");
 }
 function buildOptions(options) {
   if (!Array.isArray(options))
@@ -581,7 +586,7 @@ function buildOption(option) {
     label: option.label || option.value,
     value: ` value="${value}"`
   };
-  return Stringer7.replaceTemplate(templates.option, params, "{");
+  return Stringer8.replaceTemplate(templates.option, params, "{");
 }
 function mousedownListener(ev, inputField) {
   ev.preventDefault();
@@ -667,6 +672,27 @@ function define(cssFilePath = "") {
         }
       },
       {
+        name: "getRuleValidState",
+        action: function(name) {
+          const rulesList = Domer3.first("footer ul.rules", this);
+          const li = Domer3.first(`li.validation-${name}`, rulesList);
+          if (li === null)
+            return null;
+          return !li.classList.contains("bad");
+        }
+      },
+      {
+        name: "setRuleValidState",
+        action: function(name, isValid) {
+          const rulesList = Domer3.first("footer ul.rules", this);
+          const li = Domer3.first(`li.validation-${name}`, rulesList);
+          Domer3.classPresentIf(li, "bad", !isValid);
+          const input = Domer3.first("input", this);
+          const failedRules = Domer3.first("li.bad", rulesList);
+          Domer3.classPresentIf(input, "bad", failedRules !== null);
+        }
+      },
+      {
         name: "addValueChangeListener",
         action: function(valueChangeListener) {
           this.valueChangeListeners.push(valueChangeListener);
@@ -687,10 +713,10 @@ function define(cssFilePath = "") {
 function extractAttributes(el) {
   const domAtts = Domer3.getAttributes(el);
   const atts = {};
-  Objecter4.forEachEntry(domAtts, (k, v) => {
+  Objecter5.forEachEntry(domAtts, (k, v) => {
     atts[k.toLowerCase()] = v;
   });
-  const showRules = Stringer8.trim(atts.showrules).toLowerCase();
+  const showRules = Stringer9.trim(atts.showrules).toLowerCase();
   atts.showrules = showRules === "" || showRules === "true";
   return atts;
 }
@@ -706,7 +732,7 @@ function buildHtml(el, atts, cssFilePath) {
     rules: el.validationRules.toHtml()
   };
   setTooltipParams(atts, values);
-  return Stringer8.replaceTemplate(input_field_default, values);
+  return Stringer9.replaceTemplate(input_field_default, values);
 }
 function getInputHtml(el, atts) {
   const type = getType2(atts);
@@ -719,7 +745,7 @@ function getInputHtml(el, atts) {
   return getHtml2(atts);
 }
 function getType2(atts) {
-  const type = Stringer8.trim(atts.type).toLowerCase();
+  const type = Stringer9.trim(atts.type).toLowerCase();
   if (!type)
     return "text";
   if (type === "integer")
@@ -727,7 +753,7 @@ function getType2(atts) {
   return type;
 }
 function buildCssLink(cssFilePath) {
-  if (Stringer8.isEmpty(cssFilePath))
+  if (Stringer9.isEmpty(cssFilePath))
     return "";
   return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
 }
