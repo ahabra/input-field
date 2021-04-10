@@ -1,7 +1,9 @@
 import * as webitem from '@techexp/webitem'
 import {Domer, Objecter, Stringer} from '@techexp/jshelper'
 
-import {ValidationRules, Rule} from './input-field-validation'
+import {ValidationRules} from './validation/ValidationRules'
+import {Rule} from './validation/Rule'
+
 import template from './input-field.html'
 import * as Input from './widgets/input'
 import * as Radio from './widgets/radio'
@@ -121,7 +123,7 @@ export function define(cssFilePath = '') {
   })
 }
 
-// Make sure attributes names are all lower case
+/** Make sure attributes names are all lower case */
 function extractAttributes(el) {
   const domAtts = Domer.getAttributes(el)
   const atts = {}
