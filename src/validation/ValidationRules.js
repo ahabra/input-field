@@ -2,17 +2,17 @@ import {Objecter, Stringer} from '@techexp/jshelper'
 import {Rule} from './Rule'
 
 export class ValidationRules {
-  constructor(rules) {
+  constructor(...rules) {
     this.rules = []
     this.add(...rules)
   }
 
   add(...rules) {
-    rules = rules.filter(r => !containsName(this.rules, r.name))
-    if (rules.length === 0) return false
-
-    this.rules.push(...rules)
-    return rules
+    rules.forEach(r => {
+      if (!containsName(this.rules, r.name)) {
+        this.rules.push(r)
+      }
+    })
   }
 
   validate(value, onValidation) {
@@ -36,7 +36,7 @@ export class ValidationRules {
         rules.push(rule)
       }
     })
-    return new ValidationRules(rules)
+    return new ValidationRules(...rules)
   }
 
 }

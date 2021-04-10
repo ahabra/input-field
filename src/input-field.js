@@ -104,6 +104,28 @@ export function define(cssFilePath = '') {
         }
       },
       {
+        name: 'getRuleValidState',
+        action: function(name) {
+          const rulesList = Domer.first('footer ul.rules', this)
+          const li = Domer.first(`li.validation-${name}`, rulesList)
+          if (li === null) return null
+
+          return !li.classList.contains('bad')
+        }
+      },
+      {
+        name: 'setRuleValidState',
+        action: function(name, isValid) {
+          const rulesList = Domer.first('footer ul.rules', this)
+          const li = Domer.first(`li.validation-${name}`, rulesList)
+          Domer.classPresentIf(li, 'bad', !isValid)
+
+          const input = Domer.first('input', this)
+          const failedRules = Domer.first('li.bad', rulesList)
+          Domer.classPresentIf(input, 'bad', failedRules !== null)
+        }
+      },
+      {
         name: 'addValueChangeListener',
         action: function(valueChangeListener) {
           this.valueChangeListeners.push(valueChangeListener)

@@ -236,6 +236,23 @@ The `addRule` action takes the following arguments:
 The `addRule` action can be used to define ajax-based validation, or rules that cannot be expressed
 easily using the provided rules.
 
+##### `getRuleValidState(name)`
+Get the current validation state (true or false) for the rule with the given name.
+
+```javascript
+const age = document.getElementById('age')
+console.log(age.wi.actions.getRuleValidState('required'))
+```
+
+##### `setRuleValidState(name, isValid)`
+Set the current validation state (true or false) for the rule with the given name.
+It additionally changes the validation state of the input field if needed.
+
+```javascript
+const age = document.getElementById('age')
+age.wi.actions.setRuleValidState('required', true)
+```
+
 ##### `addValueChangeListener(valueChangeListener)`
 Define a listener that gets invoked when the value of the input changes, either through the
 UI or programmatically.
@@ -248,6 +265,8 @@ age.wi.actions.addValueChangeListener((el, value) => {
 ```
 
 
+
 ## Change Log
-* 2021-03-30 Upgrade dependency on webitem to version 0.4.0
 * 2021-03-26 Support `addValueChangeListener()`
+* 2021-03-30 Upgrade dependency on webitem to version 0.4.0
+* 2021-04-10 Added actions: `getRuleValidState()` and `setRuleValidState()`
