@@ -17,21 +17,23 @@
     "server": "node scripts/server.js",
     "test": "npm run lint && web-test-runner",
     "test:watch": "web-test-runner --watch",
-    "lint": "eslint src --fix"
+    "lint": "eslint src --fix",
+    "deps:list": "ncu",
+    "deps:up": "ncu -u"
   },
   "devDependencies": {
     "@esm-bundle/chai": "^4.3.4",
-    "@web/test-runner": "^0.12.17",
-    "@web/test-runner-commands": "^0.4.1",
+    "@web/test-runner": "^0.12.19",
+    "@web/test-runner-commands": "^0.4.2",
     "@web/test-runner-puppeteer": "^0.9.3",
     "chalk": "^4.1.0",
-    "esbuild": "^0.9.3",
-    "eslint": "^7.22.0",
+    "esbuild": "^0.11.7",
+    "eslint": "^7.24.0",
     "fs-extra": "^9.1.0",
     "serve": "^11.3.2"
   },
   "dependencies": {
-    "@techexp/jshelper": "^0.4.0",
+    "@techexp/jshelper": "^0.5.0",
     "@techexp/webitem": "^0.4.0"
   }
 }
