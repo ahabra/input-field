@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.2.0.
+// Copyright 2021 (C) Abdul Habra. Version 1.2.1.
 // Apache License Version 2.0
 
 
@@ -323,16 +323,21 @@ var Rule = class {
 
 // src/validation/ValidationRules.js
 var ValidationRules = class {
-  constructor(...rules) {
+  constructor(rules) {
     this.rules = [];
-    this.add(...rules);
+    this.addAll(rules);
   }
-  add(...rules) {
-    rules.forEach((r) => {
-      if (!containsName(this.rules, r.name)) {
-        this.rules.push(r);
-      }
-    });
+  add(rule) {
+    if (containsName(this.rules, rule.name)) {
+      return false;
+    }
+    this.rules.push(rule);
+    return true;
+  }
+  addAll(rules) {
+    if (!rules)
+      return;
+    rules.forEach((r) => this.add(r));
   }
   validate(value, onValidation) {
     this.rules.forEach((r) => {
@@ -353,7 +358,7 @@ var ValidationRules = class {
         rules.push(rule);
       }
     });
-    return new ValidationRules(...rules);
+    return new ValidationRules(rules);
   }
 };
 function checkType(rules, atts) {
