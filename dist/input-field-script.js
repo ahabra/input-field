@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.2.1.
+// Copyright 2021 (C) Abdul Habra. Version 1.2.2.
 // Apache License Version 2.0
 
 
@@ -1106,8 +1106,12 @@ ${t2}`;
       return new Rule("email", msg, validator);
     }
     static required(flag, msg = "Required Field") {
-      const validator = (value) => !!value;
-      return new Rule("required", msg, validator);
+      flag = flag.toLowerCase();
+      if (flag === "true" || flag === "required") {
+        const validator = (value) => !!value;
+        return new Rule("required", msg, validator);
+      }
+      return null;
     }
     static minlength(minLength, msg = "Minimum Length is %v") {
       const validator = (value) => {
@@ -1188,7 +1192,9 @@ ${t2}`;
         if (!Stringer_exports2.isEmpty(v) && Objecter_exports2.has(Rule, k)) {
           const msg = atts[k + "-message"];
           const rule = Rule[k](v, msg);
-          rules.push(rule);
+          if (rule !== null) {
+            rules.push(rule);
+          }
         }
       });
       return new ValidationRules(rules);
