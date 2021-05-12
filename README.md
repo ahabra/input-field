@@ -270,3 +270,4 @@ age.wi.actions.addValueChangeListener((el, value) => {
 * 2021-03-26 Support `addValueChangeListener()`
 * 2021-03-30 Upgrade dependency on webitem to version 0.4.0
 * 2021-04-10 Added actions: `getRuleValidState()` and `setRuleValidState()`
+* 2021-05-12 Change `required` attribute to accept boolean value true/false in addition to 'required' string.
