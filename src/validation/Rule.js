@@ -27,8 +27,12 @@ export class Rule {
   }
 
   static required(flag, msg = 'Required Field') {
-    const validator = value => !!value
-    return new Rule('required', msg, validator)
+    flag = flag.toLowerCase()
+    if (flag === 'true' || flag === 'required') {
+      const validator = value => !!value
+      return new Rule('required', msg, validator)
+    }
+    return null
   }
 
   static minlength(minLength, msg = 'Minimum Length is %v') {

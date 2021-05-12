@@ -40,7 +40,9 @@ export class ValidationRules {
       if (!Stringer.isEmpty(v) && Objecter.has(Rule, k)) {
         const msg = atts[k + '-message']
         const rule = Rule[k](v, msg)
-        rules.push(rule)
+        if (rule !== null) {
+          rules.push(rule)
+        }
       }
     })
     return new ValidationRules(rules)
