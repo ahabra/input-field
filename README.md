@@ -134,8 +134,8 @@ The component supports the following attributes
    `radio`, `checkbox`, `listbox`. Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `sublabel`: Text that will appear under the label, with smaller font.
-4. `required`: If the field is required, then this attribute's definition will be `required="required"`.
-    Additionally, a _required_ marker (Star) will be displayed after the label.
+4. `required`: If the field is required, then this attribute's definition will be `required="required"` or
+   `required="true"`. Additionally, a _required_ marker (Star) will be displayed after the label.
 5. `required-message`: The message to display explaining that this field is required. Default is `Required Field`.
 6. `minlength`: The minimum number of characters in the field.
 7. `minlength-message`: The message to display explaining the minimum number of characters.
