@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.2.2.
+// Copyright 2021 (C) Abdul Habra. Version 1.2.3.
 // Apache License Version 2.0
 
 
