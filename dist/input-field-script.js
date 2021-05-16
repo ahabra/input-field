@@ -6,9 +6,9 @@
 
 var InputField = (() => {
   var __defProp = Object.defineProperty;
-  var __export = (target, all3) => {
-    for (var name in all3)
-      __defProp(target, name, {get: all3[name], enumerable: true});
+  var __export = (target, all2) => {
+    for (var name in all2)
+      __defProp(target, name, {get: all2[name], enumerable: true});
   };
 
   // src/input-field.js
@@ -17,11 +17,11 @@ var InputField = (() => {
     define: () => define
   });
 
-  // node_modules/@techexp/webitem/node_modules/@techexp/jshelper/dist/helper-esm.js
+  // node_modules/@techexp/jshelper/dist/helper-esm.js
   var __defProp2 = Object.defineProperty;
-  var __export2 = (target, all22) => {
-    for (var name in all22)
-      __defProp2(target, name, {get: all22[name], enumerable: true});
+  var __export2 = (target, all2) => {
+    for (var name in all2)
+      __defProp2(target, name, {get: all2[name], enumerable: true});
   };
   var Domer_exports = {};
   __export2(Domer_exports, {
@@ -265,6 +265,9 @@ var InputField = (() => {
     replaceAll: () => replaceAll,
     replaceTemplate: () => replaceTemplate,
     startsWith: () => startsWith,
+    strip: () => strip,
+    stripEnd: () => stripEnd,
+    stripStart: () => stripStart,
     substringAfter: () => substringAfter,
     substringBefore: () => substringBefore,
     trim: () => trim
@@ -368,13 +371,54 @@ var InputField = (() => {
     });
     return text;
   }
+  function stripStart(s, stripChars = "") {
+    if (isEmpty(s))
+      return "";
+    if (!stripChars)
+      return s;
+    return stripStart_(s, new Set(Array.from(stripChars)));
+  }
+  function stripStart_(s, stripSet) {
+    for (let i = 0; i < s.length; i++) {
+      if (!stripSet.has(s.charAt(i))) {
+        return s.substring(i);
+      }
+    }
+    return "";
+  }
+  function stripEnd(s, stripChars = "") {
+    if (isEmpty(s))
+      return "";
+    if (!stripChars)
+      return s;
+    return stripEnd_(s, new Set(Array.from(stripChars)));
+  }
+  function stripEnd_(s, stripSet) {
+    for (let i = s.length - 1; i >= 0; i--) {
+      if (!stripSet.has(s.charAt(i))) {
+        return s.substring(0, i + 1);
+      }
+    }
+    return "";
+  }
+  function strip(s, stripChars = "") {
+    if (s === void 0 || s === "")
+      return "";
+    if (!stripChars)
+      return s;
+    const stripSet = new Set(Array.from(stripChars));
+    s = stripStart_(s, stripSet);
+    if (!s)
+      return "";
+    return stripEnd_(s, stripSet);
+  }
   var LineCompare_exports = {};
   __export2(LineCompare_exports, {
     compareLines: () => compareLines
   });
-  function compareLines(t1, t2, {trim: trim22 = true, skipEmpty = true, caseSensitive = true} = {trim: true, skipEmpty: true, caseSensitive: true}) {
-    t1 = toLines(t1, {trim: trim22, skipEmpty});
-    t2 = toLines(t2, {trim: trim22, skipEmpty});
+  function compareLines(t1, t2, {trim: trim2 = true, skipEmpty = true, caseSensitive = true} = {trim: true, skipEmpty: true, caseSensitive: true}) {
+    t1 = toLines(t1, {trim: trim2, skipEmpty});
+    t2 = toLines(t2, {trim: trim2, skipEmpty});
     if (t1.length !== t2.length) {
       return `t1 has ${t1.length} lines(s) while t2 has ${t2.length} line(s).`;
     }
@@ -396,12 +440,12 @@ ${t2}`;
     }
     return "";
   }
-  function toLines(t, {trim: trim22, skipEmpty}) {
-    if (trim22) {
+  function toLines(t, {trim: trim2, skipEmpty}) {
+    if (trim2) {
       t = trim(t);
     }
     t = t.split("\n");
-    if (trim22) {
+    if (trim2) {
       t = t.map((ln) => trim(ln));
     }
     if (skipEmpty) {
@@ -411,23 +455,43 @@ ${t2}`;
   }
 
   // node_modules/@techexp/data-bind/dist/data-bind-module.js
-  function bind({obj, prop, sel, attr, root, onChange}) {
+  function bind({
+    obj = {},
+    prop,
+    sel,
+    attr,
+    root = document,
+    getter,
+    setter,
+    onChange
+  }) {
     validateArgs(prop);
-    obj = obj || {};
-    const oldValue = obj.hasOwnProperty(prop) ? obj[prop] : void 0;
-    root = root || document;
+    checkInitialValue(obj, prop);
     const objNotBound = {};
+    if (!getter) {
+      getter = () => getValue({prop, sel, attr, root, objNotBound});
+    }
+    if (!setter) {
+      setter = (value) => setValue({prop, value, root, sel, attr, objNotBound});
+    }
+    return bindProp({obj, prop, getter, setter, onChange});
+  }
+  function bindProp({obj, prop, getter, setter, onChange}) {
     const descriptor = {
-      get: () => getValue({prop, sel, attr, root, objNotBound}),
-      set: (value) => setValue({prop, value, root, sel, attr, objNotBound, onChange}),
+      get: () => getter(),
+      set: (value) => {
+        if (onChange) {
+          const oldValue = getter(prop);
+          if (oldValue !== value) {
+            onChange(oldValue, value);
+          }
+        }
+        setter(value);
+      },
       configurable: true,
       enumerable: true
     };
     Object.defineProperty(obj, prop, descriptor);
-    if (oldValue !== void 0) {
-      console.info(`Property '${prop}' already exists in object. Will override previous definition but retain old value of ${oldValue}.`);
-      obj[prop] = oldValue;
-    }
     return obj;
   }
   var isCheckbox = (el) => el.type === "checkbox";
@@ -435,26 +499,25 @@ ${t2}`;
   var isSelect = (el) => el.tagName.toLowerCase() === "select";
   var isInput = (el) => "value" in el;
   var toSet = (v) => new Set(Array.isArray(v) ? v : [v]);
-  function setValue({prop, value, root, sel, attr, objNotBound, onChange}) {
-    fireChange({prop, value, root, sel, attr, objNotBound, onChange});
-    if (sel) {
-      setDomVal(root, sel, value, attr);
-      return;
+  function checkInitialValue(obj, prop) {
+    const oldValue = obj[prop];
+    if (oldValue !== void 0) {
+      console.info(`Property '${prop}' already exists in object. Will override previous definition but retain old value of ${oldValue}.`);
+      obj[prop] = oldValue;
     }
-    objNotBound[prop] = value;
-  }
-  function fireChange({prop, value, root, sel, attr, objNotBound, onChange}) {
-    if (!onChange)
-      return;
-    const oldValue = getValue({prop, root, sel, attr, objNotBound});
-    if (oldValue === value)
-      return;
-    onChange(oldValue, value);
+    return oldValue;
   }
   function getValue({prop, root, sel, attr, objNotBound}) {
     if (sel)
       return getDomVal(root, sel, attr);
     return objNotBound[prop];
+  }
+  function setValue({prop, value, root, sel, attr, objNotBound}) {
+    if (sel) {
+      setDomVal(root, sel, value, attr);
+      return;
+    }
+    objNotBound[prop] = value;
   }
   function getDomVal(root, sel, attr) {
     const elements = findElements(root, sel);
@@ -644,443 +707,6 @@ ${t2}`;
   `;
   }
 
-  // node_modules/@techexp/jshelper/dist/helper-esm.js
-  var __defProp3 = Object.defineProperty;
-  var __export3 = (target, all22) => {
-    for (var name in all22)
-      __defProp3(target, name, {get: all22[name], enumerable: true});
-  };
-  var Domer_exports2 = {};
-  __export3(Domer_exports2, {
-    add: () => add2,
-    all: () => all2,
-    classPresentIf: () => classPresentIf2,
-    createElement: () => createElement2,
-    createElements: () => createElements2,
-    first: () => first2,
-    getAttributes: () => getAttributes2,
-    id: () => id2,
-    removeElements: () => removeElements2,
-    setContent: () => setContent2,
-    tag: () => tag2
-  });
-  var Objecter_exports2 = {};
-  __export3(Objecter_exports2, {
-    equals: () => equals2,
-    forEachEntry: () => forEachEntry2,
-    has: () => has2,
-    isDate: () => isDate2,
-    isFunction: () => isFunction2,
-    isInteger: () => isInteger2,
-    isNil: () => isNil2,
-    isNumber: () => isNumber2,
-    isRegExp: () => isRegExp2,
-    isString: () => isString2
-  });
-  function isNil2(x) {
-    return x === null || x === void 0;
-  }
-  function isString2(s) {
-    return isType2(s, "String");
-  }
-  function isFunction2(f) {
-    return isType2(f, "Function");
-  }
-  function isDate2(d) {
-    return isType2(d, "Date");
-  }
-  function isNumber2(n) {
-    if (isType2(n, "Number")) {
-      if (Number.isNaN(n))
-        return false;
-      return Number.isFinite(n);
-    }
-    if (!isString2(n))
-      return false;
-    n = n.trim();
-    if (n === "")
-      return false;
-    return !isNaN(n);
-  }
-  function isInteger2(n) {
-    if (!isNumber2(n))
-      return false;
-    return Number.isInteger(Number.parseFloat(n));
-  }
-  function isRegExp2(re) {
-    return isType2(re, "RegExp");
-  }
-  function isType2(v, type) {
-    return Object.prototype.toString.call(v) === `[object ${type}]`;
-  }
-  function forEachEntry2(object, func) {
-    if (!object || !func)
-      return;
-    if (Array.isArray(object)) {
-      object.forEach((v, index) => {
-        func(index, v);
-      });
-      return;
-    }
-    Object.entries(object).forEach((p) => func(p[0], p[1]));
-  }
-  function has2(object, propName) {
-    if (!object || !propName)
-      return false;
-    return Object.prototype.hasOwnProperty.call(object, propName);
-  }
-  function equals2(a, b) {
-    if (a === b)
-      return true;
-    if (a === void 0 || b === void 0)
-      return false;
-    return isEqual2(a, b);
-  }
-  function isEqual2(a, b) {
-    if (isSimpleType2(a) || isSimpleType2(b))
-      return a === b;
-    return isEqualCompoundType2(a, b);
-  }
-  var simpleTypes2 = new Set(["boolean", "number", "bigint", "string", "symbol"]);
-  function isSimpleType2(v) {
-    return simpleTypes2.has(typeof v);
-  }
-  function isEqualCompoundType2(a, b) {
-    if (!isEqualType2(a, b))
-      return false;
-    if (isEqualDates2(a, b))
-      return true;
-    return isEqualObjects2(a, b);
-  }
-  function isEqualType2(a, b) {
-    return prototypeToString2(a) === prototypeToString2(b);
-  }
-  function prototypeToString2(v) {
-    return Object.prototype.toString.call(v);
-  }
-  function isEqualDates2(a, b) {
-    if (isDate2(a) && isDate2(b)) {
-      return a.getTime() === b.getTime();
-    }
-    return false;
-  }
-  function isEqualObjects2(a, b) {
-    const akeys = Object.keys(a);
-    if (akeys.length !== Object.keys(b).length)
-      return false;
-    return akeys.every((k) => equals2(a[k], b[k]));
-  }
-  function id2(elementId, root = document) {
-    if (isWebComponent2(root)) {
-      root = root.shadowRoot;
-    }
-    return root.getElementById(elementId);
-  }
-  function all2(selector, root = document) {
-    if (isWebComponent2(root)) {
-      root = root.shadowRoot;
-    }
-    return Array.from(root.querySelectorAll(selector));
-  }
-  function first2(selector, root = document) {
-    if (isWebComponent2(root)) {
-      root = root.shadowRoot;
-    }
-    if (!selector.includes("/")) {
-      return root.querySelector(selector);
-    }
-    const path = selector.split("/").map((p) => p.trim()).filter((p) => p.length > 0);
-    for (const p of path) {
-      root = nextChild2(p, root);
-      if (root === null)
-        break;
-    }
-    return root;
-  }
-  function nextChild2(pathItem, root) {
-    const isShadowRoot = pathItem === "shadowRoot" || pathItem === "shadow-root";
-    return isShadowRoot ? root.shadowRoot : root.querySelector(pathItem);
-  }
-  function isWebComponent2(el) {
-    return el && el.shadowRoot && el.tagName.includes("-");
-  }
-  function getAttributes2(el) {
-    const result = {};
-    const atts = el.attributes;
-    if (!atts || atts.length === 0)
-      return result;
-    for (let i = 0; i < atts.length; i++) {
-      const a = atts[i];
-      result[a.name] = a.value;
-    }
-    return result;
-  }
-  function createElements2(html = "") {
-    html = html.trim();
-    if (!html)
-      return [];
-    const temp = document.createElement("template");
-    temp.innerHTML = html;
-    return Array.from(temp.content.childNodes);
-  }
-  function createElement2(name, attributes = {}, content = "") {
-    const html = tag2(name, attributes, content);
-    const elements = createElements2(html);
-    if (elements.length === 0)
-      return null;
-    return elements[0];
-  }
-  function tag2(name, attributes = {}, content = "") {
-    if (!name)
-      return "";
-    const atts = attsToString2(attributes);
-    return `<${name}${atts}>${content}</${name}>`;
-  }
-  function attsToString2(attributes) {
-    const array = [];
-    forEachEntry2(attributes, (k, v) => {
-      array.push(`${k}="${v}"`);
-    });
-    const sep = array.length > 0 ? " " : "";
-    return sep + array.join(" ");
-  }
-  var LOCATIONS2 = new Set(["beforebegin", "afterbegin", "beforeend", "afterend"]);
-  function add2(target, tobeAdded, location = "beforeend") {
-    location = location.toLowerCase();
-    if (!LOCATIONS2.has(location))
-      return false;
-    if (isString2(tobeAdded)) {
-      target.insertAdjacentHTML(location, tobeAdded);
-    } else {
-      addElements2(target, tobeAdded, location);
-    }
-    return true;
-  }
-  function addElements2(target, tobeAdded, location) {
-    if (Array.isArray(tobeAdded)) {
-      tobeAdded.forEach((el) => target.insertAdjacentElement(location, el));
-    } else {
-      target.insertAdjacentElement(location, tobeAdded);
-    }
-  }
-  function setContent2(element, ...content) {
-    element.innerHTML = "";
-    element.append(...content);
-  }
-  function removeElements2(selector, root = document) {
-    const elements = all2(selector, root);
-    elements.forEach((el) => {
-      el.parentNode.removeChild(el);
-    });
-  }
-  function classPresentIf2(el, cssClass, condition) {
-    if (!el)
-      return;
-    const func = condition ? "add" : "remove";
-    el.classList[func](cssClass);
-  }
-  var Stringer_exports2 = {};
-  __export3(Stringer_exports2, {
-    endsWith: () => endsWith2,
-    indexOf: () => indexOf2,
-    indexOfFirstMatch: () => indexOfFirstMatch2,
-    indexOfLastMatch: () => indexOfLastMatch2,
-    isEmpty: () => isEmpty2,
-    removePrefix: () => removePrefix2,
-    removeSuffix: () => removeSuffix2,
-    removeSurrounding: () => removeSurrounding2,
-    replaceAll: () => replaceAll2,
-    replaceTemplate: () => replaceTemplate2,
-    startsWith: () => startsWith2,
-    strip: () => strip,
-    stripEnd: () => stripEnd,
-    stripStart: () => stripStart,
-    substringAfter: () => substringAfter2,
-    substringBefore: () => substringBefore2,
-    trim: () => trim2
-  });
-  function indexOf2(st, search, fromIndex = 0, ignoreCase = false) {
-    if (!st)
-      return -1;
-    if (ignoreCase) {
-      return st.toLowerCase().indexOf(search.toLowerCase(), fromIndex);
-    }
-    return st.indexOf(search, fromIndex);
-  }
-  function indexOfFirstMatch2(st, callback) {
-    if (!callback || !st)
-      return -1;
-    return st.split("").findIndex(callback);
-  }
-  function indexOfLastMatch2(st, callback) {
-    if (!callback || !st)
-      return -1;
-    const chars = st.split("");
-    for (let i = chars.length; i >= 0; --i) {
-      if (callback(chars[i], i))
-        return i;
-    }
-    return -1;
-  }
-  function startsWith2(st = "", search = void 0, ignoreCase = false) {
-    if (ignoreCase) {
-      const start = st.substring(0, search.length).toLowerCase();
-      return search.toLowerCase() === start;
-    }
-    return st.startsWith(search);
-  }
-  function endsWith2(st, search, ignoreCase = false) {
-    if (ignoreCase) {
-      return st.toLowerCase().endsWith(search.toLowerCase());
-    }
-    return st.endsWith(search);
-  }
-  function removePrefix2(st, prefix, ignoreCase = false) {
-    if (startsWith2(st, prefix, ignoreCase)) {
-      st = st.substring(prefix.length);
-    }
-    return st;
-  }
-  function removeSuffix2(st, suffix, ignoreCase = false) {
-    if (endsWith2(st, suffix, ignoreCase)) {
-      st = st.substring(0, st.length - suffix.length);
-    }
-    return st;
-  }
-  function removeSurrounding2(st, prefix, suffix, ignoreCase = false) {
-    return removeSuffix2(removePrefix2(st, prefix, ignoreCase), suffix, ignoreCase);
-  }
-  function substringAfter2(st, search, ignoreCase = false) {
-    if (!search) {
-      return st;
-    }
-    const i = indexOf2(st, search, 0, ignoreCase);
-    if (i < 0)
-      return "";
-    return st.substring(i + search.length);
-  }
-  function substringBefore2(st, search, ignoreCase = false) {
-    if (!search) {
-      return "";
-    }
-    const i = indexOf2(st, search, 0, ignoreCase);
-    if (i < 0)
-      return st;
-    return st.substring(0, i);
-  }
-  function trim2(s) {
-    if (isEmpty2(s))
-      return "";
-    if (!isString2(s)) {
-      s = String(s);
-    }
-    return s.trim(s);
-  }
-  function isEmpty2(s) {
-    return s === void 0 || s === null || s === "";
-  }
-  function replaceAll2(text, search, newStr) {
-    if (isFunction2(String.prototype.replaceAll)) {
-      return text.replaceAll(search, newStr);
-    }
-    if (isRegExp2(search)) {
-      return text.replace(search, newStr);
-    }
-    const re = new RegExp(search, "g");
-    return text.replace(re, newStr);
-  }
-  function replaceTemplate2(text = "", values = {}, preTag = "${", postTag = "}") {
-    forEachEntry2(values, (k, v) => {
-      if (v !== void 0) {
-        k = preTag + k + postTag;
-        text = replaceAll2(text, k, v);
-      }
-    });
-    return text;
-  }
-  function stripStart(s, stripChars = "") {
-    if (isEmpty2(s))
-      return "";
-    if (!stripChars)
-      return s;
-    return stripStart_(s, new Set(Array.from(stripChars)));
-  }
-  function stripStart_(s, stripSet) {
-    for (let i = 0; i < s.length; i++) {
-      if (!stripSet.has(s.charAt(i))) {
-        return s.substring(i);
-      }
-    }
-    return "";
-  }
-  function stripEnd(s, stripChars = "") {
-    if (isEmpty2(s))
-      return "";
-    if (!stripChars)
-      return s;
-    return stripEnd_(s, new Set(Array.from(stripChars)));
-  }
-  function stripEnd_(s, stripSet) {
-    for (let i = s.length - 1; i >= 0; i--) {
-      if (!stripSet.has(s.charAt(i))) {
-        return s.substring(0, i + 1);
-      }
-    }
-    return "";
-  }
-  function strip(s, stripChars = "") {
-    if (s === void 0 || s === "")
-      return "";
-    if (!stripChars)
-      return s;
-    const stripSet = new Set(Array.from(stripChars));
-    s = stripStart_(s, stripSet);
-    if (!s)
-      return "";
-    return stripEnd_(s, stripSet);
-  }
-  var LineCompare_exports2 = {};
-  __export3(LineCompare_exports2, {
-    compareLines: () => compareLines2
-  });
-  function compareLines2(t1, t2, {trim: trim22 = true, skipEmpty = true, caseSensitive = true} = {trim: true, skipEmpty: true, caseSensitive: true}) {
-    t1 = toLines2(t1, {trim: trim22, skipEmpty});
-    t2 = toLines2(t2, {trim: trim22, skipEmpty});
-    if (t1.length !== t2.length) {
-      return `t1 has ${t1.length} lines(s) while t2 has ${t2.length} line(s).`;
-    }
-    for (let i = 0; i < t1.length; i++) {
-      const result = compareTwoLines2(t1[i], t2[i], i, caseSensitive);
-      if (result.length > 0) {
-        return result;
-      }
-    }
-    return "";
-  }
-  function compareTwoLines2(t1, t2, index, caseSensitive) {
-    const a = caseSensitive ? t1 : t1.toLowerCase();
-    const b = caseSensitive ? t2 : t2.toLowerCase();
-    if (a !== b) {
-      return `Line #${index + 1} mismatch.
-${t1}
-${t2}`;
-    }
-    return "";
-  }
-  function toLines2(t, {trim: trim22, skipEmpty}) {
-    if (trim22) {
-      t = trim2(t);
-    }
-    t = t.split("\n");
-    if (trim22) {
-      t = t.map((ln) => trim2(ln));
-    }
-    if (skipEmpty) {
-      t = t.filter((ln) => !!ln);
-    }
-    return t;
-  }
-
   // src/validation/Rule.js
   var Rule = class {
     constructor(name = "", message, validator) {
@@ -1092,13 +718,13 @@ ${t2}`;
       return this.validator(String(value));
     }
     toHtml() {
-      if (Stringer_exports2.isEmpty(this.message))
+      if (Stringer_exports.isEmpty(this.message))
         return "";
       return `<li class="validation-${this.name}">${this.message}</li>
 `;
     }
     static createRule(name, message, validator, value) {
-      message = Stringer_exports2.replaceAll(message, "%v", value);
+      message = Stringer_exports.replaceAll(message, "%v", value);
       return new Rule(name, message, validator);
     }
     static email(msg = "Must be a valid email address") {
@@ -1144,11 +770,11 @@ ${t2}`;
       return Rule.createRule("max", msg, validator, maxValue);
     }
     static isNumber(msg = "Must be a valid number") {
-      const validator = (v) => Objecter_exports2.isNumber(v);
+      const validator = (v) => Objecter_exports.isNumber(v);
       return new Rule("isNumber", msg, validator);
     }
     static isInteger(msg = "Must be a valid whole number") {
-      const validator = (v) => Objecter_exports2.isInteger(v);
+      const validator = (v) => Objecter_exports.isInteger(v);
       return new Rule("isInteger", msg, validator);
     }
     static set(options, msg = "Value must be one of [%v]") {
@@ -1188,8 +814,8 @@ ${t2}`;
     static createFromAttributes(atts) {
       const rules = [];
       checkType(rules, atts);
-      Objecter_exports2.forEachEntry(atts, (k, v) => {
-        if (!Stringer_exports2.isEmpty(v) && Objecter_exports2.has(Rule, k)) {
+      Objecter_exports.forEachEntry(atts, (k, v) => {
+        if (!Stringer_exports.isEmpty(v) && Objecter_exports.has(Rule, k)) {
           const msg = atts[k + "-message"];
           const rule = Rule[k](v, msg);
           if (rule !== null) {
@@ -1235,10 +861,10 @@ ${t2}`;
       pattern: getAttr(atts, "pattern"),
       value: atts.value || ""
     };
-    return Stringer_exports2.replaceTemplate(template, params, "{");
+    return Stringer_exports.replaceTemplate(template, params, "{");
   }
   function getType(atts) {
-    const type = Stringer_exports2.trim(atts.type).toLowerCase();
+    const type = Stringer_exports.trim(atts.type).toLowerCase();
     if (!type)
       return "text";
     if (type === "integer")
@@ -1264,9 +890,9 @@ ${t2}`;
     return json;
   }
   function validateString(json) {
-    if (!Objecter_exports2.isString(json))
+    if (!Objecter_exports.isString(json))
       return false;
-    if (Stringer_exports2.isEmpty(json))
+    if (Stringer_exports.isEmpty(json))
       return false;
     json = json.trim();
     return json.length !== 0;
@@ -1276,7 +902,7 @@ ${t2}`;
       return false;
     if (json.options.length === 0)
       return false;
-    const found = required2.find((r) => !Objecter_exports2.has(json, r));
+    const found = required2.find((r) => !Objecter_exports.has(json, r));
     if (found) {
       throw `${widgetType} definition requires ${found} attribute`;
     }
@@ -1325,7 +951,7 @@ ${buttons}
       value: option.value || option.label,
       label: option.label || option.value
     };
-    return Stringer_exports2.replaceTemplate(template2.trim(), params, "{");
+    return Stringer_exports.replaceTemplate(template2.trim(), params, "{");
   }
 
   // src/widgets/checkbox.js
@@ -1364,7 +990,7 @@ ${buttons}
       value: option.value || option.label,
       label: option.label || option.value
     };
-    return Stringer_exports2.replaceTemplate(template3.trim(), params, "{");
+    return Stringer_exports.replaceTemplate(template3.trim(), params, "{");
   }
 
   // src/widgets/listbox.js
@@ -1390,7 +1016,7 @@ ${buttons}
       multiple: json.multiple ? " multiple" : "",
       options: buildOptions(json.options)
     };
-    return Stringer_exports2.replaceTemplate(templates.select, params, "{");
+    return Stringer_exports.replaceTemplate(templates.select, params, "{");
   }
   function getWidgetType({multiple, size}) {
     if (multiple || size > 1)
@@ -1402,7 +1028,7 @@ ${buttons}
       label: json.label,
       options: buildOptions(json.options)
     };
-    return Stringer_exports2.replaceTemplate(templates.group, params, "{");
+    return Stringer_exports.replaceTemplate(templates.group, params, "{");
   }
   function buildOptions(options) {
     if (!Array.isArray(options))
@@ -1423,11 +1049,11 @@ ${buttons}
       label: option.label || option.value,
       value: ` value="${value}"`
     };
-    return Stringer_exports2.replaceTemplate(templates.option, params, "{");
+    return Stringer_exports.replaceTemplate(templates.option, params, "{");
   }
   function mousedownListener(ev, inputField) {
     ev.preventDefault();
-    const select = Domer_exports2.first("select", inputField);
+    const select = Domer_exports.first("select", inputField);
     const scrollTop = select.scrollTop;
     toggleOptionSelected(ev.target);
     inputField.wi.actions._runValueChangeListeners(ev.target.value);
@@ -1488,7 +1114,7 @@ ${buttons}
           sel: "label .tooltip",
           eventName: "click",
           listener: (ev, el) => {
-            const tooltipText = Domer_exports2.first("label .tooltip-text", el);
+            const tooltipText = Domer_exports.first("label .tooltip-text", el);
             tooltipText.classList.toggle("show");
           }
         },
@@ -1511,8 +1137,8 @@ ${buttons}
         {
           name: "getRuleValidState",
           action: function(name) {
-            const rulesList = Domer_exports2.first("footer ul.rules", this);
-            const li = Domer_exports2.first(`li.validation-${name}`, rulesList);
+            const rulesList = Domer_exports.first("footer ul.rules", this);
+            const li = Domer_exports.first(`li.validation-${name}`, rulesList);
             if (li === null)
               return null;
             return !li.classList.contains("bad");
@@ -1521,12 +1147,12 @@ ${buttons}
         {
           name: "setRuleValidState",
           action: function(name, isValid) {
-            const rulesList = Domer_exports2.first("footer ul.rules", this);
-            const li = Domer_exports2.first(`li.validation-${name}`, rulesList);
-            Domer_exports2.classPresentIf(li, "bad", !isValid);
-            const input = Domer_exports2.first("input", this);
-            const failedRules = Domer_exports2.first("li.bad", rulesList);
-            Domer_exports2.classPresentIf(input, "bad", failedRules !== null);
+            const rulesList = Domer_exports.first("footer ul.rules", this);
+            const li = Domer_exports.first(`li.validation-${name}`, rulesList);
+            Domer_exports.classPresentIf(li, "bad", !isValid);
+            const input = Domer_exports.first("input", this);
+            const failedRules = Domer_exports.first("li.bad", rulesList);
+            Domer_exports.classPresentIf(input, "bad", failedRules !== null);
           }
         },
         {
@@ -1548,12 +1174,12 @@ ${buttons}
     });
   }
   function extractAttributes(el) {
-    const domAtts = Domer_exports2.getAttributes(el);
+    const domAtts = Domer_exports.getAttributes(el);
     const atts = {};
-    Objecter_exports2.forEachEntry(domAtts, (k, v) => {
+    Objecter_exports.forEachEntry(domAtts, (k, v) => {
       atts[k.toLowerCase()] = v;
     });
-    const showRules = Stringer_exports2.trim(atts.showrules).toLowerCase();
+    const showRules = Stringer_exports.trim(atts.showrules).toLowerCase();
     atts.showrules = showRules === "" || showRules === "true";
     return atts;
   }
@@ -1569,7 +1195,7 @@ ${buttons}
       rules: el.validationRules.toHtml()
     };
     setTooltipParams(atts, values);
-    return Stringer_exports2.replaceTemplate(input_field_default, values);
+    return Stringer_exports.replaceTemplate(input_field_default, values);
   }
   function getInputHtml(el, atts) {
     const type = getType2(atts);
@@ -1582,7 +1208,7 @@ ${buttons}
     return getHtml2(atts);
   }
   function getType2(atts) {
-    const type = Stringer_exports2.trim(atts.type).toLowerCase();
+    const type = Stringer_exports.trim(atts.type).toLowerCase();
     if (!type)
       return "text";
     if (type === "integer")
@@ -1590,7 +1216,7 @@ ${buttons}
     return type;
   }
   function buildCssLink(cssFilePath) {
-    if (Stringer_exports2.isEmpty(cssFilePath))
+    if (Stringer_exports.isEmpty(cssFilePath))
       return "";
     return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
   }
@@ -1609,19 +1235,19 @@ ${buttons}
     return ` ${attName}="${value}"`;
   }
   function validate(el, value) {
-    const rulesList = Domer_exports2.first("footer ul.rules", el);
+    const rulesList = Domer_exports.first("footer ul.rules", el);
     let allValid = true;
     el.validationRules.validate(value, (isValid, name) => {
-      const li = Domer_exports2.first(`li.validation-${name}`, rulesList);
-      Domer_exports2.classPresentIf(li, "bad", !isValid);
+      const li = Domer_exports.first(`li.validation-${name}`, rulesList);
+      Domer_exports.classPresentIf(li, "bad", !isValid);
       allValid = allValid && isValid;
     });
-    const input = Domer_exports2.first("input", el);
-    Domer_exports2.classPresentIf(input, "bad", !allValid);
+    const input = Domer_exports.first("input", el);
+    Domer_exports.classPresentIf(input, "bad", !allValid);
   }
   function addRuleHtml(el, rule) {
-    const rulesHtml = Domer_exports2.first("footer ul.rules", el);
-    Domer_exports2.add(rulesHtml, rule.toHtml());
+    const rulesHtml = Domer_exports.first("footer ul.rules", el);
+    Domer_exports.add(rulesHtml, rule.toHtml());
   }
   return input_field_exports;
 })();

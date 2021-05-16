@@ -27,14 +27,14 @@
     "@web/test-runner-commands": "^0.4.5",
     "@web/test-runner-puppeteer": "^0.10.0",
     "chalk": "^4.1.1",
-    "esbuild": "^0.11.20",
+    "esbuild": "^0.11.23",
     "eslint": "^7.26.0",
     "fs-extra": "^10.0.0",
-    "npm-check-updates": "^11.5.11",
+    "npm-check-updates": "^11.5.13",
     "serve": "^11.3.2"
   },
   "dependencies": {
     "@techexp/jshelper": "^0.5.1",
-    "@techexp/webitem": "^0.4.0"
+    "@techexp/webitem": "^0.4.1"
   }
 }

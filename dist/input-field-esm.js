@@ -8,23 +8,43 @@
 import {Domer, Objecter, Stringer} from "@techexp/jshelper";
 
 // node_modules/@techexp/data-bind/dist/data-bind-module.js
-function bind({obj, prop, sel, attr, root, onChange}) {
+function bind({
+  obj = {},
+  prop,
+  sel,
+  attr,
+  root = document,
+  getter,
+  setter,
+  onChange
+}) {
   validateArgs(prop);
-  obj = obj || {};
-  const oldValue = obj.hasOwnProperty(prop) ? obj[prop] : void 0;
-  root = root || document;
+  checkInitialValue(obj, prop);
   const objNotBound = {};
+  if (!getter) {
+    getter = () => getValue({prop, sel, attr, root, objNotBound});
+  }
+  if (!setter) {
+    setter = (value) => setValue({prop, value, root, sel, attr, objNotBound});
+  }
+  return bindProp({obj, prop, getter, setter, onChange});
+}
+function bindProp({obj, prop, getter, setter, onChange}) {
   const descriptor = {
-    get: () => getValue({prop, sel, attr, root, objNotBound}),
-    set: (value) => setValue({prop, value, root, sel, attr, objNotBound, onChange}),
+    get: () => getter(),
+    set: (value) => {
+      if (onChange) {
+        const oldValue = getter(prop);
+        if (oldValue !== value) {
+          onChange(oldValue, value);
+        }
+      }
+      setter(value);
+    },
     configurable: true,
     enumerable: true
   };
   Object.defineProperty(obj, prop, descriptor);
-  if (oldValue !== void 0) {
-    console.info(`Property '${prop}' already exists in object. Will override previous definition but retain old value of ${oldValue}.`);
-    obj[prop] = oldValue;
-  }
   return obj;
 }
 var isCheckbox = (el) => el.type === "checkbox";
@@ -32,26 +52,25 @@ var isRadio = (el) => el.type === "radio";
 var isSelect = (el) => el.tagName.toLowerCase() === "select";
 var isInput = (el) => "value" in el;
 var toSet = (v) => new Set(Array.isArray(v) ? v : [v]);
-function setValue({prop, value, root, sel, attr, objNotBound, onChange}) {
-  fireChange({prop, value, root, sel, attr, objNotBound, onChange});
-  if (sel) {
-    setDomVal(root, sel, value, attr);
-    return;
+function checkInitialValue(obj, prop) {
+  const oldValue = obj[prop];
+  if (oldValue !== void 0) {
+    console.info(`Property '${prop}' already exists in object. Will override previous definition but retain old value of ${oldValue}.`);
+    obj[prop] = oldValue;
   }
-  objNotBound[prop] = value;
-}
-function fireChange({prop, value, root, sel, attr, objNotBound, onChange}) {
-  if (!onChange)
-    return;
-  const oldValue = getValue({prop, root, sel, attr, objNotBound});
-  if (oldValue === value)
-    return;
-  onChange(oldValue, value);
+  return oldValue;
 }
 function getValue({prop, root, sel, attr, objNotBound}) {
   if (sel)
     return getDomVal(root, sel, attr);
   return objNotBound[prop];
+}
+function setValue({prop, value, root, sel, attr, objNotBound}) {
+  if (sel) {
+    setDomVal(root, sel, value, attr);
+    return;
+  }
+  objNotBound[prop] = value;
 }
 function getDomVal(root, sel, attr) {
   const elements = findElements(root, sel);
