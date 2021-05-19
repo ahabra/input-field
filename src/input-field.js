@@ -56,15 +56,13 @@ export function define(cssFilePath = '') {
       const atts = extractAttributes(el)
       el.validationRules = ValidationRules.createFromAttributes(atts)
       el.valueChangeListeners = []
+      monitorValueAttribute(el)
       return buildHtml(el, atts, cssFilePath)
     },
 
     propertyList: [
       { name: 'value', sel: 'input, select',
-        onChange: (el, oldValue, newValue) => {
-          validate(el, newValue)
-          el.wi.actions._runValueChangeListeners(newValue)
-        }
+        onChange: (el, oldValue, newValue) => onValueChange(el, newValue)
       }
     ],
 
@@ -72,11 +70,7 @@ export function define(cssFilePath = '') {
       {
         sel: 'input, select',
         eventName: 'input',
-        listener: (ev, el) => {
-          const value = ev.target.value
-          validate(el, value)
-          el.wi.actions._runValueChangeListeners(value)
-        }
+        listener: (ev, el) => onValueChange(el, ev.target.value)
       },
       {
         sel: 'label .tooltip',
@@ -143,6 +137,27 @@ export function define(cssFilePath = '') {
     ]
 
   })
+}
+
+function onValueChange(el, value) {
+  el.setAttribute('value', value)
+  validate(el, value)
+  el.wi.actions._runValueChangeListeners(value)
+}
+
+/** when the value attribute change, change the property as well */
+function monitorValueAttribute(el) {
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mu => {
+      if (mu.type === 'attributes' && mu.attributeName === 'value') {
+        const value = el.getAttribute('value')
+        if (value !== el.wi.properties.value) {
+          el.wi.properties.value = value
+        }
+      }
+    })
+  })
+  observer.observe(el, { attributes: true })
 }
 
 /** Make sure attributes names are all lower case */
