@@ -10,6 +10,7 @@ import * as Radio from './widgets/radio'
 import * as Checkbox from './widgets/checkbox'
 import * as Listbox from './widgets/listbox'
 import {setTooltipParams} from './widgets/tooltip'
+import {getValueAttr} from './widgets/WidgetUtils'
 
 /**
  * Define a responsive input field with its label.
@@ -56,7 +57,7 @@ export function define(cssFilePath = '') {
       const atts = extractAttributes(el)
       el.validationRules = ValidationRules.createFromAttributes(atts)
       el.valueChangeListeners = []
-      monitorValueAttribute(el)
+      overrideSetAttribute(el)
       return buildHtml(el, atts, cssFilePath)
     },
 
@@ -140,24 +141,31 @@ export function define(cssFilePath = '') {
 }
 
 function onValueChange(el, value) {
-  el.setAttribute('value', value)
+  if (getValueAttr(el) !== value) {
+    el.setAttribute('value', value)
+  }
   validate(el, value)
   el.wi.actions._runValueChangeListeners(value)
 }
 
-/** when the value attribute change, change the property as well */
-function monitorValueAttribute(el) {
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mu => {
-      if (mu.type === 'attributes' && mu.attributeName === 'value') {
-        const value = el.getAttribute('value')
-        if (value !== el.wi.properties.value) {
-          el.wi.properties.value = value
-        }
-      }
-    })
-  })
-  observer.observe(el, { attributes: true })
+/** when the value attribute changes, change the property as well */
+function overrideSetAttribute(el) {
+  const oldSet = el.setAttribute.bind(el)
+  el.setAttribute = function(name, value) {
+    if (name !== 'value') {
+      oldSet(name, value)
+      return
+    }
+
+    value = String(value)
+    if (getValueAttr(el) === value) return
+
+    oldSet(name, value)
+    if (el.wi.properties.value !== value) {
+      el.wi.properties.value = value
+    }
+  }
+
 }
 
 /** Make sure attributes names are all lower case */
