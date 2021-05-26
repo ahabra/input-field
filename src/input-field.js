@@ -10,7 +10,7 @@ import * as Radio from './widgets/radio'
 import * as Checkbox from './widgets/checkbox'
 import * as Listbox from './widgets/listbox'
 import {setTooltipParams} from './widgets/tooltip'
-import {getValueAttr} from './widgets/WidgetUtils'
+import * as ValueUtils from './widgets/ValueUtils'
 
 /**
  * Define a responsive input field with its label.
@@ -140,10 +140,12 @@ export function define(cssFilePath = '') {
   })
 }
 
+
 function onValueChange(el, value) {
-  if (getValueAttr(el) !== value) {
-    el.setAttribute('value', value)
-  }
+  console.log('prop value=', ValueUtils.getValueProp(el), ', new value=', value)
+
+  ValueUtils.setValueAttr(el, value, true)
+
   validate(el, value)
   el.wi.actions._runValueChangeListeners(value)
 }
@@ -151,22 +153,27 @@ function onValueChange(el, value) {
 /** when the value attribute changes, change the property as well */
 function overrideSetAttribute(el) {
   const oldSet = el.setAttribute.bind(el)
-  el.setAttribute = function(name, value) {
+
+  el.setAttribute = function(name, value, ignoreProp) {
+    if (ignoreProp) {
+      console.warn('setAttribute() will ignore prop')
+    }
     if (name !== 'value') {
       oldSet(name, value)
       return
     }
 
     value = String(value)
-    if (getValueAttr(el) === value) return
+    if (!ignoreProp) {
+      ValueUtils.setValueProp(el, value)
+    }
+
 
     oldSet(name, value)
-    if (el.wi.properties.value !== value) {
-      el.wi.properties.value = value
-    }
   }
 
 }
+
 
 /** Make sure attributes names are all lower case */
 function extractAttributes(el) {

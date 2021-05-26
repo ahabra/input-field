@@ -32,7 +32,3 @@ export function validateOption(widgetType, {label, value}) {
     throw `${widgetType} definition requires at least a label or value`
   }
 }
-
-export function getValueAttr(el) {
-  return el.getAttribute('value')
-}
