@@ -4,6 +4,9 @@ const separator = '|'
 const escapeChar = '^'
 const escapeSeq = escapeChar + separator
 
+const encodeItem = v => String(v).replaceAll(separator, escapeSeq)
+const decodeItem = v => v.replaceAll(escapeSeq, separator)
+
 
 /** Serialize an array to a string */
 function serialize(value) {
@@ -11,7 +14,7 @@ function serialize(value) {
     return ''
   }
   if (Array.isArray(value)) {
-    return value.map(v => String(v).replaceAll(separator, escapeSeq)).join(separator)
+    return value.map(v => encodeItem(v)).join(separator)
   }
   return String(value)
 }
@@ -22,25 +25,19 @@ function deserialize(value) {
 
   const result = []
   let lastChar = ''
-  let buffer = null
+  let buffer = ''
   Array.from(value).forEach(c => {
     if (c === separator && lastChar !== escapeChar) {
-      result.push(buffer)
-      buffer = null
+      result.push(decodeItem(buffer))
+      buffer = ''
     } else {
-      buffer = buffer === null ? c : buffer + c
+      buffer += c
     }
     lastChar = c
   })
 
-  result.push(buffer)
-
-  return result.map(r => {
-    if (r === null) return ''
-    return r.replaceAll(escapeSeq, separator)
-  })
-
-  // return value.split(separator)
+  result.push(decodeItem(buffer))
+  return result
 }
 
 function isMultiValue(el) {
