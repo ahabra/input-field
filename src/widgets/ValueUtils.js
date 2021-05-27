@@ -50,10 +50,8 @@ function getValueAttr(el) {
 }
 
 /** value can be either a string or an array */
-export function setValueAttr(el, value, ignoreProp) {
+export function setValueAttr(el, value) {
   const isMulti = isMultiValue(el)
-  // FIXME
-  // if (isMulti && !Array.isArray(value)) throw 'bad value'
 
   if (isSameValue(getValueAttr(el), value, isMulti)) {
     return
@@ -62,7 +60,7 @@ export function setValueAttr(el, value, ignoreProp) {
   if (isMulti) {
     value = serialize(value)
   }
-  el.setAttribute('value', value, ignoreProp)
+  el.setAttribute('value', value, true)
 }
 
 function getValueProp(el) {
@@ -74,15 +72,34 @@ function getValueProp(el) {
  * @param el
  * @param value a string that can be a serialized array
  */
-export function setValueProp(el, value) {
-  const isMulti = isMultiValue(el)
-  if (isMulti) {
+function setValueProp(el, value) {
+  if (isMultiValue(el)) {
     value = deserialize(value)
+    if (arraysHaveSameItems(getValueProp(el), value)) {
+      return
+    }
   }
-  if (arraysHaveSameItems(getValueProp(el), value)) {
-    return
-  }
+
   el.wi.properties.value = value
+}
+
+/** when the value attribute changes, change the property as well */
+export function overrideSetAttribute(el) {
+  const oldSet = el.setAttribute.bind(el)
+
+  el.setAttribute = function(name, value, ignoreProp) {
+    if (name !== 'value') {
+      oldSet(name, value)
+      return
+    }
+
+    value = String(value)
+    if (!ignoreProp) {
+      setValueProp(el, value)
+    }
+
+    oldSet(name, value)
+  }
 }
 
 export const privates = {
@@ -90,5 +107,7 @@ export const privates = {
   deserialize,
   isMultiValue,
   arraysHaveSameItems,
-  getValueAttr
+  isSameValue,
+  getValueAttr,
+  setValueProp
 }

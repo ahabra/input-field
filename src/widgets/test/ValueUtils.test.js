@@ -55,23 +55,6 @@ describe('ValueUtils', ()=> {
     })
   })
 
-  describe('getValueAttr', ()=> {
-    const getValueAttr = ValueUtils.privates.getValueAttr
-
-    it('returns the value attribute', ()=> {
-      const el = Domer.createElement('div', {value: '42'})
-      expect(getValueAttr(el)).to.equal('42')
-    })
-
-    it('returns an array for multivalue element', ()=> {
-      let el = Domer.createElement('div', {type: 'checkbox', value: '42'})
-      expect(getValueAttr(el)).to.eql(['42'])
-
-      el = Domer.createElement('div', {type: 'checkbox', value: 'a|b'})
-      expect(getValueAttr(el)).to.eql(['a', 'b'])
-    })
-  })
-
   describe('arraysHaveSameItems', ()=> {
     const arraysHaveSameItems = ValueUtils.privates.arraysHaveSameItems
 
@@ -91,5 +74,74 @@ describe('ValueUtils', ()=> {
       expect(arraysHaveSameItems([1, 2], [2, 1, 1])).to.be.true
     })
   })
+
+  describe('isSameValue', ()=> {
+    const isSameValue = ValueUtils.privates.isSameValue
+
+    it('checks arrays', ()=> {
+      expect(isSameValue([1, 2], [2, 1], true)).to.be.true
+      expect(isSameValue([1, 2], [2], true)).to.be.false
+      expect(isSameValue([1], [1], false)).to.be.false
+    })
+
+    it('checks strings', ()=> {
+      expect(isSameValue('', '', false)).to.be.true
+      expect(isSameValue('a', 'a', false)).to.be.true
+      expect(isSameValue('a', 'ab', false)).to.be.false
+    })
+
+  })
+
+  describe('getValueAttr', ()=> {
+    const getValueAttr = ValueUtils.privates.getValueAttr
+
+    it('returns the value attribute', ()=> {
+      const el = Domer.createElement('div', {value: '42'})
+      expect(getValueAttr(el)).to.equal('42')
+    })
+
+    it('returns an array for multivalue element', ()=> {
+      let el = Domer.createElement('div', {type: 'checkbox', value: '42'})
+      expect(getValueAttr(el)).to.eql(['42'])
+
+      el = Domer.createElement('div', {type: 'checkbox', value: 'a|b'})
+      expect(getValueAttr(el)).to.eql(['a', 'b'])
+    })
+  })
+
+  describe('setValueProp', ()=> {
+    const setValueProp = ValueUtils.privates.setValueProp
+
+    it('sets a single value', ()=> {
+      const el = Domer.createElement('div')
+      el.wi = {
+        properties: {}
+      }
+      setValueProp(el, 'a')
+      expect(el.wi.properties.value).to.equal('a')
+    })
+
+    it('sets new multivalue', ()=> {
+      const el = Domer.createElement('div', {type: 'listbox'})
+      el.wi = {
+        properties: {}
+      }
+      setValueProp(el, 'a|b')
+      expect(el.wi.properties.value).to.eql(['a', 'b'])
+    })
+
+    it('does not set multivalue when they are the same', ()=> {
+      const el = Domer.createElement('div', {type: 'listbox'})
+      el.wi = {
+        properties: {
+          value: ['b', 'a']
+        }
+      }
+      setValueProp(el, 'a|b')
+      expect(el.wi.properties.value).to.eql(['b', 'a'])
+    })
+  })
+
+
 
 })

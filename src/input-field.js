@@ -57,7 +57,7 @@ export function define(cssFilePath = '') {
       const atts = extractAttributes(el)
       el.validationRules = ValidationRules.createFromAttributes(atts)
       el.valueChangeListeners = []
-      overrideSetAttribute(el)
+      ValueUtils.overrideSetAttribute(el)
       return buildHtml(el, atts, cssFilePath)
     },
 
@@ -142,32 +142,11 @@ export function define(cssFilePath = '') {
 
 
 function onValueChange(el, value) {
-  ValueUtils.setValueAttr(el, value, true)
+  ValueUtils.setValueAttr(el, value)
 
   validate(el, value)
   el.wi.actions._runValueChangeListeners(value)
 }
-
-/** when the value attribute changes, change the property as well */
-function overrideSetAttribute(el) {
-  const oldSet = el.setAttribute.bind(el)
-
-  el.setAttribute = function(name, value, ignoreProp) {
-    if (name !== 'value') {
-      oldSet(name, value)
-      return
-    }
-
-    value = String(value)
-    if (!ignoreProp) {
-      ValueUtils.setValueProp(el, value)
-    }
-
-    oldSet(name, value)
-  }
-
-}
-
 
 /** Make sure attributes names are all lower case */
 function extractAttributes(el) {
