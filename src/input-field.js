@@ -142,8 +142,6 @@ export function define(cssFilePath = '') {
 
 
 function onValueChange(el, value) {
-  console.log('prop value=', ValueUtils.getValueProp(el), ', new value=', value)
-
   ValueUtils.setValueAttr(el, value, true)
 
   validate(el, value)
@@ -155,9 +153,6 @@ function overrideSetAttribute(el) {
   const oldSet = el.setAttribute.bind(el)
 
   el.setAttribute = function(name, value, ignoreProp) {
-    if (ignoreProp) {
-      console.warn('setAttribute() will ignore prop')
-    }
     if (name !== 'value') {
       oldSet(name, value)
       return
@@ -167,7 +162,6 @@ function overrideSetAttribute(el) {
     if (!ignoreProp) {
       ValueUtils.setValueProp(el, value)
     }
-
 
     oldSet(name, value)
   }

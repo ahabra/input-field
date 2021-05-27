@@ -6,7 +6,7 @@ import {Domer} from '@techexp/jshelper'
 describe('ValueUtils', ()=> {
 
   describe('serialize', ()=> {
-    const serialize = ValueUtils.serialize
+    const serialize = ValueUtils.privates.serialize
 
     it('converts an array to string', ()=> {
       expect(serialize([1, 2])).to.equal('1|2')
@@ -17,7 +17,7 @@ describe('ValueUtils', ()=> {
   })
 
   describe('deserialize', ()=> {
-    const deserialize = ValueUtils.deserialize
+    const deserialize = ValueUtils.privates.deserialize
 
     it('converts a string to an array', ()=> {
       expect(deserialize('1|2')).to.eql(['1', '2'])
@@ -28,7 +28,7 @@ describe('ValueUtils', ()=> {
   })
 
   describe('isMultiValue', ()=> {
-    const isMultiValue = ValueUtils.isMultiValue
+    const isMultiValue = ValueUtils.privates.isMultiValue
 
     it('returns true for checkbox type', ()=> {
       let el = Domer.createElement('div', {type: 'checkbox'})
@@ -56,7 +56,7 @@ describe('ValueUtils', ()=> {
   })
 
   describe('getValueAttr', ()=> {
-    const getValueAttr = ValueUtils.getValueAttr
+    const getValueAttr = ValueUtils.privates.getValueAttr
 
     it('returns the value attribute', ()=> {
       const el = Domer.createElement('div', {value: '42'})
@@ -73,7 +73,7 @@ describe('ValueUtils', ()=> {
   })
 
   describe('arraysHaveSameItems', ()=> {
-    const arraysHaveSameItems = ValueUtils.arraysHaveSameItems
+    const arraysHaveSameItems = ValueUtils.privates.arraysHaveSameItems
 
     it('returns false if arrays have different number of unique items', ()=> {
       expect(arraysHaveSameItems([], [1])).to.be.false

@@ -1,7 +1,7 @@
 import {Objecter, Stringer} from '@techexp/jshelper'
 
 /** Serialize an array to a string */
-export function serialize(value) {
+function serialize(value) {
   if (Objecter.isNil(value)) {
     return ''
   }
@@ -12,18 +12,18 @@ export function serialize(value) {
 }
 
 /** deSerialize a string to an array of value */
-export function deserialize(value) {
+function deserialize(value) {
   if (Stringer.isEmpty(value)) return []
   return value.split('|')
 }
 
-export function isMultiValue(el) {
+function isMultiValue(el) {
   const type = Stringer.trim(el.getAttribute('type')).toLowerCase()
   return type === 'checkbox' || type === 'listbox'
 }
 
 /** Check if two arrays have the same items, regardless of order */
-export function arraysHaveSameItems(ar1, ar2) {
+function arraysHaveSameItems(ar1, ar2) {
   const s1 = new Set(ar1)
   const s2 = new Set(ar2)
   if (s1.size !== s2.size) return false
@@ -41,7 +41,7 @@ function isSameValue(v1, v2, isMultiValue) {
 }
 
 /** get the value attribute, if multivalue return array */
-export function getValueAttr(el) {
+function getValueAttr(el) {
   const value = el.getAttribute('value')
   if (isMultiValue(el)) {
     return deserialize(value)
@@ -65,10 +65,9 @@ export function setValueAttr(el, value, ignoreProp) {
   el.setAttribute('value', value, ignoreProp)
 }
 
-export function getValueProp(el) {
+function getValueProp(el) {
   return el.wi.properties.value
 }
-
 
 /**
  * Set the value property if it is different.
@@ -84,4 +83,12 @@ export function setValueProp(el, value) {
     return
   }
   el.wi.properties.value = value
+}
+
+export const privates = {
+  serialize,
+  deserialize,
+  isMultiValue,
+  arraysHaveSameItems,
+  getValueAttr
 }
