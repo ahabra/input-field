@@ -113,12 +113,12 @@ CSS variables.
   border-color: var(--input-border-focus);
 }
 
-.input-field input.bad {
+.input-field.bad input  {
   border-color: var(--input-border-color-bad, red);
   background-image: var(--input-background-bad);
 }
 
-.input-field input.bad:focus {
+.input-field.bad input:focus {
   border-color: var(--input-border-color-bad);
   background-image: var(--input-background-focus-bad);
 }

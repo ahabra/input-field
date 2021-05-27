@@ -134,6 +134,14 @@ export function define(cssFilePath = '') {
             listener(el, value)
           })
         }
+      },
+      {
+        name: 'isValid',
+        action: function() {
+          const el = this
+          const input = Domer.first('.input-field', el)
+          return !input.classList.contains('bad')
+        }
       }
     ]
 
@@ -223,7 +231,7 @@ function validate(el, value) {
     allValid = allValid && isValid
   })
 
-  const input = Domer.first('input', el)
+  const input = Domer.first('.input-field', el)
   Domer.classPresentIf(input, 'bad', !allValid)
 }
 
