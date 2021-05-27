@@ -40,6 +40,7 @@ describe('ValueUtils', ()=> {
       const ar = ['a|b', 'c', '', '|']
       expect(deserialize( serialize(ar) )).to.eql(ar)
 
+      expect(deserialize('a^b^^|c|d')).to.eql(['a^b^|c', 'd'])
     })
   })
 
