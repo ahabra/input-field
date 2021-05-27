@@ -14,16 +14,31 @@ describe('ValueUtils', ()=> {
       expect(serialize([])).to.equal('')
       expect(serialize()).to.equal('')
     })
+
+    it('escapes pipe with a caret character', ()=> {
+      expect(serialize(['a|b', 'c'])).to.equal('a^|b|c')
+    })
   })
 
   describe('deserialize', ()=> {
     const deserialize = ValueUtils.privates.deserialize
+    const serialize = ValueUtils.privates.serialize
 
     it('converts a string to an array', ()=> {
       expect(deserialize('1|2')).to.eql(['1', '2'])
       expect(deserialize('1')).to.eql(['1'])
       expect(deserialize('')).to.eql([])
       expect(deserialize()).to.eql([])
+      expect(deserialize('1||2')).to.eql(['1', '', '2'])
+      expect(deserialize('1|2|')).to.eql(['1', '2', ''])
+    })
+
+    it('converts strings having pipe escaped with a caret', ()=> {
+      expect(deserialize('a^|b|c')).to.eql(['a|b', 'c'])
+
+      const ar = ['a|b', 'c', '']
+      expect(deserialize( serialize(ar) )).to.eql(ar)
+
     })
   })
 

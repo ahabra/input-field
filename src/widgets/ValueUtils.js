@@ -1,12 +1,17 @@
 import {Objecter, Stringer} from '@techexp/jshelper'
 
+const separator = '|'
+const escapeChar = '^'
+const escapeSeq = escapeChar + separator
+
+
 /** Serialize an array to a string */
 function serialize(value) {
   if (Objecter.isNil(value)) {
     return ''
   }
   if (Array.isArray(value)) {
-    return value.join('|')
+    return value.map(v => String(v).replaceAll(separator, escapeSeq)).join(separator)
   }
   return String(value)
 }
@@ -14,7 +19,28 @@ function serialize(value) {
 /** deSerialize a string to an array of value */
 function deserialize(value) {
   if (Stringer.isEmpty(value)) return []
-  return value.split('|')
+
+  const result = []
+  let lastChar = ''
+  let buffer = null
+  Array.from(value).forEach(c => {
+    if (c === separator && lastChar !== escapeChar) {
+      result.push(buffer)
+      buffer = null
+    } else {
+      buffer = buffer === null ? c : buffer + c
+    }
+    lastChar = c
+  })
+
+  result.push(buffer)
+
+  return result.map(r => {
+    if (r === null) return ''
+    return r.replaceAll(escapeSeq, separator)
+  })
+
+  // return value.split(separator)
 }
 
 function isMultiValue(el) {
