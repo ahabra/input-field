@@ -4,7 +4,7 @@ import {Domer, Objecter, Stringer} from '@techexp/jshelper'
 import {ValidationRules} from './validation/ValidationRules'
 import {Rule} from './validation/Rule'
 
-import template from './input-field.html'
+import {template} from './input-field.html.js'
 import * as Input from './widgets/input'
 import * as Radio from './widgets/radio'
 import * as Checkbox from './widgets/checkbox'
@@ -174,7 +174,7 @@ function buildHtml(el, atts, cssFilePath) {
     rules: el.validationRules.toHtml()
   }
   setTooltipParams(atts, values)
-  return Stringer.replaceTemplate(template, values)
+  return Stringer.replaceTemplate(template, values, '{')
 }
 
 function getInputHtml(el, atts) {
