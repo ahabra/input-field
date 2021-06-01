@@ -10,7 +10,7 @@
     <input-field id="age" type="integer" label="Age"
                  sublabel="Your age in years"
                  value="333"
-                 required="required" required-message="This field is required++"
+                 required="true" required-message="This field is required++"
                  minlength="2" minlength-message="Minimum of %v characters++"
                  maxlength="5" pattern="[0-9]{2,3}"
                  MIN="18" max="900"
@@ -26,17 +26,18 @@
     <input-field id="colors" type="set" label="RGB Colors"
                  tooltip="One of: red, green, blue"
                  options="red, green, blue"
-                 required="true"
+                 required="required"
     ></input-field>
 
     <input-field id="gender" type="radio" label="Gender"
                  tooltip="What is your preferred gender?"
+                 required="required"
     >
       {
         "name": "gender",
         "flow": "vertical",
         "options": [
-          { "label": "Male",   "id":"male",   "value": "M", "checked": true },
+          { "label": "Male",   "id":"male",   "value": "M" },
           { "label": "Female", "id":"female", "value": "F" },
           { "label": "Other" }
         ]

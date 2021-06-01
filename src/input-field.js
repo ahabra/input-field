@@ -11,6 +11,7 @@ import * as Checkbox from './widgets/checkbox'
 import * as Listbox from './widgets/listbox'
 import {setTooltipParams} from './widgets/tooltip'
 import * as ValueUtils from './widgets/ValueUtils'
+import * as WidgetUtils from './widgets/WidgetUtils'
 
 /**
  * Define a responsive input field with its label.
@@ -139,6 +140,7 @@ export function define(cssFilePath = '') {
         name: 'isValid',
         action: function() {
           const el = this
+          validate(el, el.wi.properties.value)
           const input = Domer.first('.input-field', el)
           return !input.classList.contains('bad')
         }
@@ -177,7 +179,7 @@ function buildHtml(el, atts, cssFilePath) {
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     sublabel: getSublabel(atts),
-    required: getAttr(atts, 'required'),
+    required: WidgetUtils.getAttr(atts, 'required'),
     showrules: atts.showrules ? '' : 'none',
     rules: el.validationRules.toHtml()
   }
@@ -211,15 +213,6 @@ function getSublabel(atts) {
   const sublabel = atts.sublabel
   if (!sublabel) return ''
   return `<br>${sublabel}`
-}
-
-function getAttr(atts, attName) {
-  const value = atts[attName]
-  if (!value) return ''
-
-  if (value === 'required') return value
-
-  return ` ${attName}="${value}"`
 }
 
 function validate(el, value) {

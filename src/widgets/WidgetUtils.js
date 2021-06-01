@@ -1,5 +1,7 @@
 import {Objecter, Stringer} from '@techexp/jshelper'
 
+const required = 'required'
+
 export function parseAndValidate(json, widgetType, ...required) {
   if (!validateString(json)) return false
   json = JSON.parse(json)
@@ -31,4 +33,17 @@ export function validateOption(widgetType, {label, value}) {
   if (label === undefined && value === undefined) {
     throw `${widgetType} definition requires at least a label or value`
   }
+}
+
+export function getAttr(atts, attName) {
+  const value = atts[attName]
+  if (!value) return ''
+
+  if (isRequired(attName, value)) return required
+  return `${attName}="${value}"`
+}
+
+function isRequired(attName, value) {
+  if (attName !== required) return false
+  return value === required || value === 'true'
 }

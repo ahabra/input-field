@@ -1,4 +1,5 @@
 import {Stringer} from '@techexp/jshelper'
+import * as WidgetUtils from './WidgetUtils'
 
 const template = `
  <input type="{type}" class="input" value="{value}"
@@ -9,10 +10,10 @@ const required = 'required'
 export function getHtml(atts) {
   const params = {
     type: getType(atts),
-    required: getAttr(atts, required),
-    minlength: getAttr(atts, 'minlength'),
-    maxlength: getAttr(atts, 'maxlength'),
-    pattern: getAttr(atts, 'pattern'),
+    required: WidgetUtils.getAttr(atts, required),
+    minlength: WidgetUtils.getAttr(atts, 'minlength'),
+    maxlength: WidgetUtils.getAttr(atts, 'maxlength'),
+    pattern: WidgetUtils.getAttr(atts, 'pattern'),
     value: atts.value || ''
   }
   return Stringer.replaceTemplate(template, params, '{')
@@ -24,12 +25,4 @@ function getType(atts) {
   if (type === 'integer') return 'number'
 
   return type
-}
-
-function getAttr(atts, attName) {
-  const value = atts[attName]
-  if (!value) return ''
-
-  if (attName === required && value === required) return required
-  return `${attName}="${value}"`
 }
