@@ -8,6 +8,10 @@ export class Rule {
   }
 
   isValid(value) {
+    if (this.name === 'required' && value === undefined) {
+      return false
+    }
+
     return this.validator(String(value))
   }
 
