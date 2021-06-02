@@ -125,6 +125,30 @@ export function overrideSetAttribute(el) {
   }
 }
 
+function isEmptyList(list) {
+  if (Objecter.isNil(list)) return true
+  if (Array.isArray(list)) return list.length === 0
+  if (Objecter.isString(list)) return Stringer.isEmpty(list)
+  return String(list).length === 0
+}
+
+export function toggleValueInList(list, value) {
+  if (isEmptyList(list)) {
+    return [value]
+  }
+
+  if (Objecter.isString(list)) {
+    return list === value ? [] : [list, value]
+  }
+
+  if (list.indexOf(value) < 0) {
+    list.push(value)
+  } else {
+    list = list.filter(v => v !== value)
+  }
+  return list
+}
+
 export const privates = {
   serialize,
   deserialize,

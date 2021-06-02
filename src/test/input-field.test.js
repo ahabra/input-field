@@ -6,6 +6,10 @@ import {Domer} from '@techexp/jshelper'
 describe('input-field.js', ()=> {
   InputField.define()
 
+  beforeEach(()=> {
+    document.body.innerHTML = ''
+  })
+
   describe('value attribute and property coupling', ()=> {
 
     it('couples text field', ()=> {
@@ -24,8 +28,7 @@ describe('input-field.js', ()=> {
     })
 
     it('couples multivalue field', ()=> {
-      const el = createInputField('listbox', '', getListboxContent())
-
+      const el = createListBox()
       el.wi.properties.value = ['MI', 'OH']
       expect(el.getAttribute('value')).to.equal('MI|OH')
       expect(el.wi.properties.value).to.eql(['MI', 'OH'])
@@ -37,8 +40,7 @@ describe('input-field.js', ()=> {
     })
 
     it('does not alter value property when setting value attribute of different order', ()=> {
-      const el = createInputField('listbox', '', getListboxContent())
-
+      const el = createListBox()
       el.wi.properties.value = ['MI', 'OH']
       el.setAttribute('value', 'OH|MI')
       expect(el.getAttribute('value')).to.equal('OH|MI')
@@ -46,11 +48,29 @@ describe('input-field.js', ()=> {
     })
 
     it('allows setting a multivalue property to a single string', ()=> {
-      const el = createInputField('listbox', '', getListboxContent())
+      const el = createListBox()
       el.wi.properties.value = 'MI'
       expect(el.wi.properties.value).to.eql(['MI'])
       expect(el.getAttribute('value')).to.equal('MI')
     })
+
+
+    it('changes the value attribute for a listbox when user clicks on widget', ()=> {
+      const el = createListBox()
+      const select = Domer.first('.input-field/select', el.shadowRoot)
+      clickOnSelectOption(select, 'MI')
+      expect(el.getAttribute('value')).to.equal('MI')
+
+      clickOnSelectOption(select, 'OH')
+      expect(el.getAttribute('value')).to.equal('MI|OH')
+
+      clickOnSelectOption(select, 'MI')
+      expect(el.getAttribute('value')).to.equal('OH')
+
+      clickOnSelectOption(select, 'OH')
+      expect(el.getAttribute('value')).to.equal('')
+    })
+
 
   })
 
@@ -61,6 +81,10 @@ function createInputField(type = 'text', value = '', contentJson) {
   const el = Domer.createElement('input-field', {type, value}, content)
   document.body.append(el)
   return el
+}
+
+function createListBox() {
+  return createInputField('listbox', '', getListboxContent())
 }
 
 function getListboxContent() {
@@ -82,4 +106,9 @@ function getListboxContent() {
       }
     ]
   }
+}
+
+function clickOnSelectOption(select, value) {
+  const option = Domer.first(`option[value="${value}"]`, select)
+  option.dispatchEvent(new Event('mousedown'))
 }

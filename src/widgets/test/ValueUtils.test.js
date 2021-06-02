@@ -159,6 +159,30 @@ describe('ValueUtils', ()=> {
     })
   })
 
+  describe('toggleValueInList', ()=> {
+    const toggleValueInList = ValueUtils.toggleValueInList
 
+    it('adds value to list if list is empty', ()=> {
+      expect(toggleValueInList(undefined, 'a')).to.eql(['a'])
+      expect(toggleValueInList(null, 'a')).to.eql(['a'])
+      expect(toggleValueInList([], 'a')).to.eql(['a'])
+      expect(toggleValueInList('', 'a')).to.eql(['a'])
+    })
+
+    it('clears list if it only contains value', ()=> {
+      expect(toggleValueInList('a', 'a')).to.eql([])
+      expect(toggleValueInList(['a'], 'a')).to.eql([])
+    })
+
+    it('adds value to list if list does not contain value', ()=> {
+      expect(toggleValueInList('a', 'b')).to.eql(['a', 'b'])
+      expect(toggleValueInList(['a'], 'b')).to.eql(['a', 'b'])
+    })
+
+    it('removes value from list if it exists', ()=> {
+      expect(toggleValueInList(['a', 'b'], 'a')).to.eql(['b'])
+    })
+
+  })
 
 })
