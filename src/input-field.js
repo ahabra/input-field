@@ -70,17 +70,22 @@ export function define(cssFilePath = '') {
 
     eventHandlerList: [
       {
-        sel: 'input, select',
-        eventName: 'input',
-        listener: (ev, el) => onValueChange(el, ev.target.value)
-      },
-      {
         sel: 'label .tooltip',
         eventName: 'click',
         listener: (ev, el) => {
           const tooltipText = Domer.first('label .tooltip-text', el)
           tooltipText.classList.toggle('show')
         }
+      },
+      {
+        sel: 'input:not([type="checkbox"]), select',
+        eventName: 'input',
+        listener: (ev, el) => onValueChange(el, ev.target.value)
+      },
+      {
+        sel: 'input[type="checkbox"]',
+        eventName: 'input',
+        listener: (ev, el) => onValueChange(el, el.wi.properties.value)
       },
       {
         sel: 'select.listbox.multiple option',

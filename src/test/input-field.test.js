@@ -34,9 +34,9 @@ describe('input-field.js', ()=> {
       expect(el.wi.properties.value).to.eql(['MI', 'OH'])
 
 
-      el.setAttribute('value', 'FL')
-      expect(el.getAttribute('value')).to.equal('FL')
-      expect(el.wi.properties.value).to.eql(['FL'])
+      el.setAttribute('value', 'NY')
+      expect(el.getAttribute('value')).to.equal('NY')
+      expect(el.wi.properties.value).to.eql(['NY'])
     })
 
     it('does not alter value property when setting value attribute of different order', ()=> {
@@ -71,6 +71,16 @@ describe('input-field.js', ()=> {
       expect(el.getAttribute('value')).to.equal('')
     })
 
+    it('changes the value attribute for a checkbox when user clicks on widget', ()=> {
+      const el = createCheckBox()
+      const container = Domer.first('.input-field/.checkbox-buttons', el.shadowRoot)
+      clickOnCheckbox(container, 'MI')
+      expect(el.getAttribute('value')).to.eql('MI')
+
+      clickOnCheckbox(container, 'OH')
+      expect(el.getAttribute('value')).to.eql('MI|OH')
+    })
+
 
   })
 
@@ -87,23 +97,20 @@ function createListBox() {
   return createInputField('listbox', '', getListboxContent())
 }
 
+function createCheckBox() {
+  return createInputField('checkbox', '', getListboxContent())
+}
+
+
 function getListboxContent() {
   return {
     name: 'states2',
     id: 'states2',
     multiple: true,
-    size: 5,
     options: [
       { label: 'Michigan', value: 'MI'},
       { label: 'Ohio', value: 'OH'},
       { label: 'New York', value: 'NY'},
-      { label: 'Southern', options: [
-        { label: 'Florida', value: 'FL'},
-        { value: 'Texas'},
-        { label: 'Alabama'},
-        { label: 'Georgia'}
-      ]
-      }
     ]
   }
 }
@@ -111,4 +118,9 @@ function getListboxContent() {
 function clickOnSelectOption(select, value) {
   const option = Domer.first(`option[value="${value}"]`, select)
   option.dispatchEvent(new Event('mousedown'))
+}
+
+function clickOnCheckbox(container, value) {
+  const chkbox = Domer.first(`input[value=${value}]`, container)
+  chkbox.click()
 }
