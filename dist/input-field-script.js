@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.2.3.
+// Copyright 2021 (C) Abdul Habra. Version 1.3.0.
 // Apache License Version 2.0
 
 
@@ -8,7 +8,7 @@ var InputField = (() => {
   var __defProp = Object.defineProperty;
   var __export = (target, all2) => {
     for (var name in all2)
-      __defProp(target, name, {get: all2[name], enumerable: true});
+      __defProp(target, name, { get: all2[name], enumerable: true });
   };
 
   // src/input-field.js
@@ -21,7 +21,7 @@ var InputField = (() => {
   var __defProp2 = Object.defineProperty;
   var __export2 = (target, all2) => {
     for (var name in all2)
-      __defProp2(target, name, {get: all2[name], enumerable: true});
+      __defProp2(target, name, { get: all2[name], enumerable: true });
   };
   var Domer_exports = {};
   __export2(Domer_exports, {
@@ -416,9 +416,9 @@ var InputField = (() => {
   __export2(LineCompare_exports, {
     compareLines: () => compareLines
   });
-  function compareLines(t1, t2, {trim: trim2 = true, skipEmpty = true, caseSensitive = true} = {trim: true, skipEmpty: true, caseSensitive: true}) {
-    t1 = toLines(t1, {trim: trim2, skipEmpty});
-    t2 = toLines(t2, {trim: trim2, skipEmpty});
+  function compareLines(t1, t2, { trim: trim2 = true, skipEmpty = true, caseSensitive = true } = { trim: true, skipEmpty: true, caseSensitive: true }) {
+    t1 = toLines(t1, { trim: trim2, skipEmpty });
+    t2 = toLines(t2, { trim: trim2, skipEmpty });
     if (t1.length !== t2.length) {
       return `t1 has ${t1.length} lines(s) while t2 has ${t2.length} line(s).`;
     }
@@ -440,7 +440,7 @@ ${t2}`;
     }
     return "";
   }
-  function toLines(t, {trim: trim2, skipEmpty}) {
+  function toLines(t, { trim: trim2, skipEmpty }) {
     if (trim2) {
       t = trim(t);
     }
@@ -469,14 +469,14 @@ ${t2}`;
     checkInitialValue(obj, prop);
     const objNotBound = {};
     if (!getter) {
-      getter = () => getValue({prop, sel, attr, root, objNotBound});
+      getter = () => getValue({ prop, sel, attr, root, objNotBound });
     }
     if (!setter) {
-      setter = (value) => setValue({prop, value, root, sel, attr, objNotBound});
+      setter = (value) => setValue({ prop, value, root, sel, attr, objNotBound });
     }
-    return bindProp({obj, prop, getter, setter, onChange});
+    return bindProp({ obj, prop, getter, setter, onChange });
   }
-  function bindProp({obj, prop, getter, setter, onChange}) {
+  function bindProp({ obj, prop, getter, setter, onChange }) {
     const descriptor = {
       get: () => getter(),
       set: (value) => {
@@ -507,12 +507,12 @@ ${t2}`;
     }
     return oldValue;
   }
-  function getValue({prop, root, sel, attr, objNotBound}) {
+  function getValue({ prop, root, sel, attr, objNotBound }) {
     if (sel)
       return getDomVal(root, sel, attr);
     return objNotBound[prop];
   }
-  function setValue({prop, value, root, sel, attr, objNotBound}) {
+  function setValue({ prop, value, root, sel, attr, objNotBound }) {
     if (sel) {
       setDomVal(root, sel, value, attr);
       return;
@@ -607,11 +607,11 @@ ${t2}`;
         this.wi.actions = defineActions(this, actionList);
         addEventListeners(this, eventHandlerList);
         this.wi.addProperty = function(name, value, sel, attr, onChange) {
-          const prop = {name, value, sel, attr, onChange};
+          const prop = { name, value, sel, attr, onChange };
           addProperty(root.wi.properties, prop, root);
         };
         this.wi.addAction = (name, action) => addAction(root, root.wi.actions, name, action);
-        this.wi.addEventListener = (sel, eventName, listener) => addHandler(root, {sel, eventName, listener});
+        this.wi.addEventListener = (sel, eventName, listener) => addHandler(root, { sel, eventName, listener });
       }
     };
     customElements.define(nameWithDash, el);
@@ -626,7 +626,7 @@ ${t2}`;
   }
   function addProperty(obj, prop, root) {
     const onChange = createOnChange(prop, root);
-    bind({obj, prop: prop.name, sel: prop.sel, attr: prop.attr, root: root.shadowRoot, onChange});
+    bind({ obj, prop: prop.name, sel: prop.sel, attr: prop.attr, root: root.shadowRoot, onChange });
     if (prop.value !== void 0) {
       obj[prop.name] = prop.value;
     }
@@ -666,7 +666,7 @@ ${t2}`;
     }
     eventHandlerList.forEach((h) => addHandler(root, h));
   }
-  function addHandler(root, {sel, eventName, listener}) {
+  function addHandler(root, { sel, eventName, listener }) {
     const elements = Domer_exports.all(sel, root.shadowRoot);
     elements.forEach((el) => {
       el.addEventListener(eventName, (ev) => {
@@ -676,7 +676,7 @@ ${t2}`;
   }
   function addHtml(root, html, css, display) {
     html = getHtml(root, html);
-    const shadow = root.attachShadow({mode: "open"});
+    const shadow = root.attachShadow({ mode: "open" });
     const nodes = Domer_exports.createElements(getCss(css, display) + html);
     shadow.append(...nodes);
   }
@@ -715,6 +715,9 @@ ${t2}`;
       this.validator = validator;
     }
     isValid(value) {
+      if (this.name === "required" && value === void 0) {
+        return false;
+      }
       return this.validator(String(value));
     }
     toHtml() {
@@ -843,49 +846,34 @@ ${t2}`;
     return !!found;
   }
 
-  // src/input-field.html
-  var input_field_default = '${cssFile}\n\n<div class="input-field">\n  <label class="label">\n    <span class="superlabel ${required} ${tooltip}">\n      ${label} ${tooltipIcon}\n      <span class="tooltip-text">${tooltipText}</span>\n    </span>\n    <span class="sublabel">${sublabel}</span>\n  </label>\n\n  ${input}\n\n  <footer>\n    <ul class="rules" style="display:${showrules};">${rules}</ul>\n  </footer>\n</div>\n';
-
-  // src/widgets/input.js
+  // src/input-field.html.js
   var template = `
- <input type="{type}" class="input" value="{value}"
-  {required} {minlength} {maxlength} {pattern}>
+{cssFile}
+
+<div class="input-field">
+  <label class="label">
+    <span class="superlabel {required} {tooltip}">
+      {label} {tooltipIcon}
+      <span class="tooltip-text">{tooltipText}</span>
+    </span>
+    <span class="sublabel">{sublabel}</span>
+  </label>
+
+  {input}
+
+  <footer>
+    <ul class="rules" style="display:{showrules};">{rules}</ul>
+  </footer>
+</div>
 `;
-  var required = "required";
-  function getHtml2(atts) {
-    const params = {
-      type: getType(atts),
-      required: getAttr(atts, required),
-      minlength: getAttr(atts, "minlength"),
-      maxlength: getAttr(atts, "maxlength"),
-      pattern: getAttr(atts, "pattern"),
-      value: atts.value || ""
-    };
-    return Stringer_exports.replaceTemplate(template, params, "{");
-  }
-  function getType(atts) {
-    const type = Stringer_exports.trim(atts.type).toLowerCase();
-    if (!type)
-      return "text";
-    if (type === "integer")
-      return "number";
-    return type;
-  }
-  function getAttr(atts, attName) {
-    const value = atts[attName];
-    if (!value)
-      return "";
-    if (attName === required && value === required)
-      return required;
-    return `${attName}="${value}"`;
-  }
 
   // src/widgets/WidgetUtils.js
-  function parseAndValidate(json, widgetType, ...required2) {
+  var required = "required";
+  function parseAndValidate(json, widgetType, ...required3) {
     if (!validateString(json))
       return false;
     json = JSON.parse(json);
-    if (!validateJsonObject(json, widgetType, ...required2))
+    if (!validateJsonObject(json, widgetType, ...required3))
       return false;
     return json;
   }
@@ -897,25 +885,64 @@ ${t2}`;
     json = json.trim();
     return json.length !== 0;
   }
-  function validateJsonObject(json, widgetType, ...required2) {
+  function validateJsonObject(json, widgetType, ...required3) {
     if (!Array.isArray(json.options))
       return false;
     if (json.options.length === 0)
       return false;
-    const found = required2.find((r) => !Objecter_exports.has(json, r));
+    const found = required3.find((r) => !Objecter_exports.has(json, r));
     if (found) {
       throw `${widgetType} definition requires ${found} attribute`;
     }
     return true;
   }
-  function validateOption(widgetType, {label, value}) {
+  function validateOption(widgetType, { label, value }) {
     if (label === void 0 && value === void 0) {
       throw `${widgetType} definition requires at least a label or value`;
     }
   }
+  function getAttr(atts, attName) {
+    const value = atts[attName];
+    if (!value)
+      return "";
+    if (isRequired(attName, value))
+      return required;
+    return `${attName}="${value}"`;
+  }
+  function isRequired(attName, value) {
+    if (attName !== required)
+      return false;
+    return value === required || value === "true";
+  }
+
+  // src/widgets/input.js
+  var template2 = `
+ <input type="{type}" class="input" value="{value}"
+  {required} {minlength} {maxlength} {pattern}>
+`;
+  var required2 = "required";
+  function getHtml2(atts) {
+    const params = {
+      type: getType(atts),
+      required: getAttr(atts, required2),
+      minlength: getAttr(atts, "minlength"),
+      maxlength: getAttr(atts, "maxlength"),
+      pattern: getAttr(atts, "pattern"),
+      value: atts.value || ""
+    };
+    return Stringer_exports.replaceTemplate(template2, params, "{");
+  }
+  function getType(atts) {
+    const type = Stringer_exports.trim(atts.type).toLowerCase();
+    if (!type)
+      return "text";
+    if (type === "integer")
+      return "number";
+    return type;
+  }
 
   // src/widgets/radio.js
-  var template2 = `
+  var template3 = `
 <label class="radio">
   <input type="radio" name="{name}" {id} value="{value}"{checked}>
   <span class="radio-label">{label}</span>
@@ -951,11 +978,11 @@ ${buttons}
       value: option.value || option.label,
       label: option.label || option.value
     };
-    return Stringer_exports.replaceTemplate(template2.trim(), params, "{");
+    return Stringer_exports.replaceTemplate(template3.trim(), params, "{");
   }
 
   // src/widgets/checkbox.js
-  var template3 = `
+  var template4 = `
 <label class="checkbox">
   <input type="checkbox" {name} {id} value="{value}"{checked}>
   <span class="checkbox-label">{label}</span>
@@ -990,7 +1017,7 @@ ${buttons}
       value: option.value || option.label,
       label: option.label || option.value
     };
-    return Stringer_exports.replaceTemplate(template3.trim(), params, "{");
+    return Stringer_exports.replaceTemplate(template4.trim(), params, "{");
   }
 
   // src/widgets/listbox.js
@@ -1018,7 +1045,7 @@ ${buttons}
     };
     return Stringer_exports.replaceTemplate(templates.select, params, "{");
   }
-  function getWidgetType({multiple, size}) {
+  function getWidgetType({ multiple, size }) {
     if (multiple || size > 1)
       return "listbox";
     return "combobox";
@@ -1080,6 +1107,104 @@ ${buttons}
     }
   }
 
+  // src/widgets/ValueUtils.js
+  var separator = "|";
+  var escapeChar = "^";
+  var escapeSeq = escapeChar + separator;
+  var encodeItem = (v) => String(v).replaceAll(separator, escapeSeq);
+  var decodeItem = (v) => v.replaceAll(escapeSeq, separator);
+  function serialize(value) {
+    if (Objecter_exports.isNil(value)) {
+      return "";
+    }
+    if (Array.isArray(value)) {
+      return value.map((v) => encodeItem(v)).join(separator);
+    }
+    return String(value);
+  }
+  function deserialize(value) {
+    if (Stringer_exports.isEmpty(value))
+      return [];
+    const result = [];
+    let lastChar = "";
+    let buffer = "";
+    Array.from(value).forEach((c) => {
+      if (c === separator && lastChar !== escapeChar) {
+        result.push(decodeItem(buffer));
+        buffer = "";
+      } else {
+        buffer += c;
+      }
+      lastChar = c;
+    });
+    result.push(decodeItem(buffer));
+    return result;
+  }
+  function isMultiValue(el) {
+    const type = Stringer_exports.trim(el.getAttribute("type")).toLowerCase();
+    return type === "checkbox" || type === "listbox";
+  }
+  function arraysHaveSameItems(ar1, ar2) {
+    const s1 = new Set(ar1);
+    const s2 = new Set(ar2);
+    if (s1.size !== s2.size)
+      return false;
+    for (const a of s1) {
+      if (!s2.has(a))
+        return false;
+    }
+    return true;
+  }
+  function isSameValue(v1, v2, isMultiValue2) {
+    if (isMultiValue2) {
+      return arraysHaveSameItems(v1, v2);
+    }
+    return v1 === v2;
+  }
+  function getValueAttr(el) {
+    const value = el.getAttribute("value");
+    if (isMultiValue(el)) {
+      return deserialize(value);
+    }
+    return value;
+  }
+  function setValueAttr(el, value) {
+    const isMulti = isMultiValue(el);
+    if (isSameValue(getValueAttr(el), value, isMulti)) {
+      return;
+    }
+    if (isMulti) {
+      value = serialize(value);
+    }
+    el.setAttribute("value", value, true);
+  }
+  function getValueProp(el) {
+    return el.wi.properties.value;
+  }
+  function setValueProp(el, value) {
+    if (isMultiValue(el)) {
+      value = deserialize(value);
+      if (arraysHaveSameItems(getValueProp(el), value)) {
+        return;
+      }
+    }
+    el.wi.properties.value = value;
+  }
+  function overrideSetAttribute(el) {
+    const oldSet = el.setAttribute.bind(el);
+    el.setAttribute = function(name, value, ignoreProp) {
+      if (name !== "value") {
+        oldSet(name, value);
+        return;
+      }
+      value = String(value);
+      if (!ignoreProp) {
+        setValueProp(el, value);
+      }
+      oldSet(name, value);
+    };
+  }
+
   // src/input-field.js
   function define(cssFilePath = "") {
     defineElement({
@@ -1088,28 +1213,17 @@ ${buttons}
         const atts = extractAttributes(el);
         el.validationRules = ValidationRules.createFromAttributes(atts);
         el.valueChangeListeners = [];
+        overrideSetAttribute(el);
         return buildHtml(el, atts, cssFilePath);
       },
       propertyList: [
         {
           name: "value",
           sel: "input, select",
-          onChange: (el, oldValue, newValue) => {
-            validate(el, newValue);
-            el.wi.actions._runValueChangeListeners(newValue);
-          }
+          onChange: (el, oldValue, newValue) => onValueChange(el, newValue)
         }
       ],
       eventHandlerList: [
-        {
-          sel: "input, select",
-          eventName: "input",
-          listener: (ev, el) => {
-            const value = ev.target.value;
-            validate(el, value);
-            el.wi.actions._runValueChangeListeners(value);
-          }
-        },
         {
           sel: "label .tooltip",
           eventName: "click",
@@ -1119,9 +1233,22 @@ ${buttons}
           }
         },
         {
+          sel: 'input:not([type="checkbox"]), select',
+          eventName: "input",
+          listener: (ev, el) => onValueChange(el, ev.target.value)
+        },
+        {
+          sel: 'input[type="checkbox"]',
+          eventName: "input",
+          listener: (ev, el) => onValueChange(el, el.wi.properties.value)
+        },
+        {
           sel: "select.listbox.multiple option",
           eventName: "mousedown",
-          listener: (ev, el) => mousedownListener(ev, el)
+          listener: (ev, el) => {
+            mousedownListener(ev, el);
+            onValueChange(el, el.wi.properties.value);
+          }
         }
       ],
       actionList: [
@@ -1169,9 +1296,23 @@ ${buttons}
               listener(el, value);
             });
           }
+        },
+        {
+          name: "isValid",
+          action: function() {
+            const el = this;
+            validate(el, el.wi.properties.value);
+            const input = Domer_exports.first(".input-field", el);
+            return !input.classList.contains("bad");
+          }
         }
       ]
     });
+  }
+  function onValueChange(el, value) {
+    setValueAttr(el, value);
+    validate(el, value);
+    el.wi.actions._runValueChangeListeners(value);
   }
   function extractAttributes(el) {
     const domAtts = Domer_exports.getAttributes(el);
@@ -1190,12 +1331,12 @@ ${buttons}
       cssFile: buildCssLink(cssFilePath),
       label: atts.label,
       sublabel: getSublabel(atts),
-      required: getAttr2(atts, "required"),
+      required: getAttr(atts, "required"),
       showrules: atts.showrules ? "" : "none",
       rules: el.validationRules.toHtml()
     };
     setTooltipParams(atts, values);
-    return Stringer_exports.replaceTemplate(input_field_default, values);
+    return Stringer_exports.replaceTemplate(template, values, "{");
   }
   function getInputHtml(el, atts) {
     const type = getType2(atts);
@@ -1226,14 +1367,6 @@ ${buttons}
       return "";
     return `<br>${sublabel}`;
   }
-  function getAttr2(atts, attName) {
-    const value = atts[attName];
-    if (!value)
-      return "";
-    if (value === "required")
-      return value;
-    return ` ${attName}="${value}"`;
-  }
   function validate(el, value) {
     const rulesList = Domer_exports.first("footer ul.rules", el);
     let allValid = true;
@@ -1242,7 +1375,7 @@ ${buttons}
       Domer_exports.classPresentIf(li, "bad", !isValid);
       allValid = allValid && isValid;
     });
-    const input = Domer_exports.first("input", el);
+    const input = Domer_exports.first(".input-field", el);
     Domer_exports.classPresentIf(input, "bad", !allValid);
   }
   function addRuleHtml(el, rule) {
