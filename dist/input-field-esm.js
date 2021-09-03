@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.3.0.
+// Copyright 2021 (C) Abdul Habra. Version 1.4.0.
 // Apache License Version 2.0
 
 
@@ -49,7 +49,8 @@ function bindProp({ obj, prop, getter, setter, onChange }) {
 }
 var isCheckbox = (el) => el.type === "checkbox";
 var isRadio = (el) => el.type === "radio";
-var isSelect = (el) => el.tagName.toLowerCase() === "select";
+var isSelect = (el) => el.nodeName.toLowerCase() === "select";
+var isInputField = (el) => el.nodeName.toLowerCase() === "input-field";
 var isInput = (el) => "value" in el;
 var toSet = (v) => new Set(Array.isArray(v) ? v : [v]);
 function checkInitialValue(obj, prop) {
@@ -93,6 +94,9 @@ function getDomVal(root, sel, attr) {
     if (!el)
       return void 0;
   }
+  if (isInputField(el)) {
+    return el.getAttribute("value");
+  }
   return el.value;
 }
 function setDomVal(root, sel, val, attr) {
@@ -121,6 +125,8 @@ function setElementValue(el, val, attr) {
     el.setAttribute(attr, val);
   } else if (isInput(el)) {
     el.value = val;
+  } else if (isInputField(el)) {
+    el.setAttribute("value", val);
   } else {
     el.innerHTML = val;
   }
@@ -349,9 +355,10 @@ var Rule = class {
 
 // src/validation/ValidationRules.js
 var ValidationRules = class {
-  constructor(rules) {
+  constructor(rules, showrules) {
     this.rules = [];
     this.addAll(rules);
+    this.showrules = showrules;
   }
   add(rule) {
     if (containsName(this.rules, rule.name)) {
@@ -386,7 +393,7 @@ var ValidationRules = class {
         }
       }
     });
-    return new ValidationRules(rules);
+    return new ValidationRules(rules, atts.showrules);
   }
 };
 function checkType(rules, atts) {
@@ -888,9 +895,14 @@ function extractAttributes(el) {
   Objecter6.forEachEntry(domAtts, (k, v) => {
     atts[k.toLowerCase()] = v;
   });
-  const showRules = Stringer10.trim(atts.showrules).toLowerCase();
-  atts.showrules = showRules === "" || showRules === "true";
+  atts.showrules = extractShowRuleAttribute(atts);
   return atts;
+}
+function extractShowRuleAttribute(atts) {
+  const showRules = Stringer10.trim(atts.showrules).toLowerCase();
+  if (showRules === "false" || showRules === "onerror")
+    return showRules;
+  return "true";
 }
 function buildHtml(el, atts, cssFilePath) {
   const input = getInputHtml(el, atts);
@@ -900,7 +912,7 @@ function buildHtml(el, atts, cssFilePath) {
     label: atts.label,
     sublabel: getSublabel(atts),
     required: getAttr(atts, "required"),
-    showrules: atts.showrules ? "" : "none",
+    showrules: atts.showrules === "true" ? "" : "none",
     rules: el.validationRules.toHtml()
   };
   setTooltipParams(atts, values);
@@ -943,8 +955,16 @@ function validate(el, value) {
     Domer3.classPresentIf(li, "bad", !isValid);
     allValid = allValid && isValid;
   });
+  showRulesOnError(el, rulesList, allValid);
   const input = Domer3.first(".input-field", el);
   Domer3.classPresentIf(input, "bad", !allValid);
+}
+function showRulesOnError(el, rulesList, allValid) {
+  if (el.validationRules.showrules !== "onerror") {
+    return;
+  }
+  const display = allValid ? "none" : "";
+  rulesList.setAttribute("style", `display:${display};`);
 }
 function addRuleHtml(el, rule) {
   const rulesHtml = Domer3.first("footer ul.rules", el);
