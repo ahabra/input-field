@@ -153,7 +153,8 @@ The component supports the following attributes
     `Maximum value of %v`.
 15. `number-message`: The message to show when the value must be a number.
 16. `integer-message`: The message to show when the value must be an integer.
-17. `showrules`: Boolean. Default is true. Show or hide validation rules.
+17. `showrules`: true, false, or onerror. Default is true. Show or hide validation rules.
+      When is value is `onerror`, the rules list will show only if the field is invalid.
 18. `tooltip`: String. If provided, a question parm icon is displayed at the end of
     the label. When User clicks on the label a tooltip will pop up.
 19. `options`: A comma separated list of options used with `set` type.
@@ -267,6 +268,8 @@ age.wi.actions.addValueChangeListener((el, value) => {
 
 
 ## Change Log
+* 2021-09-03 Support `onerror` new value for `showrules` attribute
+* 2021-05-27 Support `isValid()`
 * 2021-03-26 Support `addValueChangeListener()`
 * 2021-03-30 Upgrade dependency on webitem to version 0.4.0
 * 2021-04-10 Added actions: `getRuleValidState()` and `setRuleValidState()`

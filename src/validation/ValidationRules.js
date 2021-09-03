@@ -2,9 +2,10 @@ import {Objecter, Stringer} from '@techexp/jshelper'
 import {Rule} from './Rule'
 
 export class ValidationRules {
-  constructor(rules) {
+  constructor(rules, showrules) {
     this.rules = []
     this.addAll(rules)
+    this.showrules = showrules
   }
 
 
@@ -45,7 +46,7 @@ export class ValidationRules {
         }
       }
     })
-    return new ValidationRules(rules)
+    return new ValidationRules(rules, atts.showrules)
   }
 
 }

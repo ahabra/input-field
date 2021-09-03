@@ -37,7 +37,7 @@ import * as WidgetUtils from './widgets/WidgetUtils'
  *    Default is "Maximum value of %v".
  * number-message: Optional. The message to show when the value must be a number.
  * integer-message: Optional. The message to show when the value must be an integer.
- * showrules: Boolean. Default is true. Show or hide validation rules.
+ * showrules: true, false, onerror. Default is true. Show or hide validation rules.
  * tooltip: A string to show if the user clicks on the label.
  * options: A comma separated list of options used with set type
  * set-message: Optional. The message to show when there is a set of options.
@@ -173,10 +173,14 @@ function extractAttributes(el) {
   Objecter.forEachEntry(domAtts, (k, v) => {
     atts[k.toLowerCase()] = v
   })
-  const showRules = Stringer.trim(atts.showrules).toLowerCase()
-  atts.showrules = showRules === '' || showRules === 'true'
-
+  atts.showrules = extractShowRuleAttribute(atts)
   return atts
+}
+
+function extractShowRuleAttribute(atts) {
+  const showRules = Stringer.trim(atts.showrules).toLowerCase()
+  if (showRules === 'false' || showRules === 'onerror') return showRules
+  return 'true'
 }
 
 function buildHtml(el, atts, cssFilePath) {
@@ -188,7 +192,7 @@ function buildHtml(el, atts, cssFilePath) {
     label: atts.label,
     sublabel: getSublabel(atts),
     required: WidgetUtils.getAttr(atts, 'required'),
-    showrules: atts.showrules ? '' : 'none',
+    showrules: atts.showrules === 'true' ? '' : 'none',
     rules: el.validationRules.toHtml()
   }
   setTooltipParams(atts, values)
@@ -232,8 +236,18 @@ function validate(el, value) {
     allValid = allValid && isValid
   })
 
+  showRulesOnError(el, rulesList, allValid)
+
   const input = Domer.first('.input-field', el)
   Domer.classPresentIf(input, 'bad', !allValid)
+}
+
+function showRulesOnError(el, rulesList, allValid) {
+  if (el.validationRules.showrules !== 'onerror') {
+    return
+  }
+  const display = allValid ? 'none' : ''
+  rulesList.setAttribute('style', `display:${display};`)
 }
 
 function addRuleHtml(el, rule) {
