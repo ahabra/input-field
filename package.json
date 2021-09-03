@@ -23,15 +23,15 @@
   },
   "devDependencies": {
     "@esm-bundle/chai": "^4.3.4",
-    "@web/test-runner": "^0.13.5",
-    "@web/test-runner-commands": "^0.5.0",
-    "@web/test-runner-puppeteer": "^0.10.0",
-    "chalk": "^4.1.1",
-    "esbuild": "^0.12.5",
-    "eslint": "^7.27.0",
+    "@web/test-runner": "^0.13.17",
+    "@web/test-runner-commands": "^0.5.12",
+    "@web/test-runner-puppeteer": "^0.10.2",
+    "chalk": "^4.1.2",
+    "esbuild": "^0.12.25",
+    "eslint": "^7.32.0",
     "fs-extra": "^10.0.0",
-    "npm-check-updates": "^11.6.0",
-    "serve": "^11.3.2"
+    "npm-check-updates": "^11.8.4",
+    "serve": "^12.0.0"
   },
   "dependencies": {
     "@techexp/jshelper": "^0.5.1",
