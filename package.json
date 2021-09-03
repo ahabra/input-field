@@ -1,6 +1,6 @@
 {
   "name": "@techexp/input-field",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Web Component. Responsive input field with label and validation",
   "author": "Abdul Habra",
   "license": "Apache",
