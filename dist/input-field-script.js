@@ -6,12 +6,22 @@
 
 var InputField = (() => {
   var __defProp = Object.defineProperty;
-  var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __export = (target, all2) => {
-    __markAsModule(target);
     for (var name in all2)
       __defProp(target, name, { get: all2[name], enumerable: true });
   };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
   // src/input-field.js
   var input_field_exports = {};
@@ -116,7 +126,7 @@ var InputField = (() => {
       return a === b;
     return isEqualCompoundType(a, b);
   }
-  var simpleTypes = new Set(["boolean", "number", "bigint", "string", "symbol"]);
+  var simpleTypes = /* @__PURE__ */ new Set(["boolean", "number", "bigint", "string", "symbol"]);
   function isSimpleType(v) {
     return simpleTypes.has(typeof v);
   }
@@ -219,7 +229,7 @@ var InputField = (() => {
     const sep = array.length > 0 ? " " : "";
     return sep + array.join(" ");
   }
-  var LOCATIONS = new Set(["beforebegin", "afterbegin", "beforeend", "afterend"]);
+  var LOCATIONS = /* @__PURE__ */ new Set(["beforebegin", "afterbegin", "beforeend", "afterend"]);
   function add(target, tobeAdded, location = "beforeend") {
     location = location.toLowerCase();
     if (!LOCATIONS.has(location))
@@ -1404,6 +1414,6 @@ ${buttons}
     const rulesHtml = Domer_exports.first("footer ul.rules", el);
     Domer_exports.add(rulesHtml, rule.toHtml());
   }
-  return input_field_exports;
+  return __toCommonJS(input_field_exports);
 })();
 //# sourceMappingURL=input-field-script.js.map
