@@ -6,7 +6,6 @@
   "license": "Apache",
   "repository": "ahabra/input-field",
   "main": "dist/input-field-esm.js",
-  "type": "commonjs",
   "engines": {
     "node": ">=15.0.0",
     "npm": ">=7.0.0"
