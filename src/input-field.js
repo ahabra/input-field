@@ -238,7 +238,7 @@ function validate(el, value) {
 
   showRulesOnError(el, rulesList, allValid)
 
-  const input = Domer.first('.input-field', el)
+  const input = Domer.first('.input', el)
   Domer.classPresentIf(input, 'bad', !allValid)
 }
 
