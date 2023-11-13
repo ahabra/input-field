@@ -124,7 +124,7 @@ export function define(cssFilePath = '') {
           const li = Domer.first(`li.validation-${name}`, rulesList)
           Domer.classPresentIf(li, 'bad', !isValid)
 
-          const input = Domer.first('input-field', this)
+          const input = Domer.first('.input-field', this)
           const failedRules = Domer.first('li.bad', rulesList)
           Domer.classPresentIf(input, 'bad', failedRules !== null)
         }
