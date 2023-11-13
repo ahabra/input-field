@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.5.2.
+// Copyright 2021 (C) Abdul Habra. Version 1.5.3.
 // Apache License Version 2.0
 
 
@@ -1296,7 +1296,7 @@ ${buttons}
             const rulesList = Domer_exports.first("footer ul.rules", this);
             const li = Domer_exports.first(`li.validation-${name}`, rulesList);
             Domer_exports.classPresentIf(li, "bad", !isValid);
-            const input = Domer_exports.first("input", this);
+            const input = Domer_exports.first("input-field", this);
             const failedRules = Domer_exports.first("li.bad", rulesList);
             Domer_exports.classPresentIf(input, "bad", failedRules !== null);
           }
