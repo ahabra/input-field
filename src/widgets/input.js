@@ -2,13 +2,14 @@ import {Stringer} from '@techexp/jshelper'
 import * as WidgetUtils from './WidgetUtils'
 
 const template = `
- <input type="{type}" class="input" value="{value}"
+ <input id="{id}" type="{type}" class="input" value="{value}"
   {required} {minlength} {maxlength} {pattern}>
 `
 const required = 'required'
 
 export function getHtml(atts) {
   const params = {
+    id: atts.id,
     type: getType(atts),
     required: WidgetUtils.getAttr(atts, required),
     minlength: WidgetUtils.getAttr(atts, 'minlength'),

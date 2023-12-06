@@ -188,6 +188,7 @@ function buildHtml(el, atts, cssFilePath) {
 
   const values = {
     input,
+    id: atts.id,
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     sublabel: getSublabel(atts),
