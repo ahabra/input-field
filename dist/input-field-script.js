@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.6.0.
+// Copyright 2021 (C) Abdul Habra. Version 1.6.1.
 // Apache License Version 2.0
 
 
@@ -726,7 +726,7 @@ ${t2}`;
   }
 
   // src/validation/Rule.js
-  var Rule = class {
+  var Rule = class _Rule {
     constructor(name = "", message, validator) {
       this.name = name.replace(/[ \\.]/g, "-").toLowerCase();
       this.message = message;
@@ -746,17 +746,17 @@ ${t2}`;
     }
     static createRule(name, message, validator, value) {
       message = Stringer_exports.replaceAll(message, "%v", value);
-      return new Rule(name, message, validator);
+      return new _Rule(name, message, validator);
     }
     static email(msg = "Must be a valid email address") {
       const validator = (value) => /\S+@\S+\.\S+/.test(value);
-      return new Rule("email", msg, validator);
+      return new _Rule("email", msg, validator);
     }
     static required(flag, msg = "Required Field") {
       flag = flag.toLowerCase();
       if (flag === "true" || flag === "required") {
         const validator = (value) => !!value;
-        return new Rule("required", msg, validator);
+        return new _Rule("required", msg, validator);
       }
       return null;
     }
@@ -765,14 +765,14 @@ ${t2}`;
         const len = value ? value.length : 0;
         return len >= minLength;
       };
-      return Rule.createRule("minlength", msg, validator, minLength);
+      return _Rule.createRule("minlength", msg, validator, minLength);
     }
     static pattern(pattern, msg = "Must satisfy the pattern %v") {
       const validator = (value) => {
         const regex = new RegExp(pattern);
         return regex.test(value);
       };
-      return Rule.createRule("pattern", msg, validator, pattern);
+      return _Rule.createRule("pattern", msg, validator, pattern);
     }
     static min(minValue, msg = "Minimum value of %v") {
       minValue = Number(minValue) || 0;
@@ -780,7 +780,7 @@ ${t2}`;
         value = Number(value) || 0;
         return value >= minValue;
       };
-      return Rule.createRule("minValue", msg, validator, minValue);
+      return _Rule.createRule("minValue", msg, validator, minValue);
     }
     static max(maxValue, msg = "Maximum value of %v") {
       maxValue = Number(maxValue) || 0;
@@ -788,25 +788,25 @@ ${t2}`;
         value = Number(value) || 0;
         return value <= maxValue;
       };
-      return Rule.createRule("max", msg, validator, maxValue);
+      return _Rule.createRule("max", msg, validator, maxValue);
     }
     static isNumber(msg = "Must be a valid number") {
       const validator = (v) => Objecter_exports.isNumber(v);
-      return new Rule("isNumber", msg, validator);
+      return new _Rule("isNumber", msg, validator);
     }
     static isInteger(msg = "Must be a valid whole number") {
       const validator = (v) => Objecter_exports.isInteger(v);
-      return new Rule("isInteger", msg, validator);
+      return new _Rule("isInteger", msg, validator);
     }
     static set(options, msg = "Value must be one of [%v]") {
       const set = new Set(options.split(",").map((op) => op.trim().toLowerCase()));
       const validator = (v) => v === "" || set.has(v.toLowerCase());
-      return Rule.createRule("set", msg, validator, options);
+      return _Rule.createRule("set", msg, validator, options);
     }
   };
 
   // src/validation/ValidationRules.js
-  var ValidationRules = class {
+  var ValidationRules = class _ValidationRules {
     constructor(rules, showrules) {
       this.rules = [];
       this.addAll(rules);
@@ -845,7 +845,7 @@ ${t2}`;
           }
         }
       });
-      return new ValidationRules(rules, atts.showrules);
+      return new _ValidationRules(rules, atts.showrules);
     }
   };
   function checkType(rules, atts) {
