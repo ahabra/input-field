@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.5.4.
+// Copyright 2021 (C) Abdul Habra. Version 1.6.0.
 // Apache License Version 2.0
 
 
@@ -419,7 +419,7 @@ var template = `
 {cssFile}
 
 <div class="input-field">
-  <label class="label">
+  <label for="{id}" class="label">
     <span class="superlabel {required} {tooltip}">
       {label} {tooltipIcon}
       <span class="tooltip-text">{tooltipText}</span>
@@ -489,12 +489,13 @@ function isRequired(attName, value) {
 
 // src/widgets/input.js
 var template2 = `
- <input type="{type}" class="input" value="{value}"
+ <input id="{id}" type="{type}" class="input" value="{value}"
   {required} {minlength} {maxlength} {pattern}>
 `;
 var required2 = "required";
 function getHtml2(atts) {
   const params = {
+    id: atts.id,
     type: getType(atts),
     required: getAttr(atts, required2),
     minlength: getAttr(atts, "minlength"),
@@ -909,6 +910,7 @@ function buildHtml(el, atts, cssFilePath) {
   const input = getInputHtml(el, atts);
   const values = {
     input,
+    id: atts.id,
     cssFile: buildCssLink(cssFilePath),
     label: atts.label,
     sublabel: getSublabel(atts),
