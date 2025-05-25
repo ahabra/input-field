@@ -76,20 +76,16 @@ var InputField = (() => {
   }
   function isNumber(n) {
     if (isType(n, "Number")) {
-      if (Number.isNaN(n))
-        return false;
+      if (Number.isNaN(n)) return false;
       return Number.isFinite(n);
     }
-    if (!isString(n))
-      return false;
+    if (!isString(n)) return false;
     n = n.trim();
-    if (n === "")
-      return false;
+    if (n === "") return false;
     return !isNaN(n);
   }
   function isInteger(n) {
-    if (!isNumber(n))
-      return false;
+    if (!isNumber(n)) return false;
     return Number.isInteger(Number.parseFloat(n));
   }
   function isRegExp(re) {
@@ -99,8 +95,7 @@ var InputField = (() => {
     return Object.prototype.toString.call(v) === `[object ${type}]`;
   }
   function forEachEntry(object, func) {
-    if (!object || !func)
-      return;
+    if (!object || !func) return;
     if (Array.isArray(object)) {
       object.forEach((v, index) => {
         func(index, v);
@@ -110,20 +105,16 @@ var InputField = (() => {
     Object.entries(object).forEach((p) => func(p[0], p[1]));
   }
   function has(object, propName) {
-    if (!object || !propName)
-      return false;
+    if (!object || !propName) return false;
     return Object.prototype.hasOwnProperty.call(object, propName);
   }
   function equals(a, b) {
-    if (a === b)
-      return true;
-    if (a === void 0 || b === void 0)
-      return false;
+    if (a === b) return true;
+    if (a === void 0 || b === void 0) return false;
     return isEqual(a, b);
   }
   function isEqual(a, b) {
-    if (isSimpleType(a) || isSimpleType(b))
-      return a === b;
+    if (isSimpleType(a) || isSimpleType(b)) return a === b;
     return isEqualCompoundType(a, b);
   }
   var simpleTypes = /* @__PURE__ */ new Set(["boolean", "number", "bigint", "string", "symbol"]);
@@ -131,10 +122,8 @@ var InputField = (() => {
     return simpleTypes.has(typeof v);
   }
   function isEqualCompoundType(a, b) {
-    if (!isEqualType(a, b))
-      return false;
-    if (isEqualDates(a, b))
-      return true;
+    if (!isEqualType(a, b)) return false;
+    if (isEqualDates(a, b)) return true;
     return isEqualObjects(a, b);
   }
   function isEqualType(a, b) {
@@ -151,8 +140,7 @@ var InputField = (() => {
   }
   function isEqualObjects(a, b) {
     const akeys = Object.keys(a);
-    if (akeys.length !== Object.keys(b).length)
-      return false;
+    if (akeys.length !== Object.keys(b).length) return false;
     return akeys.every((k) => equals(a[k], b[k]));
   }
   function id(elementId, root = document) {
@@ -174,11 +162,13 @@ var InputField = (() => {
     if (!selector.includes("/")) {
       return root.querySelector(selector);
     }
+    return traverseSelectorPath(selector, root);
+  }
+  function traverseSelectorPath(selector, root) {
     const path = selector.split("/").map((p) => p.trim()).filter((p) => p.length > 0);
     for (const p of path) {
       root = nextChild(p, root);
-      if (root === null)
-        break;
+      if (root === null) break;
     }
     return root;
   }
@@ -192,8 +182,7 @@ var InputField = (() => {
   function getAttributes(el) {
     const result = {};
     const atts = el.attributes;
-    if (!atts || atts.length === 0)
-      return result;
+    if (!atts || atts.length === 0) return result;
     for (let i = 0; i < atts.length; i++) {
       const a = atts[i];
       result[a.name] = a.value;
@@ -202,8 +191,7 @@ var InputField = (() => {
   }
   function createElements(html = "") {
     html = html.trim();
-    if (!html)
-      return [];
+    if (!html) return [];
     const temp = document.createElement("template");
     temp.innerHTML = html;
     return Array.from(temp.content.childNodes);
@@ -211,13 +199,11 @@ var InputField = (() => {
   function createElement(name, attributes = {}, content = "") {
     const html = tag(name, attributes, content);
     const elements = createElements(html);
-    if (elements.length === 0)
-      return null;
+    if (elements.length === 0) return null;
     return elements[0];
   }
   function tag(name, attributes = {}, content = "") {
-    if (!name)
-      return "";
+    if (!name) return "";
     const atts = attsToString(attributes);
     return `<${name}${atts}>${content}</${name}>`;
   }
@@ -232,8 +218,7 @@ var InputField = (() => {
   var LOCATIONS = /* @__PURE__ */ new Set(["beforebegin", "afterbegin", "beforeend", "afterend"]);
   function add(target, tobeAdded, location = "beforeend") {
     location = location.toLowerCase();
-    if (!LOCATIONS.has(location))
-      return false;
+    if (!LOCATIONS.has(location)) return false;
     if (isString(tobeAdded)) {
       target.insertAdjacentHTML(location, tobeAdded);
     } else {
@@ -259,8 +244,7 @@ var InputField = (() => {
     });
   }
   function classPresentIf(el, cssClass, condition) {
-    if (!el)
-      return;
+    if (!el) return;
     const func = condition ? "add" : "remove";
     el.classList[func](cssClass);
   }
@@ -285,25 +269,21 @@ var InputField = (() => {
     trim: () => trim
   });
   function indexOf(st, search, fromIndex = 0, ignoreCase = false) {
-    if (!st)
-      return -1;
+    if (!st) return -1;
     if (ignoreCase) {
       return st.toLowerCase().indexOf(search.toLowerCase(), fromIndex);
     }
     return st.indexOf(search, fromIndex);
   }
   function indexOfFirstMatch(st, callback) {
-    if (!callback || !st)
-      return -1;
+    if (!callback || !st) return -1;
     return st.split("").findIndex(callback);
   }
   function indexOfLastMatch(st, callback) {
-    if (!callback || !st)
-      return -1;
+    if (!callback || !st) return -1;
     const chars = st.split("");
     for (let i = chars.length; i >= 0; --i) {
-      if (callback(chars[i], i))
-        return i;
+      if (callback(chars[i], i)) return i;
     }
     return -1;
   }
@@ -340,8 +320,7 @@ var InputField = (() => {
       return st;
     }
     const i = indexOf(st, search, 0, ignoreCase);
-    if (i < 0)
-      return "";
+    if (i < 0) return "";
     return st.substring(i + search.length);
   }
   function substringBefore(st, search, ignoreCase = false) {
@@ -349,13 +328,11 @@ var InputField = (() => {
       return "";
     }
     const i = indexOf(st, search, 0, ignoreCase);
-    if (i < 0)
-      return st;
+    if (i < 0) return st;
     return st.substring(0, i);
   }
   function trim(s) {
-    if (isEmpty(s))
-      return "";
+    if (isEmpty(s)) return "";
     if (!isString(s)) {
       s = String(s);
     }
@@ -384,10 +361,8 @@ var InputField = (() => {
     return text;
   }
   function stripStart(s, stripChars = "") {
-    if (isEmpty(s))
-      return "";
-    if (!stripChars)
-      return s;
+    if (isEmpty(s)) return "";
+    if (!stripChars) return s;
     return stripStart_(s, new Set(Array.from(stripChars)));
   }
   function stripStart_(s, stripSet) {
@@ -399,10 +374,8 @@ var InputField = (() => {
     return "";
   }
   function stripEnd(s, stripChars = "") {
-    if (isEmpty(s))
-      return "";
-    if (!stripChars)
-      return s;
+    if (isEmpty(s)) return "";
+    if (!stripChars) return s;
     return stripEnd_(s, new Set(Array.from(stripChars)));
   }
   function stripEnd_(s, stripSet) {
@@ -414,14 +387,11 @@ var InputField = (() => {
     return "";
   }
   function strip(s, stripChars = "") {
-    if (s === void 0 || s === "")
-      return "";
-    if (!stripChars)
-      return s;
+    if (s === void 0 || s === "") return "";
+    if (!stripChars) return s;
     const stripSet = new Set(Array.from(stripChars));
     s = stripStart_(s, stripSet);
-    if (!s)
-      return "";
+    if (!s) return "";
     return stripEnd_(s, stripSet);
   }
   var LineCompare_exports = {};
@@ -434,6 +404,9 @@ var InputField = (() => {
     if (t1.length !== t2.length) {
       return `t1 has ${t1.length} lines(s) while t2 has ${t2.length} line(s).`;
     }
+    return compareArraysOfLines(t1, t2, caseSensitive);
+  }
+  function compareArraysOfLines(t1, t2, caseSensitive) {
     for (let i = 0; i < t1.length; i++) {
       const result = compareTwoLines(t1[i], t2[i], i, caseSensitive);
       if (result.length > 0) {
@@ -521,8 +494,7 @@ ${t2}`;
     return oldValue;
   }
   function getValue({ prop, root, sel, attr, objNotBound }) {
-    if (sel)
-      return getDomVal(root, sel, attr);
+    if (sel) return getDomVal(root, sel, attr);
     return objNotBound[prop];
   }
   function setValue({ prop, value, root, sel, attr, objNotBound }) {
@@ -534,13 +506,10 @@ ${t2}`;
   }
   function getDomVal(root, sel, attr) {
     const elements = findElements(root, sel);
-    if (elements.length === 0)
-      return null;
+    if (elements.length === 0) return null;
     let el = elements[0];
-    if (attr)
-      return el.getAttribute(attr);
-    if (!isInput(el))
-      return el.innerHTML;
+    if (attr) return el.getAttribute(attr);
+    if (!isInput(el)) return el.innerHTML;
     if (isCheckbox(el)) {
       return elements.filter((e) => isCheckbox(e) && e.checked).map((e) => e.value === "on" ? e.name : e.value);
     }
@@ -550,8 +519,7 @@ ${t2}`;
     }
     if (isRadio(el)) {
       el = elements.filter(isRadio).find((e) => e.checked);
-      if (!el)
-        return void 0;
+      if (!el) return void 0;
     }
     if (isInputField(el)) {
       return el.getAttribute("value");
@@ -560,8 +528,7 @@ ${t2}`;
   }
   function setDomVal(root, sel, val, attr) {
     const elements = findElements(root, sel);
-    if (elements.length === 0)
-      return;
+    if (elements.length === 0) return;
     const el = elements[0];
     if (isCheckbox(el)) {
       const v = toSet(val);
@@ -613,8 +580,7 @@ ${t2}`;
     actionList,
     eventHandlerList
   }) {
-    if (customElements.get(nameWithDash))
-      return false;
+    if (customElements.get(nameWithDash)) return false;
     const el = class extends HTMLElement {
       constructor() {
         super();
@@ -637,8 +603,7 @@ ${t2}`;
   }
   function bindProperties(root, propertyList) {
     const result = {};
-    if (!validatePropertyList(propertyList))
-      return result;
+    if (!validatePropertyList(propertyList)) return result;
     propertyList.forEach((p) => addProperty(result, p, root));
     return result;
   }
@@ -650,13 +615,11 @@ ${t2}`;
     }
   }
   function createOnChange(prop, root) {
-    if (!prop.onChange)
-      return void 0;
+    if (!prop.onChange) return void 0;
     return (oldValue, newValue) => prop.onChange(root, oldValue, newValue);
   }
   function validatePropertyList(propertyList) {
-    if (!propertyList)
-      return false;
+    if (!propertyList) return false;
     if (!Array.isArray(propertyList)) {
       throw "propertyList must be an array of {name, value, [sel], [attr]} objects";
     }
@@ -664,21 +627,18 @@ ${t2}`;
   }
   function defineActions(root, actionList) {
     const actions = {};
-    if (!actionList)
-      return actions;
+    if (!actionList) return actions;
     actionList.forEach((pair) => {
       addAction(root, actions, pair.name, pair.action);
     });
     return actions;
   }
   function addAction(root, actions, name, action) {
-    if (!Objecter_exports.isString(name) || !Objecter_exports.isFunction(action))
-      return;
+    if (!Objecter_exports.isString(name) || !Objecter_exports.isFunction(action)) return;
     actions[name] = action.bind(root);
   }
   function addEventListeners(root, eventHandlerList) {
-    if (!eventHandlerList)
-      return;
+    if (!eventHandlerList) return;
     if (!Array.isArray(eventHandlerList)) {
       throw "eventHandlerList must be an array of {sel, eventName, listener} objects";
     }
@@ -706,8 +666,7 @@ ${t2}`;
   }
   function buildCss(css) {
     css = Stringer_exports.trim(css);
-    if (css.length === 0)
-      return "";
+    if (css.length === 0) return "";
     if (!Stringer_exports.startsWith(css, "<style>", false)) {
       css = Domer_exports.tag("style", {}, css);
     }
@@ -715,8 +674,7 @@ ${t2}`;
   }
   function displayStyle(display) {
     display = Stringer_exports.trim(display);
-    if (display.length === 0)
-      return "";
+    if (display.length === 0) return "";
     return `
   <style>
     :host { display: ${display};}
@@ -739,8 +697,7 @@ ${t2}`;
       return this.validator(String(value));
     }
     toHtml() {
-      if (Stringer_exports.isEmpty(this.message))
-        return "";
+      if (Stringer_exports.isEmpty(this.message)) return "";
       return `<li class="validation-${this.name}">${this.message}</li>
 `;
     }
@@ -820,8 +777,7 @@ ${t2}`;
       return true;
     }
     addAll(rules) {
-      if (!rules)
-        return;
+      if (!rules) return;
       rules.forEach((r) => this.add(r));
     }
     validate(value, onValidation) {
@@ -889,26 +845,20 @@ ${t2}`;
   // src/widgets/WidgetUtils.js
   var required = "required";
   function parseAndValidate(json, widgetType, ...required3) {
-    if (!validateString(json))
-      return false;
+    if (!validateString(json)) return false;
     json = JSON.parse(json);
-    if (!validateJsonObject(json, widgetType, ...required3))
-      return false;
+    if (!validateJsonObject(json, widgetType, ...required3)) return false;
     return json;
   }
   function validateString(json) {
-    if (!Objecter_exports.isString(json))
-      return false;
-    if (Stringer_exports.isEmpty(json))
-      return false;
+    if (!Objecter_exports.isString(json)) return false;
+    if (Stringer_exports.isEmpty(json)) return false;
     json = json.trim();
     return json.length !== 0;
   }
   function validateJsonObject(json, widgetType, ...required3) {
-    if (!Array.isArray(json.options))
-      return false;
-    if (json.options.length === 0)
-      return false;
+    if (!Array.isArray(json.options)) return false;
+    if (json.options.length === 0) return false;
     const found = required3.find((r) => !Objecter_exports.has(json, r));
     if (found) {
       throw `${widgetType} definition requires ${found} attribute`;
@@ -922,15 +872,12 @@ ${t2}`;
   }
   function getAttr(atts, attName) {
     const value = atts[attName];
-    if (!value)
-      return "";
-    if (isRequired(attName, value))
-      return required;
+    if (!value) return "";
+    if (isRequired(attName, value)) return required;
     return `${attName}="${value}"`;
   }
   function isRequired(attName, value) {
-    if (attName !== required)
-      return false;
+    if (attName !== required) return false;
     return value === required || value === "true";
   }
 
@@ -954,10 +901,8 @@ ${t2}`;
   }
   function getType(atts) {
     const type = Stringer_exports.trim(atts.type).toLowerCase();
-    if (!type)
-      return "text";
-    if (type === "integer")
-      return "number";
+    if (!type) return "text";
+    if (type === "integer") return "number";
     return type;
   }
 
@@ -969,14 +914,12 @@ ${t2}`;
 </label>
 `;
   function contentToHtml(element) {
-    if (!element)
-      return "";
+    if (!element) return "";
     return jsonToHtml(element.innerHTML);
   }
   function jsonToHtml(json) {
     json = parseAndValidate(json, "Radio", "name");
-    if (!json)
-      return "";
+    if (!json) return "";
     const buttons = buildRadioButtons(json);
     return `
 <div class="radio-buttons">
@@ -1009,14 +952,12 @@ ${buttons}
 </label>
 `;
   function contentToHtml2(element) {
-    if (!element)
-      return "";
+    if (!element) return "";
     return jsonToHtml2(element.innerHTML);
   }
   function jsonToHtml2(json) {
     json = parseAndValidate(json, "Checkbox");
-    if (!json)
-      return "";
+    if (!json) return "";
     const buttons = buildCheckboxButtons(json);
     return `
 <div class="checkbox-buttons">
@@ -1047,14 +988,12 @@ ${buttons}
     option: "<option{disabled}{selected}{value}>{label}</option>"
   };
   function contentToHtml3(element) {
-    if (!element)
-      return "";
+    if (!element) return "";
     return jsonToHtml3(element.innerHTML);
   }
   function jsonToHtml3(json) {
     json = parseAndValidate(json, "Listbox");
-    if (!json)
-      return "";
+    if (!json) return "";
     const params = {
       name: json.name ? ` name="${json.name}"` : "",
       id: json.id ? ` id="${json.id}"` : "",
@@ -1066,8 +1005,7 @@ ${buttons}
     return Stringer_exports.replaceTemplate(templates.select, params, "{");
   }
   function getWidgetType({ multiple, size }) {
-    if (multiple || size > 1)
-      return "listbox";
+    if (multiple || size > 1) return "listbox";
     return "combobox";
   }
   function buildOptionGroup(json) {
@@ -1078,11 +1016,9 @@ ${buttons}
     return Stringer_exports.replaceTemplate(templates.group, params, "{");
   }
   function buildOptions(options) {
-    if (!Array.isArray(options))
-      return "";
+    if (!Array.isArray(options)) return "";
     const html = options.map((op) => {
-      if (op.options)
-        return buildOptionGroup(op);
+      if (op.options) return buildOptionGroup(op);
       return buildOption(op);
     });
     return html.join("\n");
@@ -1143,8 +1079,7 @@ ${buttons}
     return String(value);
   }
   function deserialize(value) {
-    if (Stringer_exports.isEmpty(value))
-      return [];
+    if (Stringer_exports.isEmpty(value)) return [];
     const result = [];
     let lastChar = "";
     let buffer = "";
@@ -1167,11 +1102,9 @@ ${buttons}
   function arraysHaveSameItems(ar1, ar2) {
     const s1 = new Set(ar1);
     const s2 = new Set(ar2);
-    if (s1.size !== s2.size)
-      return false;
+    if (s1.size !== s2.size) return false;
     for (const a of s1) {
-      if (!s2.has(a))
-        return false;
+      if (!s2.has(a)) return false;
     }
     return true;
   }
@@ -1276,8 +1209,7 @@ ${buttons}
           name: "addRule",
           action: function(name, message, validator) {
             const rule = new Rule(name, message, validator);
-            if (!this.validationRules.add(rule))
-              return;
+            if (!this.validationRules.add(rule)) return;
             addRuleHtml(this, rule);
           }
         },
@@ -1286,8 +1218,7 @@ ${buttons}
           action: function(name) {
             const rulesList = Domer_exports.first("footer ul.rules", this);
             const li = Domer_exports.first(`li.validation-${name}`, rulesList);
-            if (li === null)
-              return null;
+            if (li === null) return null;
             return !li.classList.contains("bad");
           }
         },
@@ -1345,8 +1276,7 @@ ${buttons}
   }
   function extractShowRuleAttribute(atts) {
     const showRules = Stringer_exports.trim(atts.showrules).toLowerCase();
-    if (showRules === "false" || showRules === "onerror")
-      return showRules;
+    if (showRules === "false" || showRules === "onerror") return showRules;
     return "true";
   }
   function buildHtml(el, atts, cssFilePath) {
@@ -1366,31 +1296,24 @@ ${buttons}
   }
   function getInputHtml(el, atts) {
     const type = getType2(atts);
-    if (type === "radio")
-      return contentToHtml(el);
-    if (type === "checkbox")
-      return contentToHtml2(el);
-    if (type === "listbox")
-      return contentToHtml3(el);
+    if (type === "radio") return contentToHtml(el);
+    if (type === "checkbox") return contentToHtml2(el);
+    if (type === "listbox") return contentToHtml3(el);
     return getHtml2(atts);
   }
   function getType2(atts) {
     const type = Stringer_exports.trim(atts.type).toLowerCase();
-    if (!type)
-      return "text";
-    if (type === "integer")
-      return "number";
+    if (!type) return "text";
+    if (type === "integer") return "number";
     return type;
   }
   function buildCssLink(cssFilePath) {
-    if (Stringer_exports.isEmpty(cssFilePath))
-      return "";
+    if (Stringer_exports.isEmpty(cssFilePath)) return "";
     return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
   }
   function getSublabel(atts) {
     const sublabel = atts.sublabel;
-    if (!sublabel)
-      return "";
+    if (!sublabel) return "";
     return `<br>${sublabel}`;
   }
   function validate(el, value) {

@@ -63,8 +63,7 @@ function checkInitialValue(obj, prop) {
   return oldValue;
 }
 function getValue({ prop, root, sel, attr, objNotBound }) {
-  if (sel)
-    return getDomVal(root, sel, attr);
+  if (sel) return getDomVal(root, sel, attr);
   return objNotBound[prop];
 }
 function setValue({ prop, value, root, sel, attr, objNotBound }) {
@@ -76,13 +75,10 @@ function setValue({ prop, value, root, sel, attr, objNotBound }) {
 }
 function getDomVal(root, sel, attr) {
   const elements = findElements(root, sel);
-  if (elements.length === 0)
-    return null;
+  if (elements.length === 0) return null;
   let el = elements[0];
-  if (attr)
-    return el.getAttribute(attr);
-  if (!isInput(el))
-    return el.innerHTML;
+  if (attr) return el.getAttribute(attr);
+  if (!isInput(el)) return el.innerHTML;
   if (isCheckbox(el)) {
     return elements.filter((e) => isCheckbox(e) && e.checked).map((e) => e.value === "on" ? e.name : e.value);
   }
@@ -92,8 +88,7 @@ function getDomVal(root, sel, attr) {
   }
   if (isRadio(el)) {
     el = elements.filter(isRadio).find((e) => e.checked);
-    if (!el)
-      return void 0;
+    if (!el) return void 0;
   }
   if (isInputField(el)) {
     return el.getAttribute("value");
@@ -102,8 +97,7 @@ function getDomVal(root, sel, attr) {
 }
 function setDomVal(root, sel, val, attr) {
   const elements = findElements(root, sel);
-  if (elements.length === 0)
-    return;
+  if (elements.length === 0) return;
   const el = elements[0];
   if (isCheckbox(el)) {
     const v = toSet(val);
@@ -155,8 +149,7 @@ function defineElement({
   actionList,
   eventHandlerList
 }) {
-  if (customElements.get(nameWithDash))
-    return false;
+  if (customElements.get(nameWithDash)) return false;
   const el = class extends HTMLElement {
     constructor() {
       super();
@@ -179,8 +172,7 @@ function defineElement({
 }
 function bindProperties(root, propertyList) {
   const result = {};
-  if (!validatePropertyList(propertyList))
-    return result;
+  if (!validatePropertyList(propertyList)) return result;
   propertyList.forEach((p) => addProperty(result, p, root));
   return result;
 }
@@ -192,13 +184,11 @@ function addProperty(obj, prop, root) {
   }
 }
 function createOnChange(prop, root) {
-  if (!prop.onChange)
-    return void 0;
+  if (!prop.onChange) return void 0;
   return (oldValue, newValue) => prop.onChange(root, oldValue, newValue);
 }
 function validatePropertyList(propertyList) {
-  if (!propertyList)
-    return false;
+  if (!propertyList) return false;
   if (!Array.isArray(propertyList)) {
     throw "propertyList must be an array of {name, value, [sel], [attr]} objects";
   }
@@ -206,21 +196,18 @@ function validatePropertyList(propertyList) {
 }
 function defineActions(root, actionList) {
   const actions = {};
-  if (!actionList)
-    return actions;
+  if (!actionList) return actions;
   actionList.forEach((pair) => {
     addAction(root, actions, pair.name, pair.action);
   });
   return actions;
 }
 function addAction(root, actions, name, action) {
-  if (!Objecter.isString(name) || !Objecter.isFunction(action))
-    return;
+  if (!Objecter.isString(name) || !Objecter.isFunction(action)) return;
   actions[name] = action.bind(root);
 }
 function addEventListeners(root, eventHandlerList) {
-  if (!eventHandlerList)
-    return;
+  if (!eventHandlerList) return;
   if (!Array.isArray(eventHandlerList)) {
     throw "eventHandlerList must be an array of {sel, eventName, listener} objects";
   }
@@ -248,8 +235,7 @@ function getCss(css, display) {
 }
 function buildCss(css) {
   css = Stringer.trim(css);
-  if (css.length === 0)
-    return "";
+  if (css.length === 0) return "";
   if (!Stringer.startsWith(css, "<style>", false)) {
     css = Domer.tag("style", {}, css);
   }
@@ -257,8 +243,7 @@ function buildCss(css) {
 }
 function displayStyle(display) {
   display = Stringer.trim(display);
-  if (display.length === 0)
-    return "";
+  if (display.length === 0) return "";
   return `
   <style>
     :host { display: ${display};}
@@ -288,8 +273,7 @@ var Rule = class _Rule {
     return this.validator(String(value));
   }
   toHtml() {
-    if (Stringer2.isEmpty(this.message))
-      return "";
+    if (Stringer2.isEmpty(this.message)) return "";
     return `<li class="validation-${this.name}">${this.message}</li>
 `;
   }
@@ -369,8 +353,7 @@ var ValidationRules = class _ValidationRules {
     return true;
   }
   addAll(rules) {
-    if (!rules)
-      return;
+    if (!rules) return;
     rules.forEach((r) => this.add(r));
   }
   validate(value, onValidation) {
@@ -442,26 +425,20 @@ import { Stringer as Stringer5 } from "@techexp/jshelper";
 import { Objecter as Objecter4, Stringer as Stringer4 } from "@techexp/jshelper";
 var required = "required";
 function parseAndValidate(json, widgetType, ...required3) {
-  if (!validateString(json))
-    return false;
+  if (!validateString(json)) return false;
   json = JSON.parse(json);
-  if (!validateJsonObject(json, widgetType, ...required3))
-    return false;
+  if (!validateJsonObject(json, widgetType, ...required3)) return false;
   return json;
 }
 function validateString(json) {
-  if (!Objecter4.isString(json))
-    return false;
-  if (Stringer4.isEmpty(json))
-    return false;
+  if (!Objecter4.isString(json)) return false;
+  if (Stringer4.isEmpty(json)) return false;
   json = json.trim();
   return json.length !== 0;
 }
 function validateJsonObject(json, widgetType, ...required3) {
-  if (!Array.isArray(json.options))
-    return false;
-  if (json.options.length === 0)
-    return false;
+  if (!Array.isArray(json.options)) return false;
+  if (json.options.length === 0) return false;
   const found = required3.find((r) => !Objecter4.has(json, r));
   if (found) {
     throw `${widgetType} definition requires ${found} attribute`;
@@ -475,15 +452,12 @@ function validateOption(widgetType, { label, value }) {
 }
 function getAttr(atts, attName) {
   const value = atts[attName];
-  if (!value)
-    return "";
-  if (isRequired(attName, value))
-    return required;
+  if (!value) return "";
+  if (isRequired(attName, value)) return required;
   return `${attName}="${value}"`;
 }
 function isRequired(attName, value) {
-  if (attName !== required)
-    return false;
+  if (attName !== required) return false;
   return value === required || value === "true";
 }
 
@@ -507,10 +481,8 @@ function getHtml2(atts) {
 }
 function getType(atts) {
   const type = Stringer5.trim(atts.type).toLowerCase();
-  if (!type)
-    return "text";
-  if (type === "integer")
-    return "number";
+  if (!type) return "text";
+  if (type === "integer") return "number";
   return type;
 }
 
@@ -523,14 +495,12 @@ var template3 = `
 </label>
 `;
 function contentToHtml(element) {
-  if (!element)
-    return "";
+  if (!element) return "";
   return jsonToHtml(element.innerHTML);
 }
 function jsonToHtml(json) {
   json = parseAndValidate(json, "Radio", "name");
-  if (!json)
-    return "";
+  if (!json) return "";
   const buttons = buildRadioButtons(json);
   return `
 <div class="radio-buttons">
@@ -564,14 +534,12 @@ var template4 = `
 </label>
 `;
 function contentToHtml2(element) {
-  if (!element)
-    return "";
+  if (!element) return "";
   return jsonToHtml2(element.innerHTML);
 }
 function jsonToHtml2(json) {
   json = parseAndValidate(json, "Checkbox");
-  if (!json)
-    return "";
+  if (!json) return "";
   const buttons = buildCheckboxButtons(json);
   return `
 <div class="checkbox-buttons">
@@ -603,14 +571,12 @@ var templates = {
   option: "<option{disabled}{selected}{value}>{label}</option>"
 };
 function contentToHtml3(element) {
-  if (!element)
-    return "";
+  if (!element) return "";
   return jsonToHtml3(element.innerHTML);
 }
 function jsonToHtml3(json) {
   json = parseAndValidate(json, "Listbox");
-  if (!json)
-    return "";
+  if (!json) return "";
   const params = {
     name: json.name ? ` name="${json.name}"` : "",
     id: json.id ? ` id="${json.id}"` : "",
@@ -622,8 +588,7 @@ function jsonToHtml3(json) {
   return Stringer8.replaceTemplate(templates.select, params, "{");
 }
 function getWidgetType({ multiple, size }) {
-  if (multiple || size > 1)
-    return "listbox";
+  if (multiple || size > 1) return "listbox";
   return "combobox";
 }
 function buildOptionGroup(json) {
@@ -634,11 +599,9 @@ function buildOptionGroup(json) {
   return Stringer8.replaceTemplate(templates.group, params, "{");
 }
 function buildOptions(options) {
-  if (!Array.isArray(options))
-    return "";
+  if (!Array.isArray(options)) return "";
   const html = options.map((op) => {
-    if (op.options)
-      return buildOptionGroup(op);
+    if (op.options) return buildOptionGroup(op);
     return buildOption(op);
   });
   return html.join("\n");
@@ -700,8 +663,7 @@ function serialize(value) {
   return String(value);
 }
 function deserialize(value) {
-  if (Stringer9.isEmpty(value))
-    return [];
+  if (Stringer9.isEmpty(value)) return [];
   const result = [];
   let lastChar = "";
   let buffer = "";
@@ -724,11 +686,9 @@ function isMultiValue(el) {
 function arraysHaveSameItems(ar1, ar2) {
   const s1 = new Set(ar1);
   const s2 = new Set(ar2);
-  if (s1.size !== s2.size)
-    return false;
+  if (s1.size !== s2.size) return false;
   for (const a of s1) {
-    if (!s2.has(a))
-      return false;
+    if (!s2.has(a)) return false;
   }
   return true;
 }
@@ -833,8 +793,7 @@ function define(cssFilePath = "") {
         name: "addRule",
         action: function(name, message, validator) {
           const rule = new Rule(name, message, validator);
-          if (!this.validationRules.add(rule))
-            return;
+          if (!this.validationRules.add(rule)) return;
           addRuleHtml(this, rule);
         }
       },
@@ -843,8 +802,7 @@ function define(cssFilePath = "") {
         action: function(name) {
           const rulesList = Domer3.first("footer ul.rules", this);
           const li = Domer3.first(`li.validation-${name}`, rulesList);
-          if (li === null)
-            return null;
+          if (li === null) return null;
           return !li.classList.contains("bad");
         }
       },
@@ -902,8 +860,7 @@ function extractAttributes(el) {
 }
 function extractShowRuleAttribute(atts) {
   const showRules = Stringer10.trim(atts.showrules).toLowerCase();
-  if (showRules === "false" || showRules === "onerror")
-    return showRules;
+  if (showRules === "false" || showRules === "onerror") return showRules;
   return "true";
 }
 function buildHtml(el, atts, cssFilePath) {
@@ -923,31 +880,24 @@ function buildHtml(el, atts, cssFilePath) {
 }
 function getInputHtml(el, atts) {
   const type = getType2(atts);
-  if (type === "radio")
-    return contentToHtml(el);
-  if (type === "checkbox")
-    return contentToHtml2(el);
-  if (type === "listbox")
-    return contentToHtml3(el);
+  if (type === "radio") return contentToHtml(el);
+  if (type === "checkbox") return contentToHtml2(el);
+  if (type === "listbox") return contentToHtml3(el);
   return getHtml2(atts);
 }
 function getType2(atts) {
   const type = Stringer10.trim(atts.type).toLowerCase();
-  if (!type)
-    return "text";
-  if (type === "integer")
-    return "number";
+  if (!type) return "text";
+  if (type === "integer") return "number";
   return type;
 }
 function buildCssLink(cssFilePath) {
-  if (Stringer10.isEmpty(cssFilePath))
-    return "";
+  if (Stringer10.isEmpty(cssFilePath)) return "";
   return `<link rel="stylesheet" type="text/css" href="${cssFilePath}">`;
 }
 function getSublabel(atts) {
   const sublabel = atts.sublabel;
-  if (!sublabel)
-    return "";
+  if (!sublabel) return "";
   return `<br>${sublabel}`;
 }
 function validate(el, value) {

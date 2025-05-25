@@ -51,7 +51,7 @@ export class ValidationRules {
 
 }
 
-/* eslint-disable complexity */
+
 function checkType(rules, atts) {
   switch (atts.type) {
   case 'email':
@@ -64,7 +64,7 @@ function checkType(rules, atts) {
     return rules.push(Rule.set(atts.options, atts['set-message']))
   }
 }
-/* eslint-enable */
+
 
 function containsName(rules, name) {
   const found = rules.find(r => r.name === name)
