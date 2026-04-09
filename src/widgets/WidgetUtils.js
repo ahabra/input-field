@@ -47,3 +47,10 @@ function isRequired(attName, value) {
   if (attName !== required) return false
   return value === required || value === 'true'
 }
+
+export function getCssClass(atts = {}, isSpacePrefix = false) {
+  const cls = Stringer.trim(atts['css-class']).toLowerCase()
+  if (Stringer.isEmpty(cls)) return ''
+  const prefix = isSpacePrefix ? ' ' : ''
+  return prefix + cls
+}

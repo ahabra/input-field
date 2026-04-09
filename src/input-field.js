@@ -202,9 +202,9 @@ function buildHtml(el, atts, cssFilePath) {
 
 function getInputHtml(el, atts) {
   const type = getType(atts)
-  if (type === 'radio') return Radio.contentToHtml(el)
-  if (type === 'checkbox') return Checkbox.contentToHtml(el)
-  if (type === 'listbox') return Listbox.contentToHtml(el)
+  if (type === 'radio') return Radio.contentToHtml(el, atts)
+  if (type === 'checkbox') return Checkbox.contentToHtml(el, atts)
+  if (type === 'listbox') return Listbox.contentToHtml(el, atts)
 
   return Input.getHtml(atts)
 }

@@ -55,7 +55,7 @@ export default defineConfig([
       'key-spacing': [error, {beforeColon: false, afterColon:true}],
       'keyword-spacing': [error],
       'max-depth': [error, 4],
-      'max-len': [error, {code: 100, comments: 100, ignoreUrls: true}],
+      'max-len': [error, {code: 120, comments: 120, ignoreUrls: true}],
       'max-lines': [error, {max: 300, skipBlankLines: true, skipComments: false}],
       'max-lines-per-function': [error, {max: 200, skipBlankLines: true, skipComments: true, IIFEs: false}],
       'max-nested-callbacks': [error, 6],

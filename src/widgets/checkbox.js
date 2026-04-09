@@ -3,31 +3,31 @@ import * as WidgetUtils from './WidgetUtils'
 
 const template = `
 <label class="checkbox">
-  <input type="checkbox" {name} {id} value="{value}"{checked}>
+  <input type="checkbox" {name} {id} value="{value}"{checked} class="{css-class}">
   <span class="checkbox-label">{label}</span>
 </label>
 `
 
-export function contentToHtml(element) {
+export function contentToHtml(element, atts) {
   if (!element) return ''
 
-  return jsonToHtml(element.innerHTML)
+  return jsonToHtml(element.innerHTML, atts)
 }
 
-export function jsonToHtml(json) {
+export function jsonToHtml(json, atts) {
   json = WidgetUtils.parseAndValidate(json, 'Checkbox')
   if (!json) return ''
 
-  const buttons = buildCheckboxButtons(json)
+  const buttons = buildCheckboxButtons(json, atts)
   return `\n<div class="checkbox-buttons">\n${buttons}\n</div>\n`
 }
 
-function buildCheckboxButtons(json) {
+function buildCheckboxButtons(json, atts) {
   const sep = json.flow === 'vertical' ? '<br>\n' : '\n'
-  return json.options.map(op => buildOneCheckboxButton(op)).join(sep)
+  return json.options.map(op => buildOneCheckboxButton(op, atts)).join(sep)
 }
 
-function buildOneCheckboxButton(option) {
+function buildOneCheckboxButton(option, atts) {
   WidgetUtils.validateOption('Checkbox', option)
 
   const params = {
@@ -35,7 +35,8 @@ function buildOneCheckboxButton(option) {
     checked: option.checked ? ' checked' : '',
     id: option.id ? `id="${option.id}"` : '',
     value: option.value || option.label,
-    label: option.label || option.value
+    label: option.label || option.value,
+    'css-class': WidgetUtils.getCssClass(atts),
   }
 
   return Stringer.replaceTemplate(template.trim(), params, '{')

@@ -38,18 +38,17 @@ describe('radio.js', ()=> {
       const html = `
       <div class="radio-buttons">
         <label class="radio">
-          <input type="radio" name="gender" id="male" value="M" checked>
+          <input type="radio" name="gender" id="male" value="M" class="" checked>
           <span class="radio-label">Male</span>
         </label><br>
         <label class="radio">
-          <input type="radio" name="gender" id="female" value="F">
+          <input type="radio" name="gender" id="female" value="F" class="">
           <span class="radio-label">Female</span>
         </label>
       </div>
       `
 
       const actual = jsonToHtml(JSON.stringify(json))
-
       const comparision = LineCompare.compareLines(actual, html)
       expect(comparision).to.equal('')
     })
@@ -65,7 +64,7 @@ describe('radio.js', ()=> {
         const html = `
         <div class="radio-buttons">
           <label class="radio">
-            <input type="radio" name="gender"  value="Male">
+            <input type="radio" name="gender"  value="Male" class="">
             <span class="radio-label">Male</span>
           </label>
         </div>
@@ -85,7 +84,7 @@ describe('radio.js', ()=> {
         const html = `
         <div class="radio-buttons">
           <label class="radio">
-            <input type="radio" name="gender"  value="male">
+            <input type="radio" name="gender"  value="male" class="">
             <span class="radio-label">male</span>
           </label>
         </div>

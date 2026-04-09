@@ -2,17 +2,17 @@ import * as WidgetUtils from './WidgetUtils'
 import {Domer, Stringer} from '@techexp/jshelper'
 
 const templates = {
-  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}">{options}</select>',
+  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}{css-class}">{options}</select>',
   group: '<optgroup label="{label}">{options}</optgroup>',
   option: '<option{disabled}{selected}{value}>{label}</option>'
 }
 
-export function contentToHtml(element) {
+export function contentToHtml(element, atts) {
   if (!element) return ''
-  return jsonToHtml(element.innerHTML)
+  return jsonToHtml(element.innerHTML, atts)
 }
 
-export function jsonToHtml(json) {
+export function jsonToHtml(json, atts) {
   json = WidgetUtils.parseAndValidate(json, 'Listbox')
   if (!json) return ''
 
@@ -22,6 +22,7 @@ export function jsonToHtml(json) {
     size: json.size ? ` size="${json.size}"` : '',
     widgetType: getWidgetType(json),
     multiple: json.multiple ? ' multiple' : '',
+    'css-class': WidgetUtils.getCssClass(atts, true),
     options: buildOptions(json.options)
   }
   return Stringer.replaceTemplate(templates.select, params, '{')

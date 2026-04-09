@@ -467,7 +467,7 @@ function isRequired(attName, value) {
 
 // src/widgets/input.js
 var template2 = `
- <input id="{id}" type="{type}" class="input" value="{value}"
+ <input id="{id}" type="{type}" class="input{cssClass}" value="{value}"
   {required} {minlength} {maxlength} {pattern}>
 `;
 var required2 = "required";
@@ -479,6 +479,7 @@ function getHtml2(atts) {
     minlength: getAttr(atts, "minlength"),
     maxlength: getAttr(atts, "maxlength"),
     pattern: getAttr(atts, "pattern"),
+    cssClass: getAttr(atts, "cssClass"),
     value: atts.value || ""
   };
   return Stringer5.replaceTemplate(template2, params, "{");

@@ -887,7 +887,7 @@ ${t2}`;
 
   // src/widgets/input.js
   var template2 = `
- <input id="{id}" type="{type}" class="input" value="{value}"
+ <input id="{id}" type="{type}" class="input{cssClass}" value="{value}"
   {required} {minlength} {maxlength} {pattern}>
 `;
   var required2 = "required";
@@ -899,6 +899,7 @@ ${t2}`;
       minlength: getAttr(atts, "minlength"),
       maxlength: getAttr(atts, "maxlength"),
       pattern: getAttr(atts, "pattern"),
+      cssClass: getAttr(atts, "cssClass"),
       value: atts.value || ""
     };
     return Stringer_exports.replaceTemplate(template2, params, "{");
