@@ -1,6 +1,6 @@
 // input-field Web Component. Responsive input field with label and validation
 // https://github.com/ahabra/input-field
-// Copyright 2021 (C) Abdul Habra. Version 1.7.2.
+// Copyright 2021 (C) Abdul Habra. Version 1.8.0.
 // Apache License Version 2.0
 
 
@@ -166,6 +166,7 @@ function defineElement({
       };
       this.wi.addAction = (name, action) => addAction(root, root.wi.actions, name, action);
       this.wi.addEventListener = (sel, eventName, listener) => addHandler(root, { sel, eventName, listener });
+      this.wi.addCss = (css2) => addCss(root, css2);
     }
   };
   customElements.define(nameWithDash, el);
@@ -254,6 +255,13 @@ function displayStyle(display) {
     :host([hidden]) {display: none;}
   </style>
   `;
+}
+function addCss(root, css) {
+  css = Stringer.trim(css);
+  if (css.length === 0) return;
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(css);
+  root.shadowRoot.adoptedStyleSheets.push(sheet);
 }
 
 // src/input-field.js
@@ -464,10 +472,16 @@ function isRequired(attName, value) {
   if (attName !== required) return false;
   return value === required || value === "true";
 }
+function getCssClass(atts = {}, isSpacePrefix = false) {
+  const cls = Stringer4.trim(atts["css-class"]).toLowerCase();
+  if (Stringer4.isEmpty(cls)) return "";
+  const prefix = isSpacePrefix ? " " : "";
+  return prefix + cls;
+}
 
 // src/widgets/input.js
 var template2 = `
- <input id="{id}" type="{type}" class="input{cssClass}" value="{value}"
+ <input id="{id}" type="{type}" class="input{css-class}" value="{value}"
   {required} {minlength} {maxlength} {pattern}>
 `;
 var required2 = "required";
@@ -479,7 +493,7 @@ function getHtml2(atts) {
     minlength: getAttr(atts, "minlength"),
     maxlength: getAttr(atts, "maxlength"),
     pattern: getAttr(atts, "pattern"),
-    cssClass: getAttr(atts, "cssClass"),
+    "css-class": getCssClass(atts, true),
     value: atts.value || ""
   };
   return Stringer5.replaceTemplate(template2, params, "{");
@@ -495,37 +509,38 @@ function getType(atts) {
 import { Stringer as Stringer6 } from "@techexp/jshelper";
 var template3 = `
 <label class="radio">
-  <input type="radio" name="{name}" {id} value="{value}"{checked}>
+  <input type="radio" name="{name}" {id} value="{value}" class="{css-class}"{checked}>
   <span class="radio-label">{label}</span>
 </label>
 `;
-function contentToHtml(element) {
+function contentToHtml(element, atts) {
   if (!element) return "";
-  return jsonToHtml(element.innerHTML);
+  return jsonToHtml(element.innerHTML, atts);
 }
-function jsonToHtml(json) {
+function jsonToHtml(json, atts) {
   json = parseAndValidate(json, "Radio", "name");
   if (!json) return "";
-  const buttons = buildRadioButtons(json);
+  const buttons = buildRadioButtons(json, atts);
   return `
 <div class="radio-buttons">
 ${buttons}
 </div>
 `;
 }
-function buildRadioButtons(json) {
+function buildRadioButtons(json, atts) {
   const name = json.name;
   const sep = json.flow === "vertical" ? "<br>\n" : "\n";
-  return json.options.map((op) => buildOneRadioButton(name, op)).join(sep);
+  return json.options.map((op) => buildOneRadioButton(name, op, atts)).join(sep);
 }
-function buildOneRadioButton(name, option) {
+function buildOneRadioButton(name, option, atts) {
   validateOption("Radio", option);
   const params = {
     name,
     checked: option.checked ? " checked" : "",
     id: option.id ? `id="${option.id}"` : "",
     value: option.value || option.label,
-    label: option.label || option.value
+    label: option.label || option.value,
+    "css-class": getCssClass(atts)
   };
   return Stringer6.replaceTemplate(template3.trim(), params, "{");
 }
@@ -534,36 +549,37 @@ function buildOneRadioButton(name, option) {
 import { Stringer as Stringer7 } from "@techexp/jshelper";
 var template4 = `
 <label class="checkbox">
-  <input type="checkbox" {name} {id} value="{value}"{checked}>
+  <input type="checkbox" {name} {id} value="{value}"{checked} class="{css-class}">
   <span class="checkbox-label">{label}</span>
 </label>
 `;
-function contentToHtml2(element) {
+function contentToHtml2(element, atts) {
   if (!element) return "";
-  return jsonToHtml2(element.innerHTML);
+  return jsonToHtml2(element.innerHTML, atts);
 }
-function jsonToHtml2(json) {
+function jsonToHtml2(json, atts) {
   json = parseAndValidate(json, "Checkbox");
   if (!json) return "";
-  const buttons = buildCheckboxButtons(json);
+  const buttons = buildCheckboxButtons(json, atts);
   return `
 <div class="checkbox-buttons">
 ${buttons}
 </div>
 `;
 }
-function buildCheckboxButtons(json) {
+function buildCheckboxButtons(json, atts) {
   const sep = json.flow === "vertical" ? "<br>\n" : "\n";
-  return json.options.map((op) => buildOneCheckboxButton(op)).join(sep);
+  return json.options.map((op) => buildOneCheckboxButton(op, atts)).join(sep);
 }
-function buildOneCheckboxButton(option) {
+function buildOneCheckboxButton(option, atts) {
   validateOption("Checkbox", option);
   const params = {
     name: option.name ? `name="${option.name}"` : "",
     checked: option.checked ? " checked" : "",
     id: option.id ? `id="${option.id}"` : "",
     value: option.value || option.label,
-    label: option.label || option.value
+    label: option.label || option.value,
+    "css-class": getCssClass(atts)
   };
   return Stringer7.replaceTemplate(template4.trim(), params, "{");
 }
@@ -571,15 +587,15 @@ function buildOneCheckboxButton(option) {
 // src/widgets/listbox.js
 import { Domer as Domer2, Stringer as Stringer8 } from "@techexp/jshelper";
 var templates = {
-  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}">{options}</select>',
+  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}{css-class}">{options}</select>',
   group: '<optgroup label="{label}">{options}</optgroup>',
   option: "<option{disabled}{selected}{value}>{label}</option>"
 };
-function contentToHtml3(element) {
+function contentToHtml3(element, atts) {
   if (!element) return "";
-  return jsonToHtml3(element.innerHTML);
+  return jsonToHtml3(element.innerHTML, atts);
 }
-function jsonToHtml3(json) {
+function jsonToHtml3(json, atts) {
   json = parseAndValidate(json, "Listbox");
   if (!json) return "";
   const params = {
@@ -588,6 +604,7 @@ function jsonToHtml3(json) {
     size: json.size ? ` size="${json.size}"` : "",
     widgetType: getWidgetType(json),
     multiple: json.multiple ? " multiple" : "",
+    "css-class": getCssClass(atts, true),
     options: buildOptions(json.options)
   };
   return Stringer8.replaceTemplate(templates.select, params, "{");
@@ -845,6 +862,12 @@ function define(cssFilePath = "") {
           const input = Domer3.first(".input-field", el);
           return !input.classList.contains("bad");
         }
+      },
+      {
+        name: "getClassList",
+        action: function() {
+          return Domer3.first("input, select", this).classList;
+        }
       }
     ]
   });
@@ -885,9 +908,9 @@ function buildHtml(el, atts, cssFilePath) {
 }
 function getInputHtml(el, atts) {
   const type = getType2(atts);
-  if (type === "radio") return contentToHtml(el);
-  if (type === "checkbox") return contentToHtml2(el);
-  if (type === "listbox") return contentToHtml3(el);
+  if (type === "radio") return contentToHtml(el, atts);
+  if (type === "checkbox") return contentToHtml2(el, atts);
+  if (type === "listbox") return contentToHtml3(el, atts);
   return getHtml2(atts);
 }
 function getType2(atts) {
