@@ -41,6 +41,8 @@ import * as WidgetUtils from './widgets/WidgetUtils'
  * tooltip: A string to show if the user clicks on the label.
  * options: A comma separated list of options used with set type
  * set-message: Optional. The message to show when there is a set of options.
+ * css-class: Optional. A CSS class name (or names) to be added to the input widget.
+ *    This allows granular styling control over the input.
  *
  * Additionally, you can add custom validation rules to the component using:
  *
@@ -151,6 +153,12 @@ export function define(cssFilePath = '') {
           validate(el, el.wi.properties.value)
           const input = Domer.first('.input-field', el)
           return !input.classList.contains('bad')
+        }
+      },
+      {
+        name: 'getClassList',
+        action: function() {
+          return Domer.first('input, select', this).classList
         }
       }
     ]

@@ -267,9 +267,18 @@ age.wi.actions.addValueChangeListener((el, value) => {
 })
 ```
 
+##### `getClassList()`
+Get the class list for the internal `input` or `select` tag that's used in this input-field.
+The function returns the actual reference to `classList`, so that you can add or remove from the list.
+
+```js
+const age = document.getElementById('age')
+console.log(age.wi.actions.getClassList())
+```
 
 
 ## Change Log
+* 2021.04.09 Add `getClassList()` action, `css-class` attribute.
 * 2021-09-03 Support `onerror` new value for `showrules` attribute
 * 2021-05-27 Support `isValid()`
 * 2021-03-26 Support `addValueChangeListener()`
