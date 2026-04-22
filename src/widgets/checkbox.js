@@ -3,7 +3,7 @@ import * as WidgetUtils from './WidgetUtils'
 
 const template = `
 <label class="checkbox">
-  <input type="checkbox" {name} {id} value="{value}"{checked} class="{css-class}">
+  <input type="checkbox" {name} {id} value="{value}"{checked} class="{css-class}"{extra}>
   <span class="checkbox-label">{label}</span>
 </label>
 `
@@ -37,6 +37,7 @@ function buildOneCheckboxButton(option, atts) {
     value: option.value || option.label,
     label: option.label || option.value,
     'css-class': WidgetUtils.getCssClass(atts),
+    extra: WidgetUtils.extractAttrs(atts, 'name', 'id', 'value', 'checked', 'css-class'),
   }
 
   return Stringer.replaceTemplate(template.trim(), params, '{')

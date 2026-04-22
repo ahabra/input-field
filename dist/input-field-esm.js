@@ -413,7 +413,7 @@ function containsName(rules, name) {
 var template = `
 {cssFile}
 
-<div class="input-field">
+<div class="input-field {css-class}">
   <label for="{id}" class="label">
     <span class="superlabel {required} {tooltip}">
       {label} {tooltipIcon}
@@ -436,10 +436,10 @@ import { Stringer as Stringer5 } from "@techexp/jshelper";
 // src/widgets/WidgetUtils.js
 import { Objecter as Objecter4, Stringer as Stringer4 } from "@techexp/jshelper";
 var required = "required";
-function parseAndValidate(json, widgetType, ...required3) {
+function parseAndValidate(json, widgetType, ...required2) {
   if (!validateString(json)) return false;
   json = JSON.parse(json);
-  if (!validateJsonObject(json, widgetType, ...required3)) return false;
+  if (!validateJsonObject(json, widgetType, ...required2)) return false;
   return json;
 }
 function validateString(json) {
@@ -448,10 +448,10 @@ function validateString(json) {
   json = json.trim();
   return json.length !== 0;
 }
-function validateJsonObject(json, widgetType, ...required3) {
+function validateJsonObject(json, widgetType, ...required2) {
   if (!Array.isArray(json.options)) return false;
   if (json.options.length === 0) return false;
-  const found = required3.find((r) => !Objecter4.has(json, r));
+  const found = required2.find((r) => !Objecter4.has(json, r));
   if (found) {
     throw `${widgetType} definition requires ${found} attribute`;
   }
@@ -478,23 +478,44 @@ function getCssClass(atts = {}, isSpacePrefix = false) {
   const prefix = isSpacePrefix ? " " : "";
   return prefix + cls;
 }
+function extractAttrs(atts, ...ignore) {
+  const pairs = [];
+  Objecter4.forEachEntry(atts, (k, v) => {
+    if (!ignore.includes(k)) {
+      pairs.push(`${k}="${v}"`);
+    }
+  });
+  if (pairs.length === 0) return "";
+  return " " + pairs.join(" ");
+}
 
 // src/widgets/input.js
 var template2 = `
  <input id="{id}" type="{type}" class="input{css-class}" value="{value}"
-  {required} {minlength} {maxlength} {pattern}>
+  {required} {minlength} {maxlength} {pattern}{extra}>
 `;
-var required2 = "required";
 function getHtml2(atts) {
   const params = {
     id: atts.id,
     type: getType(atts),
-    required: getAttr(atts, required2),
+    required: getAttr(atts, "required"),
     minlength: getAttr(atts, "minlength"),
     maxlength: getAttr(atts, "maxlength"),
     pattern: getAttr(atts, "pattern"),
     "css-class": getCssClass(atts, true),
-    value: atts.value || ""
+    value: atts.value || "",
+    extra: extractAttrs(
+      atts,
+      "id",
+      "type",
+      "css-class",
+      "value",
+      "pattern",
+      "required",
+      "minlength",
+      "maxlength",
+      "pattern"
+    )
   };
   return Stringer5.replaceTemplate(template2, params, "{");
 }
@@ -509,7 +530,7 @@ function getType(atts) {
 import { Stringer as Stringer6 } from "@techexp/jshelper";
 var template3 = `
 <label class="radio">
-  <input type="radio" name="{name}" {id} value="{value}" class="{css-class}"{checked}>
+  <input type="radio" name="{name}" {id} value="{value}" class="{css-class}"{checked}{extra}>
   <span class="radio-label">{label}</span>
 </label>
 `;
@@ -540,7 +561,8 @@ function buildOneRadioButton(name, option, atts) {
     id: option.id ? `id="${option.id}"` : "",
     value: option.value || option.label,
     label: option.label || option.value,
-    "css-class": getCssClass(atts)
+    "css-class": getCssClass(atts),
+    extra: extractAttrs(atts, "name", "id", "value", "css-class", "checked")
   };
   return Stringer6.replaceTemplate(template3.trim(), params, "{");
 }
@@ -549,7 +571,7 @@ function buildOneRadioButton(name, option, atts) {
 import { Stringer as Stringer7 } from "@techexp/jshelper";
 var template4 = `
 <label class="checkbox">
-  <input type="checkbox" {name} {id} value="{value}"{checked} class="{css-class}">
+  <input type="checkbox" {name} {id} value="{value}"{checked} class="{css-class}"{extra}>
   <span class="checkbox-label">{label}</span>
 </label>
 `;
@@ -579,7 +601,8 @@ function buildOneCheckboxButton(option, atts) {
     id: option.id ? `id="${option.id}"` : "",
     value: option.value || option.label,
     label: option.label || option.value,
-    "css-class": getCssClass(atts)
+    "css-class": getCssClass(atts),
+    extra: extractAttrs(atts, "name", "id", "value", "checked", "css-class")
   };
   return Stringer7.replaceTemplate(template4.trim(), params, "{");
 }
@@ -587,7 +610,7 @@ function buildOneCheckboxButton(option, atts) {
 // src/widgets/listbox.js
 import { Domer as Domer2, Stringer as Stringer8 } from "@techexp/jshelper";
 var templates = {
-  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}{css-class}">{options}</select>',
+  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}{css-class}{extra}">{options}</select>',
   group: '<optgroup label="{label}">{options}</optgroup>',
   option: "<option{disabled}{selected}{value}>{label}</option>"
 };
@@ -605,7 +628,8 @@ function jsonToHtml3(json, atts) {
     widgetType: getWidgetType(json),
     multiple: json.multiple ? " multiple" : "",
     "css-class": getCssClass(atts, true),
-    options: buildOptions(json.options)
+    options: buildOptions(json.options),
+    extra: extractAttrs(atts, "name", "id", "size", "multiple", "widgetType", "multiple", "css-class")
   };
   return Stringer8.replaceTemplate(templates.select, params, "{");
 }
@@ -897,6 +921,7 @@ function buildHtml(el, atts, cssFilePath) {
     input,
     id: atts.id,
     cssFile: buildCssLink(cssFilePath),
+    "css-class": atts["css-class"],
     label: atts.label,
     sublabel: getSublabel(atts),
     required: getAttr(atts, "required"),

@@ -131,7 +131,7 @@ The component supports the following attributes
 (in addition to common HTML attributes like `id` or `class`):
 
 1. `type`: `text`, `password`, `email`, `number`, `integer`, `set`,
-   `radio`, `checkbox`, `listbox`. Optional. Default is `text`
+   `radio`, `checkbox`, `listbox`, `date`. Optional. Default is `text`
 2. `label`: The label to display before the input field
 3. `sublabel`: Text that will appear under the label, with smaller font.
 4. `required`: If the field is required, then this attribute's definition will be `required="required"` or
@@ -161,6 +161,9 @@ The component supports the following attributes
 20. `set-message`: Optional. The message to show when there is a set of options.
 21. `css-class`: Optional. A CSS class name (or names) to be added to the input field or select box,
       and to its containing div. This allows granular styling control over the input.
+
+If you add any extra attributes on the input-field element, these attributes will be added to
+the input/select element inside the input-field.
 
 ### Radio type
 When the type is `radio`, provide a JSON string as the content of the `input-field` element.
@@ -278,7 +281,8 @@ console.log(age.wi.actions.getClassList())
 
 
 ## Change Log
-* 2021.04.09 Add `getClassList()` action, `css-class` attribute.
+* 2026.04.21 Add support for extra attributes.
+* 2026.04.09 Add `getClassList()` action, `css-class` attribute.
 * 2021-09-03 Support `onerror` new value for `showrules` attribute
 * 2021-05-27 Support `isValid()`
 * 2021-03-26 Support `addValueChangeListener()`

@@ -54,7 +54,6 @@ describe('input-field.js', ()=> {
       expect(el.getAttribute('value')).to.equal('MI')
     })
 
-
     it('changes the value attribute for a listbox when user clicks on widget', ()=> {
       const el = createListBox()
       const select = Domer.first('.input-field/select', el.shadowRoot)
@@ -81,10 +80,38 @@ describe('input-field.js', ()=> {
       expect(el.getAttribute('value')).to.eql('MI|OH')
     })
 
+  })
 
+  describe('extra attributes', ()=> {
+    it('adds extra attributes to the input box', ()=> {
+      const attrs = {
+        type: 'text',
+        value: 'foo',
+        step: '10',
+        accept: '*.pdf',
+        unknown: '42',
+        'not-there': 'bar'
+      }
+      const el = createInputFieldWithAttributes(attrs)
+      const input = Domer.first('.input-field/input', el.shadowRoot)
+
+      expect(input.getAttribute('type')).to.equal('text')
+      expect(input.getAttribute('value')).to.equal('foo')
+      expect(input.getAttribute('step')).to.equal('10')
+      expect(input.getAttribute('accept')).to.equal('*.pdf')
+      expect(input.getAttribute('unknown')).to.equal('42')
+      expect(input.getAttribute('not-there')).to.equal('bar')
+    })
   })
 
 })
+
+function createInputFieldWithAttributes(attrs = {}, contentJson) {
+  const content = contentJson ? JSON.stringify(contentJson) : ''
+  const el = Domer.createElement('input-field', attrs, content)
+  document.body.append(el)
+  return el
+}
 
 function createInputField(type = 'text', value = '', contentJson) {
   const content = contentJson ? JSON.stringify(contentJson) : ''

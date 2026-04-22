@@ -54,3 +54,15 @@ export function getCssClass(atts = {}, isSpacePrefix = false) {
   const prefix = isSpacePrefix ? ' ' : ''
   return prefix + cls
 }
+
+/** Build a string of attributes that are not ignored */
+export function extractAttrs(atts, ...ignore) {
+  const pairs = []
+  Objecter.forEachEntry(atts, (k, v)=> {
+    if (!ignore.includes(k)) {
+      pairs.push(`${k}="${v}"`)
+    }
+  })
+  if (pairs.length === 0) return ''
+  return ' ' + pairs.join(' ')
+}

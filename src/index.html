@@ -18,11 +18,13 @@
                  showrules="onerror"
                  tooltip="What is your age in lunar years?"
                  css-class="age"
+                 extra1="a" extra2="b" extra3>
     ></input-field>
 
-    <input-field id="name" type="email" label="Email"
+    <input-field id="email" type="email" label="Email"
                  email-message="Valid email address"
                  css-class="email"
+                 extra1="a" extra2="b" extra3
     ></input-field>
 
     <input-field id="colors" type="set" label="RGB Colors"
@@ -30,12 +32,14 @@
                  options="red, green, blue"
                  required="required"
                  css-class="colors"
+                 extra1="a" extra2="b" extra3
     ></input-field>
 
     <input-field id="gender" type="radio" label="Gender"
                  tooltip="What is your preferred gender?"
                  required="required"
                  css-class="genders"
+                 extra1="a" extra2="b" extra3
     >
       {
         "name": "gender",
@@ -49,7 +53,8 @@
     </input-field>
 
     <input-field id="vehicle" type="checkbox" label="Vehicle" value="bike"
-                 required="required" css-class="vehicles">
+                 required="required" css-class="vehicles"
+                 extra1="a" extra2="b" extra3>
       {
         "flow": "vertical",
         "options": [
@@ -60,7 +65,8 @@
       }
     </input-field>
 
-    <input-field id="states" type="listbox" label="States" css-class="states">
+    <input-field id="states" type="listbox" label="States" css-class="states"
+                 extra1="a" extra2="b" extra3>
       {
         "name": "states",
         "id": "states",
@@ -82,7 +88,8 @@
     </input-field>
 
     <input-field id="multiStates" type="listbox" label="Multiple States" value=""
-                 tooltip="select multiple states" required="true" css-class="multi-states">
+                 tooltip="select multiple states" required="true" css-class="multi-states"
+                 extra1="a" extra2="b" extra3>
       {
         "name": "states2",
         "id": "states2",
@@ -103,7 +110,8 @@
       }
     </input-field>
 
-    <input-field id="oneState" type="listbox" label="One State" css-class="one-state">
+    <input-field id="oneState" type="listbox" label="One State" css-class="one-state"
+                 extra1="a" extra2="b" extra3>
       {
         "name": "states2",
         "id": "states2",

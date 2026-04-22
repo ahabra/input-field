@@ -2,7 +2,7 @@ import * as WidgetUtils from './WidgetUtils'
 import {Domer, Stringer} from '@techexp/jshelper'
 
 const templates = {
-  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}{css-class}">{options}</select>',
+  select: '<select{name}{id}{size}{multiple} class="{widgetType}{multiple}{css-class}{extra}">{options}</select>',
   group: '<optgroup label="{label}">{options}</optgroup>',
   option: '<option{disabled}{selected}{value}>{label}</option>'
 }
@@ -23,7 +23,8 @@ export function jsonToHtml(json, atts) {
     widgetType: getWidgetType(json),
     multiple: json.multiple ? ' multiple' : '',
     'css-class': WidgetUtils.getCssClass(atts, true),
-    options: buildOptions(json.options)
+    options: buildOptions(json.options),
+    extra: WidgetUtils.extractAttrs(atts, 'name', 'id', 'size', 'multiple', 'widgetType', 'multiple', 'css-class'),
   }
   return Stringer.replaceTemplate(templates.select, params, '{')
 }

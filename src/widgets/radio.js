@@ -3,7 +3,7 @@ import * as WidgetUtils from './WidgetUtils'
 
 const template = `
 <label class="radio">
-  <input type="radio" name="{name}" {id} value="{value}" class="{css-class}"{checked}>
+  <input type="radio" name="{name}" {id} value="{value}" class="{css-class}"{checked}{extra}>
   <span class="radio-label">{label}</span>
 </label>
 `
@@ -38,6 +38,7 @@ function buildOneRadioButton(name, option, atts) {
     value: option.value || option.label,
     label: option.label || option.value,
     'css-class': WidgetUtils.getCssClass(atts),
+    extra: WidgetUtils.extractAttrs(atts, 'name', 'id', 'value', 'css-class', 'checked'),
   }
 
   return Stringer.replaceTemplate(template.trim(), params, '{')
