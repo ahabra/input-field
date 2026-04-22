@@ -41,8 +41,8 @@ import * as WidgetUtils from './widgets/WidgetUtils'
  * tooltip: A string to show if the user clicks on the label.
  * options: A comma separated list of options used with set type
  * set-message: Optional. The message to show when there is a set of options.
- * css-class: Optional. A CSS class name (or names) to be added to the input widget.
- *    This allows granular styling control over the input.
+ * css-class: Optional. A CSS class name (or names) to be added to the input field or select box,
+ *    and to its containing div. This allows granular styling control over the input.
  *
  * Additionally, you can add custom validation rules to the component using:
  *
@@ -198,6 +198,7 @@ function buildHtml(el, atts, cssFilePath) {
     input,
     id: atts.id,
     cssFile: buildCssLink(cssFilePath),
+    'css-class': atts['css-class'],
     label: atts.label,
     sublabel: getSublabel(atts),
     required: WidgetUtils.getAttr(atts, 'required'),

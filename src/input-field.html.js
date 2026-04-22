@@ -1,7 +1,7 @@
 export const template = `
 {cssFile}
 
-<div class="input-field">
+<div class="input-field {css-class}">
   <label for="{id}" class="label">
     <span class="superlabel {required} {tooltip}">
       {label} {tooltipIcon}

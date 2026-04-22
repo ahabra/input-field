@@ -159,8 +159,8 @@ The component supports the following attributes
     the label. When User clicks on the label a tooltip will pop up.
 19. `options`: A comma separated list of options used with `set` type.
 20. `set-message`: Optional. The message to show when there is a set of options.
-21. `css-class`: Optional. A CSS class name (or names) to be added to the input widget. This allows
-    granular styling control over the input.
+21. `css-class`: Optional. A CSS class name (or names) to be added to the input field or select box,
+      and to its containing div. This allows granular styling control over the input.
 
 ### Radio type
 When the type is `radio`, provide a JSON string as the content of the `input-field` element.
